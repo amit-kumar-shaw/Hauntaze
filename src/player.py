@@ -7,9 +7,9 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
 
         if player2:
-            self.image = pygame.image.load("./v1/player2.png").convert_alpha()
+            self.image = pygame.image.load("./assets/images/player2.png").convert_alpha()
         else:
-            self.image = pygame.image.load("./v1/priest1_v1_1.png").convert_alpha()
+            self.image = pygame.image.load("./assets/images/player1.png").convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
 
         # player movement
