@@ -52,7 +52,7 @@ def _AStar(start, goal):
     return ()
 
 
-def generate(columns, rows, cellSize=5):
+def generate(columns, rows, cellSize=6):
     # 1. Divide the map into a grid of evenly sized cells.
 
     class Cell(object):
