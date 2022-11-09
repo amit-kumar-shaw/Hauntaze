@@ -18,6 +18,7 @@ CELL_SIZE = 5
 
 # player
 PLAYER_SPEED = 2
+VISIBILITY_RADIUS = 100
 
 # colors
 BG_COLOR = '#968b8a'
