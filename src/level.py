@@ -18,8 +18,8 @@ class Level:
         self.collision_sprites = pygame.sprite.Group()
 
         # create cover surface for limited visibility
-        self.cover_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.cover_surf.fill(0)
+        self.cover_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 
         self.setup_level()
@@ -57,4 +57,4 @@ class Level:
 
         self.display_surface.blit(self.cover_surf, (0, 0))
         pygame.display.flip()
-        self.cover_surf.fill(0)
+        self.cover_surf.fill(COVER_COLOR)
