@@ -53,6 +53,15 @@ class Level:
         # pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player2.rect.centerx, self.player2.rect.centery),
         #                    VISIBILITY_RADIUS)
 
+        self.draw_visible_region()
+
+        self.visible_sprites.draw(self.display_surface)
+
+        self.display_surface.blit(self.cover_surf, (0, 0))
+        pygame.display.flip()
+        self.cover_surf.fill(COVER_COLOR)
+
+    def draw_visible_region(self):
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 220), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 220), (self.player2.rect.centerx, self.player2.rect.centery),
@@ -73,9 +82,3 @@ class Level:
                            VISIBILITY_RADIUS * 0.80)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS * 0.80)
-
-        self.visible_sprites.draw(self.display_surface)
-
-        self.display_surface.blit(self.cover_surf, (0, 0))
-        pygame.display.flip()
-        self.cover_surf.fill(COVER_COLOR)
