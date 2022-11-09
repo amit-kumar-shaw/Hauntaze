@@ -48,10 +48,31 @@ class Level:
         # self.visible_sprites.custom_draw(self.player1)
 
         # draw visible area around players
-        pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player1.rect.centerx, self.player1.rect.centery),
+        # pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player1.rect.centerx, self.player1.rect.centery),
+        #                    VISIBILITY_RADIUS)
+        # pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player2.rect.centerx, self.player2.rect.centery),
+        #                    VISIBILITY_RADIUS)
+
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 220), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS)
-        pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player2.rect.centerx, self.player2.rect.centery),
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 220), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 180), (self.player1.rect.centerx, self.player1.rect.centery),
+                           VISIBILITY_RADIUS * 0.95)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 180), (self.player2.rect.centerx, self.player2.rect.centery),
+                           VISIBILITY_RADIUS * 0.95)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 130), (self.player1.rect.centerx, self.player1.rect.centery),
+                           VISIBILITY_RADIUS * 0.90)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 130), (self.player2.rect.centerx, self.player2.rect.centery),
+                           VISIBILITY_RADIUS * 0.90)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player1.rect.centerx, self.player1.rect.centery),
+                           VISIBILITY_RADIUS * 0.85)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player2.rect.centerx, self.player2.rect.centery),
+                           VISIBILITY_RADIUS * 0.85)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player1.rect.centerx, self.player1.rect.centery),
+                           VISIBILITY_RADIUS * 0.80)
+        pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player2.rect.centerx, self.player2.rect.centery),
+                           VISIBILITY_RADIUS * 0.80)
 
         self.visible_sprites.draw(self.display_surface)
 
