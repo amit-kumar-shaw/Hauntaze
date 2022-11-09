@@ -46,4 +46,15 @@ class Level:
         # run the entire game (level)
         self.active_sprites.update()
         # self.visible_sprites.custom_draw(self.player1)
+
+        # draw visible area around players
+        pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player1.rect.centerx, self.player1.rect.centery),
+                           VISIBILITY_RADIUS)
+        pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player2.rect.centerx, self.player2.rect.centery),
+                           VISIBILITY_RADIUS)
+
         self.visible_sprites.draw(self.display_surface)
+
+        self.display_surface.blit(self.cover_surf, (0, 0))
+        pygame.display.flip()
+        self.cover_surf.fill(0)
