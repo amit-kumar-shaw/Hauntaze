@@ -33,9 +33,9 @@ class Level:
                 x = row_index * TILE_WIDTH
                 if level_map[(row_index, col_index)] == '#' or level_map[(row_index, col_index)] == ' ':
                     Tile((x, y), [self.visible_sprites, self.collision_sprites])
-                    Tile((x + 16, y), [self.visible_sprites, self.collision_sprites])
-                    Tile((x, y + 16), [self.visible_sprites, self.collision_sprites])
-                    Tile((x + 16, y + 16), [self.visible_sprites, self.collision_sprites])
+                    # Tile((x + 16, y), [self.visible_sprites, self.collision_sprites])
+                    # Tile((x, y + 16), [self.visible_sprites, self.collision_sprites])
+                    # Tile((x + 16, y + 16), [self.visible_sprites, self.collision_sprites])
                 if level_map[(row_index, col_index)] == 'A':
                     self.player1 = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
                 if level_map[(row_index, col_index)] == 'B':

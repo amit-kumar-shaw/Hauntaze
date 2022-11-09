@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.image.load("./assets/images/player2.png").convert_alpha()
         else:
             self.image = pygame.image.load("./assets/images/player1.png").convert_alpha()
-        self.image = pygame.transform.rotozoom(self.image, 0, 1.5)
+        self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
         self.rect = self.image.get_rect(topleft=pos)
 
         # player movement
