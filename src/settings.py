@@ -1,6 +1,6 @@
 
 # screen
-FPS = 60
+FPS = 90
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 360
 

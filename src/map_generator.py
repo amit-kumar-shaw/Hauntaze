@@ -80,7 +80,9 @@ def generate(columns, rows, cellSize=6):
             cells[(c.x, c.y)] = c
 
     # 2. Pick a random cell as the current cell and mark it as connected.
-    current = lastCell = firstCell = random.choice(list(cells.values()))
+    current = firstCell = random.choice(list(cells.values()))
+    lastCell = random.choice(list(cells.values()))
+    enemyCell = random.choice(list(cells.values()))
     current.connected = True
 
     # 3. While the current cell has unconnected neighbor cells:
@@ -165,6 +167,7 @@ def generate(columns, rows, cellSize=6):
     # 8. Place staircases in the cell picked in step 2 and the lest cell visited in step 3b.
     playerA = random.choice(firstCell.room)
     playerB = random.choice(lastCell.room)
+    enemy = random.choice(enemyCell.room)
 
     # create tiles
     tiles = {}
@@ -190,8 +193,10 @@ def generate(columns, rows, cellSize=6):
     for xy, tile in tiles.items():
         if not tile == "." and "." in getNeighborTiles(xy):
             tiles[xy] = "#"
+
     tiles[playerA] = "A"
     tiles[playerB] = "B"
+    tiles[enemy] = "E"
 
     # for y in range(tilesY):
     #     for x in range(tilesX):

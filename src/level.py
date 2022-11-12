@@ -4,6 +4,7 @@ import map_generator
 from settings import *
 from tile import Tile
 from player import Player
+from enemy import Enemy
 
 
 class Level:
@@ -41,7 +42,9 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     self.player2 = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites,
                                           player2=True)
-
+                if level_map[(row_index, col_index)] == 'E':
+                    Enemy((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites
+                                          )
     def run(self):
         # run the entire game (level)
         self.active_sprites.update()
