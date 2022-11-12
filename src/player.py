@@ -70,3 +70,4 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
+        
