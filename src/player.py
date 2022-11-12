@@ -1,20 +1,21 @@
 import pygame
 from pygame.locals import *
-
+from settings import *
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, player2=False):
         super().__init__(groups)
 
         if player2:
-            self.image = pygame.image.load("./assets/images/player_hongtao/tile_0098.png").convert_alpha()
+            self.image = pygame.image.load("./assets/images/player2.png").convert_alpha()
         else:
-            self.image = pygame.image.load("./assets/images/player_hongtao/tile_0096.png").convert_alpha()
+            self.image = pygame.image.load("./assets/images/player1.png").convert_alpha()
+        self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
         self.rect = self.image.get_rect(topleft=pos)
 
         # player movement
         self.direction = pygame.math.Vector2()
-        self.speed = 2
+        self.speed = PLAYER_SPEED
         self.collision_sprites = collision_sprites
 
         # player keys

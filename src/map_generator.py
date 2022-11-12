@@ -163,8 +163,8 @@ def generate(columns, rows, cellSize=6):
         rooms.append(corridor)
 
     # 8. Place staircases in the cell picked in step 2 and the lest cell visited in step 3b.
-    stairsUp = random.choice(firstCell.room)
-    stairsDown = random.choice(lastCell.room)
+    playerA = random.choice(firstCell.room)
+    playerB = random.choice(lastCell.room)
 
     # create tiles
     tiles = {}
@@ -190,8 +190,8 @@ def generate(columns, rows, cellSize=6):
     for xy, tile in tiles.items():
         if not tile == "." and "." in getNeighborTiles(xy):
             tiles[xy] = "#"
-    tiles[stairsUp] = "A"
-    tiles[stairsDown] = "B"
+    tiles[playerA] = "A"
+    tiles[playerB] = "B"
 
     # for y in range(tilesY):
     #     for x in range(tilesX):
