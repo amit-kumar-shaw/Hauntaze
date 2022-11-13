@@ -83,6 +83,7 @@ def generate(columns, rows, cellSize=6):
     current = firstCell = random.choice(list(cells.values()))
     lastCell = random.choice(list(cells.values()))
     enemyCell = random.choice(list(cells.values()))
+    doorCell = random.choice(list(cells.values()))
     current.connected = True
 
     # 3. While the current cell has unconnected neighbor cells:
@@ -168,6 +169,7 @@ def generate(columns, rows, cellSize=6):
     playerA = random.choice(firstCell.room)
     playerB = random.choice(lastCell.room)
     enemy = random.choice(enemyCell.room)
+    door = random.choice(doorCell.room)
 
     # create tiles
     tiles = {}
@@ -197,6 +199,7 @@ def generate(columns, rows, cellSize=6):
     tiles[playerA] = "A"
     tiles[playerB] = "B"
     tiles[enemy] = "E"
+    tiles[door] = "D"
 
     # for y in range(tilesY):
     #     for x in range(tilesX):

@@ -10,22 +10,14 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
         self.direction = pygame.math.Vector2()
-        self.speed = PLAYER_SPEED
+        self.speed = 1
         self.collision_sprites = collision_sprites
 
-    def move (self):
-        if Player.rect.centerx > self.rect.centerx:
-            self.direction = 1
-            self.rect.x += self.direction.x * self.speed
-        if Player.__init__().rect.x > self.rect.x:
-            self.direction = -1
-            self.rect.x += self.direction.x * self.speed
-        if Player.rect.centery > self.rect.centery:
-            self.direction = 1
-            self.rect.y += self.direction.y * self.speed
-        if Player.rect.y > self.rect.y:
-            self.direction = -1
-            self.rect.y += self.direction.y * self.speed
+    def update(self):
+            self.rect.x += self.speed
+
+            self.horizontal_collisions()
+            self.vertical_collisions()
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
