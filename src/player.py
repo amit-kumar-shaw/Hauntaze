@@ -77,6 +77,14 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
 
+    def animate(self):
+        if self.direction.x == 0 and self.direction.y == 0:
+            self.image = self.player_still
+        else:
+            self.player_index += 0.1
+            if self.player_index >= len(self.player_walk): self.player_index = 0
+            self.image = self.player_walk[int(self.player_index)]
+
     def update(self):
         self.input()
 
@@ -85,3 +93,5 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
+
+        self.animate()
