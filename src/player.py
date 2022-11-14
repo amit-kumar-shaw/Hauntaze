@@ -7,10 +7,23 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
 
         if player2:
-            self.image = pygame.image.load("./assets/images/player2.png").convert_alpha()
+            self.player_still = pygame.image.load('./assets/images/player/p2_01.png').convert_alpha()
+            self.player_walk_1 = pygame.image.load('./assets/images/player/p2_02.png').convert_alpha()
+            self.player_walk_2 = pygame.image.load('./assets/images/player/p2_03.png').convert_alpha()
+            # self.image = pygame.image.load("./v1/p1_01.png").convert_alpha()
         else:
-            self.image = pygame.image.load("./assets/images/player1.png").convert_alpha()
-        self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
+            self.player_still = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
+            self.player_walk_1 = pygame.image.load('./assets/images/player/p1_02.png').convert_alpha()
+            self.player_walk_2 = pygame.image.load('./assets/images/player/p1_03.png').convert_alpha()
+        # self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
+        self.player_walk_1 = pygame.transform.rotozoom(self.player_walk_1, 0, 0.7)
+        self.player_walk_2 = pygame.transform.rotozoom(self.player_walk_2, 0, 0.7)
+        self.player_still = pygame.transform.rotozoom(self.player_still, 0, 0.7)
+        self.player_walk = [self.player_walk_1, self.player_walk_2]
+        self.player_index = 0
+
+        self.image = self.player_still
+
         self.rect = self.image.get_rect(topleft=pos)
 
         # player movement
