@@ -6,6 +6,8 @@ from settings import *
 class Menu():
     def __init__(self, ):
         self.screen = pygame.display.get_surface()
+        self.isStoryMode = False
+        self.multiplayer = False
 
     def update(self):
 
@@ -23,14 +25,14 @@ class Menu():
 
         title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50)
         title = title_font.render('HAUNTAZE', False, 'red')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 2, 50 + 2))
+        title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 1, 50 + 2))
         self.screen.blit(title, title_rect)
 
         title = title_font.render('HAUNTAZE', False, 'white')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 50))
         self.screen.blit(title, title_rect)
 
-        font = pygame.font.Font('./assets/fonts/PixelDevilsdeal.ttf', 20)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 20)
         start_msg = font.render('Press ENTER to start', False, 'white')
         msg_rect = start_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT-20))
         # self.screen.blit(background, (0, 0))
