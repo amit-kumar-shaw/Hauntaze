@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 from settings import *
+from torch import Torch
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, player2=False):
@@ -25,6 +26,8 @@ class Player(pygame.sprite.Sprite):
         self.image = self.player_still
 
         self.rect = self.image.get_rect(topleft=pos)
+
+        self.torch = Torch(pos, groups)
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -95,3 +98,6 @@ class Player(pygame.sprite.Sprite):
         self.vertical_collisions()
 
         self.animate()
+
+        self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
+        self.torch.animate()

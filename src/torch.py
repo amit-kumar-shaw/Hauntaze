@@ -15,3 +15,9 @@ class Torch(pygame.sprite.Sprite):
         self.image = self.torch[self.torch_index]
 
         self.rect = self.image.get_rect(midtop=pos)
+
+    def animate(self):
+
+        self.torch_index += 0.1
+        if self.torch_index >= len(self.torch): self.torch_index = 0
+        self.image = self.torch[int(self.torch_index)]
