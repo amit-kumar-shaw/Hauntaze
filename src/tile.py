@@ -12,10 +12,10 @@ class Tile(pygame.sprite.Sprite):
         floor1 = pygame.image.load("./assets/images/tiles/floor1.png").convert_alpha()
         floor2 = pygame.image.load("./assets/images/tiles/floor2.png").convert_alpha()
         floor3 = pygame.image.load("./assets/images/tiles/floor3.png").convert_alpha()
-        # self.image = pygame.image.load("./tiles/wall2.png").convert_alpha()
+
         if wall:
             self.image = choice([wall1, wall1, wall2])
         else:
             self.image = choice([floor1, floor1, floor1, floor1, floor1, floor1, floor1, floor1, floor1, floor3])
-        # self.image = pygame.transform.rotozoom(self.image, 0, 0.5)
+
         self.rect = self.image.get_rect(topleft=pos)

@@ -27,20 +27,24 @@ class Level:
     def setup_level(self):
 
         level_map = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
+        p1 = p2 = (0, 0)
         for col_index in range(ROWS * CELL_SIZE):
             for row_index in range(COLUMNS * CELL_SIZE):
                 y = col_index * TILE_HEIGHT
                 x = row_index * TILE_WIDTH
-                if level_map[(row_index, col_index)] == '#' or level_map[(row_index, col_index)] == ' ':
+                if level_map[(row_index, col_index)] == '.':
+                    Tile((x, y), [self.visible_sprites], wall=False)
+                if level_map[(row_index, col_index)] == '#':
                     Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
-                    # Tile((x + 16, y), [self.visible_sprites, self.collision_sprites])
-                    # Tile((x, y + 16), [self.visible_sprites, self.collision_sprites])
-                    # Tile((x + 16, y + 16), [self.visible_sprites, self.collision_sprites])
                 if level_map[(row_index, col_index)] == 'A':
-                    self.player1 = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites)
+                    p1 = (x, y)
+                    Tile((x, y), [self.visible_sprites], wall=False)
                 if level_map[(row_index, col_index)] == 'B':
-                    self.player2 = Player((x, y), [self.visible_sprites, self.active_sprites], self.collision_sprites,
-                                          player2=True)
+                    p2 = (x, y)
+                    Tile((x, y), [self.visible_sprites], wall=False)
+        self.player1 = Player(p1, [self.visible_sprites, self.active_sprites], self.collision_sprites)
+        self.player2 = Player(p2, [self.visible_sprites, self.active_sprites], self.collision_sprites,
+                                      player2=True)
 
     def run(self):
         # run the entire game (level)
