@@ -1,17 +1,33 @@
 import pygame
 from pygame.locals import *
 from settings import *
+from torch import Torch
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, player2=False):
         super().__init__(groups)
 
         if player2:
-            self.image = pygame.image.load("./assets/images/player2.png").convert_alpha()
+            self.player_still = pygame.image.load('./assets/images/player/p2_01.png').convert_alpha()
+            self.player_walk_1 = pygame.image.load('./assets/images/player/p2_02.png').convert_alpha()
+            self.player_walk_2 = pygame.image.load('./assets/images/player/p2_03.png').convert_alpha()
+            # self.image = pygame.image.load("./v1/p1_01.png").convert_alpha()
         else:
-            self.image = pygame.image.load("./assets/images/player1.png").convert_alpha()
-        self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
+            self.player_still = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
+            self.player_walk_1 = pygame.image.load('./assets/images/player/p1_02.png').convert_alpha()
+            self.player_walk_2 = pygame.image.load('./assets/images/player/p1_03.png').convert_alpha()
+        # self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
+        self.player_walk_1 = pygame.transform.rotozoom(self.player_walk_1, 0, 0.7)
+        self.player_walk_2 = pygame.transform.rotozoom(self.player_walk_2, 0, 0.7)
+        self.player_still = pygame.transform.rotozoom(self.player_still, 0, 0.7)
+        self.player_walk = [self.player_walk_1, self.player_walk_2]
+        self.player_index = 0
+
+        self.image = self.player_still
+
         self.rect = self.image.get_rect(topleft=pos)
+
+        self.torch = Torch(pos, groups)
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -64,6 +80,14 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
 
+    def animate(self):
+        if self.direction.x == 0 and self.direction.y == 0:
+            self.image = self.player_still
+        else:
+            self.player_index += 0.1
+            if self.player_index >= len(self.player_walk): self.player_index = 0
+            self.image = self.player_walk[int(self.player_index)]
+
     def update(self):
         self.input()
 
@@ -72,3 +96,8 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
+
+        self.animate()
+
+        self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
+        self.torch.animate()
