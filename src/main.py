@@ -10,7 +10,7 @@ os.chdir('..')
 
 # Pygame setup
 pygame.init()
-flags = pygame.SCALED | pygame.FULLSCREEN
+flags = pygame.SCALED #| pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
