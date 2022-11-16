@@ -10,12 +10,13 @@ os.chdir('..')
 
 # Pygame setup
 pygame.init()
-flags = pygame.SCALED | pygame.FULLSCREEN
+flags = pygame.SCALED #| pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
 start = False
-level = Level(multiplayer=True)
+level_loaded = False
+level = Level(player1=True, player2=True)
 menu = Menu()
 
 while True:
@@ -25,11 +26,14 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] and (menu.is_player1_ready or menu.is_player2_ready):
             start = True
 
     screen.fill(BG_COLOR)
     if start:
+        if not level_loaded:
+            level = Level(player1=menu.is_player1_ready,player2=menu.is_player2_ready)
+            level_loaded = True
         level.run()
         # display fps
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
