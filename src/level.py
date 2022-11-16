@@ -10,7 +10,7 @@ from collectible import Collectible
 
 
 class Level:
-    def __init__(self):
+    def __init__(self, multiplayer = False):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -25,7 +25,7 @@ class Level:
         self.cover_surf = pygame.Surface((SCREEN_WIDTH, (ROWS*CELL_SIZE*TILE_HEIGHT)), pygame.SRCALPHA)
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
-
+        self.multiplayer = multiplayer
         self.setup_level()
 
     def setup_level(self):
@@ -48,7 +48,8 @@ class Level:
                     Tile((x, y), [self.visible_sprites], wall=False)
         self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]), [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites)
-        self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites],
+        if self.multiplayer:
+            self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites,
                                       player2=True)
 
@@ -77,21 +78,26 @@ class Level:
     def draw_visible_region(self):
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 200), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS)
-        pygame.draw.circle(self.cover_surf, (0, 0, 0, 200), (self.player2.rect.centerx, self.player2.rect.centery),
+        if self.multiplayer:
+            pygame.draw.circle(self.cover_surf, (0, 0, 0, 200), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 150), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS * 0.97)
-        pygame.draw.circle(self.cover_surf, (0, 0, 0, 150), (self.player2.rect.centerx, self.player2.rect.centery),
+        if self.multiplayer:
+            pygame.draw.circle(self.cover_surf, (0, 0, 0, 150), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS * 0.97)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS * 0.93)
-        pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player2.rect.centerx, self.player2.rect.centery),
+        if self.multiplayer:
+            pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS * 0.93)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 50), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS * 0.88)
-        pygame.draw.circle(self.cover_surf, (0, 0, 0, 50), (self.player2.rect.centerx, self.player2.rect.centery),
+        if self.multiplayer:
+            pygame.draw.circle(self.cover_surf, (0, 0, 0, 50), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS * 0.88)
         pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player1.rect.centerx, self.player1.rect.centery),
                            VISIBILITY_RADIUS * 0.80)
-        pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player2.rect.centerx, self.player2.rect.centery),
+        if self.multiplayer:
+            pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player2.rect.centerx, self.player2.rect.centery),
                            VISIBILITY_RADIUS * 0.80)

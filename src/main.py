@@ -15,7 +15,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
 start = False
-level = Level()
+level = Level(multiplayer=True)
 menu = Menu()
 
 while True:
