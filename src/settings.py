@@ -19,6 +19,7 @@ CELL_SIZE = 5
 # player
 PLAYER_SPEED = 1
 VISIBILITY_RADIUS = 45
+LIVES = 3
 
 # colors
 BG_COLOR = 'black'
