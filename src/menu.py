@@ -11,6 +11,7 @@ class Menu():
         self.is_player1_ready = False
         self.is_player2_ready = False
         self.animation_index = 0
+        self.animation_direction = 1
         self.mode_transition = False
         self.transition_index = 5
 
@@ -82,11 +83,14 @@ class Menu():
         # player2_rect = player2.get_rect(center=((SCREEN_WIDTH // 2) + 100, SCREEN_HEIGHT // 2))
 
         # title animation
-        self.animation_index += 0.15
-        if self.animation_index >= 12: self.animation_index = 0
+        self.animation_index += 0.08# * self.animation_direction
+        if self.animation_index >= 2: self.animation_index = 0
+        # if self.animation_index > 12: self.animation_direction = -1
+        # if self.animation_index <= 0: self.animation_direction = 1
+
 
         # title
-        title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50+int(self.animation_index))
+        title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50)#+int(self.animation_index))
         title = title_font.render('HAUNTAZE', False, 'red')
         title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 1, 50 + 2))
         self.screen.blit(title, title_rect)
@@ -115,7 +119,8 @@ class Menu():
         # player 1 insert coin
         msg = 'Ready' if self.is_player1_ready else 'Insert Coin'
         font = pygame.font.Font('./assets/fonts/1.ttf', 15 +
-                                (1 if int(self.animation_index) % 6 == 0 and not self.is_player1_ready else 0))
+                                int(self.animation_index if not self.is_player1_ready else 0))
+                                #(1 if int(self.animation_index) % 6 == 0 and not self.is_player1_ready else 0))
         text = font.render(msg, False, 'orange')
         text_rect = text.get_rect(center=(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT - 200))
         self.screen.blit(text, text_rect)
@@ -126,7 +131,8 @@ class Menu():
         # player 2 insert coin
         msg = 'Ready' if self.is_player2_ready else 'Insert Coin'
         font = pygame.font.Font('./assets/fonts/1.ttf', 15 +
-                                (1 if int(self.animation_index) % 6 == 0 and not self.is_player2_ready else 0))
+                                int(self.animation_index if not self.is_player2_ready else 0))
+                                #(1 if int(self.animation_index) % 6 == 0 and not self.is_player2_ready else 0))
         text = font.render(msg, False, 'orange')
         text_rect = text.get_rect(center=(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT - 200))
         self.screen.blit(text, text_rect)
