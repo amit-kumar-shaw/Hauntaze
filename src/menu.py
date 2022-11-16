@@ -12,7 +12,7 @@ class Menu():
         self.is_player2_ready = False
         self.animation_index = 0
         self.mode_transition = False
-        self.transition_index = 0
+        self.transition_index = 5
 
     def check_input(self):
         keys = pygame.key.get_pressed()
@@ -70,8 +70,8 @@ class Menu():
         self.check_input()
 
         # set background image
-        background = pygame.image.load(f'./assets/images/background/4.png').convert()
-        background = pygame.transform.rotozoom(background, 0, 1/3)
+        background = pygame.image.load(f'./assets/images/background/6.png').convert()
+        # background = pygame.transform.rotozoom(background, 0, 1/3)
         self.screen.blit(background, (0, 0))
 
         # player1 = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
