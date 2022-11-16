@@ -193,9 +193,13 @@ def generate(columns, rows, cellSize=5):
     tiles[playerA] = "A"
     tiles[playerB] = "B"
 
+    # to
+    player_cells = [playerA, playerB]
+    empty_cells = list(set(cells.values()) - {firstCell, lastCell})
+
     # for y in range(tilesY):
     #     for x in range(tilesX):
     #         sys.stdout.write(tiles[(x, y)])
     #     sys.stdout.write("\n")
 
-    return tiles
+    return tiles, player_cells, empty_cells

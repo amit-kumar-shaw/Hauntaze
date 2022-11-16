@@ -8,6 +8,7 @@ class Menu():
         self.screen = pygame.display.get_surface()
         self.isStoryMode = False
         self.multiplayer = False
+        self.animation_index = 0
 
     def update(self):
 
@@ -23,7 +24,10 @@ class Menu():
         # player2 = pygame.transform.rotozoom(player2, 0, 5)
         # player2_rect = player2.get_rect(center=((SCREEN_WIDTH // 2) + 100, SCREEN_HEIGHT // 2))
 
-        title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50)
+        self.animation_index += 0.15
+        if self.animation_index >= 12: self.animation_index = 0
+
+        title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50+int(self.animation_index))
         title = title_font.render('HAUNTAZE', False, 'red')
         title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 1, 50 + 2))
         self.screen.blit(title, title_rect)
