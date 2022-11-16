@@ -31,13 +31,15 @@ while True:
     screen.fill(BG_COLOR)
     if start:
         level.run()
+        # display fps
+        font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+        fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
+        msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 10))
+        screen.blit(fps_msg, msg_rect)
     else:
         menu.update()
 
-    font = pygame.font.Font('./assets/fonts/1.ttf', 10)
-    fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
-    msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 10))
-    screen.blit(fps_msg, msg_rect)
+
     # drawing logic
     pygame.display.update()
     clock.tick(FPS)

@@ -130,6 +130,7 @@ class Player(pygame.sprite.Sprite):
         pygame.display.get_surface().blit(coin, coin_rect)
         pygame.display.get_surface().blit(score_msg, score_rect)
 
+
     def update(self):
         self.input()
 
