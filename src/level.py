@@ -1,9 +1,12 @@
+import random
+
 import pygame
 
 import map_generator
 from settings import *
 from tile import Tile
 from player import Player
+from collectible import Collectible
 
 
 class Level:
@@ -16,6 +19,7 @@ class Level:
         self.visible_sprites = pygame.sprite.Group()
         self.active_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
+        self.collectible_sprites = pygame.sprite.Group()
 
         # create cover surface for limited visibility
         self.cover_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
@@ -26,7 +30,7 @@ class Level:
 
     def setup_level(self):
 
-        level_map = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
+        level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
         p1 = p2 = (0, 0)
         for col_index in range(ROWS * CELL_SIZE):
             for row_index in range(COLUMNS * CELL_SIZE):
@@ -42,9 +46,16 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
-        self.player1 = Player(p1, [self.visible_sprites, self.active_sprites], self.collision_sprites)
-        self.player2 = Player(p2, [self.visible_sprites, self.active_sprites], self.collision_sprites,
+        self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]), [self.visible_sprites, self.active_sprites], self.collision_sprites)
+        self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites], self.collision_sprites,
                                       player2=True)
+
+        self.coins = []
+        coin_cells = random.sample(other_cells, 15)
+        for cell in coin_cells:
+            c = random.choice(list(cell.room))
+            self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
+
 
     def run(self):
         # run the entire game (level)
@@ -61,8 +72,11 @@ class Level:
 
         self.visible_sprites.draw(self.display_surface)
 
-        self.display_surface.blit(self.cover_surf, (0, 0))
-        pygame.display.flip()
+        for coin in self.coins:
+            coin.animate()
+
+        # self.display_surface.blit(self.cover_surf, (0, 0))
+        # pygame.display.flip()
         self.cover_surf.fill(COVER_COLOR)
 
     def draw_visible_region(self):

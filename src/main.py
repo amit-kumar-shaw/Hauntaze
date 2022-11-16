@@ -34,6 +34,10 @@ while True:
     else:
         menu.update()
 
+    font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+    start_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
+    msg_rect = start_msg.get_rect(center=(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 10))
+    screen.blit(start_msg, msg_rect)
     # drawing logic
     pygame.display.update()
     clock.tick(FPS)

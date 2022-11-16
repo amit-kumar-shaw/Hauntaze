@@ -14,7 +14,7 @@ class Collectible(pygame.sprite.Sprite):
 
         self.image = self.frames[self.animation_index]
 
-        self.rect = self.image.get_rect(midtop=pos)
+        self.rect = self.image.get_rect(topleft=pos)
 
     def animate(self):
 

@@ -1,6 +1,6 @@
 
 # screen
-FPS = 60
+FPS = 120
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 360
 
@@ -17,7 +17,7 @@ ROWS = 4
 CELL_SIZE = 5
 
 # player
-PLAYER_SPEED = 2
+PLAYER_SPEED = 1
 VISIBILITY_RADIUS = 45
 
 # colors
