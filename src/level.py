@@ -22,7 +22,7 @@ class Level:
         self.collectible_sprites = pygame.sprite.Group()
 
         # create cover surface for limited visibility
-        self.cover_surf = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
+        self.cover_surf = pygame.Surface((SCREEN_WIDTH, (ROWS*CELL_SIZE*TILE_HEIGHT)), pygame.SRCALPHA)
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 
@@ -46,8 +46,10 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
-        self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]), [self.visible_sprites, self.active_sprites], self.collision_sprites)
-        self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites], self.collision_sprites,
+        self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]), [self.visible_sprites, self.active_sprites],
+                              self.collision_sprites, self.collectible_sprites)
+        self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites],
+                              self.collision_sprites, self.collectible_sprites,
                                       player2=True)
 
         self.coins = []
@@ -60,13 +62,6 @@ class Level:
     def run(self):
         # run the entire game (level)
         self.active_sprites.update()
-        # self.visible_sprites.custom_draw(self.player1)
-
-        # draw visible area around players
-        # pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS)
-        # pygame.draw.circle(self.cover_surf, (255, 255, 255), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS)
 
         self.draw_visible_region()
 
@@ -75,7 +70,7 @@ class Level:
         for coin in self.coins:
             coin.animate()
 
-        # self.display_surface.blit(self.cover_surf, (0, 0))
+        self.display_surface.blit(self.cover_surf, (0, 0))
         # pygame.display.flip()
         self.cover_surf.fill(COVER_COLOR)
 
