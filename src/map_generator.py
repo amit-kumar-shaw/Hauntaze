@@ -52,7 +52,7 @@ def _AStar(start, goal):
     return ()
 
 
-def generate(columns, rows, cellSize=6):
+def generate(columns, rows, cellSize=5):
     # 1. Divide the map into a grid of evenly sized cells.
 
     class Cell(object):
@@ -80,10 +80,7 @@ def generate(columns, rows, cellSize=6):
             cells[(c.x, c.y)] = c
 
     # 2. Pick a random cell as the current cell and mark it as connected.
-    current = firstCell = random.choice(list(cells.values()))
-    lastCell = random.choice(list(cells.values()))
-    enemyCell = random.choice(list(cells.values()))
-    doorCell = random.choice(list(cells.values()))
+    current = lastCell = firstCell = random.choice(list(cells.values()))
     current.connected = True
 
     # 3. While the current cell has unconnected neighbor cells:
@@ -168,8 +165,6 @@ def generate(columns, rows, cellSize=6):
     # 8. Place staircases in the cell picked in step 2 and the lest cell visited in step 3b.
     playerA = random.choice(firstCell.room)
     playerB = random.choice(lastCell.room)
-    enemy = random.choice(enemyCell.room)
-    door = random.choice(doorCell.room)
 
     # create tiles
     tiles = {}
@@ -195,15 +190,16 @@ def generate(columns, rows, cellSize=6):
     for xy, tile in tiles.items():
         if not tile == "." and "." in getNeighborTiles(xy):
             tiles[xy] = "#"
-
     tiles[playerA] = "A"
     tiles[playerB] = "B"
-    tiles[enemy] = "E"
-    tiles[door] = "D"
+
+    # to
+    player_cells = [playerA, playerB]
+    empty_cells = list(set(cells.values()) - {firstCell, lastCell})
 
     # for y in range(tilesY):
     #     for x in range(tilesX):
     #         sys.stdout.write(tiles[(x, y)])
     #     sys.stdout.write("\n")
 
-    return tiles
+    return tiles, player_cells, empty_cells

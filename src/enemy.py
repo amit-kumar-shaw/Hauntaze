@@ -10,7 +10,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def __init__(self, pos, groups, collision_sprites):
         super().__init__(groups)
-        self.image = pygame.image.load("./assets/images/enemy_hongtao/tile_0120.png").convert_alpha()
+        self.image = pygame.image.load("./assets/images/enemy/tile_0120.png").convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
 
         self.direction = pygame.math.Vector2()
@@ -74,7 +74,4 @@ class Enemy(pygame.sprite.Sprite):
         self.horizontal_collisions()
         self.rect.y += self.direction.y #* self.speed
         self.vertical_collisions()
-
-
-
 
