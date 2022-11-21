@@ -3,6 +3,10 @@ import random
 import pygame, sys
 from settings import *
 from level import Level
+<<<<<<< HEAD
+=======
+from music import GameSound
+>>>>>>> Hongtao_ye
 from menu import Menu
 import os
 
@@ -10,13 +14,18 @@ os.chdir('..')
 
 # Pygame setup
 pygame.init()
-flags = pygame.SCALED | pygame.FULLSCREEN
+flags = pygame.SCALED #| pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
 start = False
 level_loaded = False
 level = Level(player1=True, player2=True)
+<<<<<<< HEAD
+=======
+sound = GameSound()
+sound.playbackgroundmusic()
+>>>>>>> Hongtao_ye
 menu = Menu()
 
 while True:
