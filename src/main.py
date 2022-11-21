@@ -3,10 +3,7 @@ import random
 import pygame, sys
 from settings import *
 from level import Level
-<<<<<<< HEAD
-=======
 from music import GameSound
->>>>>>> Hongtao_ye
 from menu import Menu
 import os
 
@@ -21,11 +18,8 @@ clock = pygame.time.Clock()
 start = False
 level_loaded = False
 level = Level(player1=True, player2=True)
-<<<<<<< HEAD
-=======
 sound = GameSound()
 sound.playbackgroundmusic()
->>>>>>> Hongtao_ye
 menu = Menu()
 
 while True:
