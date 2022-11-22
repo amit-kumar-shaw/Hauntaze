@@ -53,7 +53,15 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
+
         key_door_cells = random.sample(other_cells, 3)
+
+        # draw door
+        d = random.choice(list(key_door_cells[1].room))
+        self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
+                         )
+
+        # draw player and keys
         if self.player1_active:
             self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]),
                                   [self.visible_sprites, self.active_sprites],
@@ -76,13 +84,8 @@ class Level:
             c = random.choice(list(cell.room))
             self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
 
-        # self.door = []
-        # door_cells = random.sample(other_cells, 1)
-        # for door in door_cells:
-        d = random.choice(list(key_door_cells[1].room))
-        self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
-                     )
 
+        # draw enemies
         self.enemys = []
         enemy_cells = random.sample(other_cells, 12)
         for enemy in enemy_cells:
@@ -115,7 +118,7 @@ class Level:
             self.player2_key.animate()
 
         # draw the cover surface to hide the map
-        # self.display_surface.blit(self.cover_surf, (0, 0))
+        self.display_surface.blit(self.cover_surf, (0, 0))
 
         self.cover_surf.fill(COVER_COLOR)
 
