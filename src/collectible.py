@@ -1,4 +1,5 @@
 import pygame
+import random
 
 
 class Collectible(pygame.sprite.Sprite):
@@ -10,7 +11,7 @@ class Collectible(pygame.sprite.Sprite):
         t4 = pygame.image.load("./assets/images/coin/4.png").convert_alpha()
 
         self.frames = [pygame.transform.rotozoom(t1, 0, 0.5), pygame.transform.rotozoom(t2, 0, 0.5), pygame.transform.rotozoom(t3, 0, 0.5), pygame.transform.rotozoom(t4, 0, 0.5)]
-        self.animation_index = 0
+        self.animation_index = random.choice([0, 1, 2, 3])
 
         self.image = self.frames[self.animation_index]
 

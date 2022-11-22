@@ -1,3 +1,4 @@
+import math
 import random
 
 import pygame
@@ -8,6 +9,7 @@ from tile import Tile
 from player import Player
 from enemy import Enemy
 from collectible import Collectible
+from key import Key
 from door import Door
 
 
@@ -22,6 +24,8 @@ class Level:
         self.active_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.collectible_sprites = pygame.sprite.Group()
+        self.key1_sprite = pygame.sprite.GroupSingle()
+        self.key2_sprite = pygame.sprite.GroupSingle()
 
         # create cover surface for limited visibility
         self.cover_surf = pygame.Surface((SCREEN_WIDTH, (ROWS*CELL_SIZE*TILE_HEIGHT)), pygame.SRCALPHA)
@@ -49,13 +53,30 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
+
+        key_door_cells = random.sample(other_cells, 3)
+
+        # draw door
+        d = random.choice(list(key_door_cells[1].room))
+        self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
+                         )
+
+        # draw player and keys
         if self.player1_active:
-            self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]), [self.visible_sprites, self.active_sprites],
+            self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]),
+                                  [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites)
+            c = random.choice(list(key_door_cells[0].room))
+            self.player1_key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
+
         if self.player2_active:
-            self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]), [self.visible_sprites, self.active_sprites],
+            self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]),
+                                  [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites,
                                       player2=True)
+            c = random.choice(list(key_door_cells[1].room))
+            self.player2_key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
+
 
         self.coins = []
         coin_cells = random.sample(other_cells, 15)
@@ -63,21 +84,17 @@ class Level:
             c = random.choice(list(cell.room))
             self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
 
+
+        # draw enemies
         self.enemys = []
-        enemy_cells = random.sample(other_cells, 5)
+        enemy_cells = random.sample(other_cells, 12)
         for enemy in enemy_cells:
             e = random.choice(list(enemy.room))
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites],
                               self.collision_sprites))
 
-        self.door = []
-        door_cells = random.sample(other_cells, 1)
-        for door in door_cells:
-            d = random.choice(list(door.room))
-            self.enemys.append(
-                Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
-                      ))
+
 
     def run(self):
         # run the entire game (level)
@@ -90,9 +107,21 @@ class Level:
         for coin in self.coins:
             coin.animate()
 
+        # draw key if the player is nearby
+        if self.player1_active and math.dist(self.player1.torch.rect.center,self.player1_key.rect.center) < VISIBILITY_RADIUS:
+            self.player1_key.update()
+            self.key1_sprite.draw(self.display_surface)
+            self.player1_key.animate()
+        if self.player2_active and math.dist(self.player2.torch.rect.center,self.player2_key.rect.center) < VISIBILITY_RADIUS:
+            self.player2_key.update()
+            self.key2_sprite.draw(self.display_surface)
+            self.player2_key.animate()
+
+        # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
-        # pygame.display.flip()
+
         self.cover_surf.fill(COVER_COLOR)
+
 
     def draw_visible_region(self):
 
@@ -105,33 +134,3 @@ class Level:
                 pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50*i)),
                                    (self.player2.torch.rect.centerx, self.player2.torch.rect.centery),
                                    VISIBILITY_RADIUS * float(1 - (i*i)/100))
-        # if self.player1_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 200), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS)
-        # if self.player2_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 200), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS)
-        # if self.player1_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 150), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.97)
-        # if self.player2_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 150), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.97)
-        # if self.player1_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.93)
-        # if self.player2_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 100), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.93)
-        # if self.player1_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 50), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.88)
-        # if self.player2_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 50), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.88)
-        # if self.player1_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player1.rect.centerx, self.player1.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.80)
-        # if self.player2_active:
-        #     pygame.draw.circle(self.cover_surf, (0, 0, 0, 0), (self.player2.rect.centerx, self.player2.rect.centery),
-        #                    VISIBILITY_RADIUS * 0.80)
