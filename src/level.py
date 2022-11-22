@@ -53,12 +53,12 @@ class Level:
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
-        key_cells = random.sample(other_cells, 2)
+        key_door_cells = random.sample(other_cells, 3)
         if self.player1_active:
             self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]),
                                   [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites)
-            c = random.choice(list(key_cells[0].room))
+            c = random.choice(list(key_door_cells[0].room))
             self.player1_key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
 
         if self.player2_active:
@@ -66,7 +66,7 @@ class Level:
                                   [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites,
                                       player2=True)
-            c = random.choice(list(key_cells[1].room))
+            c = random.choice(list(key_door_cells[1].room))
             self.player2_key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
 
 
@@ -76,21 +76,22 @@ class Level:
             c = random.choice(list(cell.room))
             self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
 
+        # self.door = []
+        # door_cells = random.sample(other_cells, 1)
+        # for door in door_cells:
+        d = random.choice(list(key_door_cells[1].room))
+        self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
+                     )
+
         self.enemys = []
-        enemy_cells = random.sample(other_cells, 5)
+        enemy_cells = random.sample(other_cells, 12)
         for enemy in enemy_cells:
             e = random.choice(list(enemy.room))
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites],
                               self.collision_sprites))
 
-        self.door = []
-        door_cells = random.sample(other_cells, 1)
-        for door in door_cells:
-            d = random.choice(list(door.room))
-            self.enemys.append(
-                Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
-                      ))
+
 
     def run(self):
         # run the entire game (level)
@@ -114,7 +115,7 @@ class Level:
             self.player2_key.animate()
 
         # draw the cover surface to hide the map
-        self.display_surface.blit(self.cover_surf, (0, 0))
+        # self.display_surface.blit(self.cover_surf, (0, 0))
 
         self.cover_surf.fill(COVER_COLOR)
 
