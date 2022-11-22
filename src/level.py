@@ -7,8 +7,10 @@ import map_generator
 from settings import *
 from tile import Tile
 from player import Player
+from enemy import Enemy
 from collectible import Collectible
 from key import Key
+from door import Door
 
 
 class Level:
@@ -74,6 +76,21 @@ class Level:
             c = random.choice(list(cell.room))
             self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
 
+        self.enemys = []
+        enemy_cells = random.sample(other_cells, 5)
+        for enemy in enemy_cells:
+            e = random.choice(list(enemy.room))
+            self.enemys.append(
+                Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites],
+                              self.collision_sprites))
+
+        self.door = []
+        door_cells = random.sample(other_cells, 1)
+        for door in door_cells:
+            d = random.choice(list(door.room))
+            self.enemys.append(
+                Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
+                      ))
 
     def run(self):
         # run the entire game (level)
