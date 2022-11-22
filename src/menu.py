@@ -18,12 +18,15 @@ class Menu():
     def check_input(self):
         keys = pygame.key.get_pressed()
 
+        # insert coin for player 1
         if keys[pygame.K_1] and not self.is_player1_ready:
             self.is_player1_ready = True
 
+        # insert coin for player 2
         if keys[pygame.K_2] and not self.is_player2_ready:
             self.is_player2_ready = True
 
+        # toggle game modes
         if keys[pygame.K_DOWN] and self.is_story_mode:
             self.is_story_mode = False
             self.mode_transition = True
@@ -56,13 +59,13 @@ class Menu():
         text_rect = text.get_rect(center=(SCREEN_WIDTH * 0.5 - 1, SCREEN_HEIGHT - 100 - 2))
         self.screen.blit(text, text_rect)
 
-        # Unlimited Mode
+        # Survival Mode
         font = deselected_font if self.is_story_mode else selected_font
         color = deselected_color if self.is_story_mode else selected_color
-        text = font.render('Unlimited Mode', False, color[0])
+        text = font.render('Survival Mode', False, color[0])
         text_rect = text.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 70))
         self.screen.blit(text, text_rect)
-        text = font.render('Unlimited Mode', False, color[1])
+        text = font.render('Survival Mode', False, color[1])
         text_rect = text.get_rect(center=(SCREEN_WIDTH * 0.5 - 1, SCREEN_HEIGHT - 70 - 2))
         self.screen.blit(text, text_rect)
 
