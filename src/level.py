@@ -38,7 +38,7 @@ class Level:
     def setup_level(self):
 
         level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
-        p1 = p2 = (0, 0)
+
         for col_index in range(ROWS * CELL_SIZE):
             for row_index in range(COLUMNS * CELL_SIZE):
                 y = col_index * TILE_HEIGHT
@@ -57,7 +57,7 @@ class Level:
         key_door_cells = random.sample(other_cells, 3)
 
         # draw door
-        d = random.choice(list(key_door_cells[1].room))
+        d = random.choice(list(key_door_cells[2].room))
         self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
                          )
 
