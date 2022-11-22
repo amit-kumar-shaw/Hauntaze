@@ -58,7 +58,7 @@ class Level:
                               self.collision_sprites, self.collectible_sprites)
             c = random.choice(list(key_cells[0].room))
             self.player1_key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
-            print(tuple(TILE_SIZE * x for x in c))
+
         if self.player2_active:
             self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]),
                                   [self.visible_sprites, self.active_sprites],
@@ -66,7 +66,7 @@ class Level:
                                       player2=True)
             c = random.choice(list(key_cells[1].room))
             self.player2_key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
-            print(tuple(TILE_SIZE * x for x in c))
+
 
         self.coins = []
         coin_cells = random.sample(other_cells, 15)
@@ -85,6 +85,8 @@ class Level:
 
         for coin in self.coins:
             coin.animate()
+
+        # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,self.player1_key.rect.center) < VISIBILITY_RADIUS:
             self.player1_key.update()
             self.key1_sprite.draw(self.display_surface)
@@ -93,8 +95,10 @@ class Level:
             self.player2_key.update()
             self.key2_sprite.draw(self.display_surface)
             self.player2_key.animate()
+
+        # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
-        # pygame.display.flip()
+
         self.cover_surf.fill(COVER_COLOR)
 
 
