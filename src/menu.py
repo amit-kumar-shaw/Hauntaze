@@ -74,8 +74,8 @@ class Menu():
         self.check_input()
 
         # set background image
-        background = pygame.image.load(f'./assets/images/background/6.png').convert()
-        # background = pygame.transform.rotozoom(background, 0, 1/3)
+        background = pygame.image.load(f'./assets/images/background/7.jpg').convert()
+        background = pygame.transform.rotozoom(background, 0, 1/3)
         self.screen.blit(background, (0, 0))
 
         # player1 = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
