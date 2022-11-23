@@ -137,4 +137,9 @@ class Level:
 
         # draw enemy indicator
         for enemy in self.enemys:
-            pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+            if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and not self.player2_active:
+                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+            if (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and not self.player1_active:
+                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+            if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS):
+                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
