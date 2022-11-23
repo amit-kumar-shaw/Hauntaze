@@ -67,7 +67,7 @@ class Level:
                                   [self.visible_sprites, self.active_sprites],
                               self.collision_sprites, self.collectible_sprites)
             c = random.choice(list(key_door_cells[0].room))
-            self.player1_key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
+            self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
 
         if self.player2_active:
             self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]),
@@ -75,7 +75,7 @@ class Level:
                               self.collision_sprites, self.collectible_sprites,
                                       player2=True)
             c = random.choice(list(key_door_cells[1].room))
-            self.player2_key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
+            self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
 
 
         self.coins = []
@@ -108,14 +108,14 @@ class Level:
             coin.animate()
 
         # draw key if the player is nearby
-        if self.player1_active and math.dist(self.player1.torch.rect.center,self.player1_key.rect.center) < VISIBILITY_RADIUS:
-            self.player1_key.update()
+        if self.player1_active and math.dist(self.player1.torch.rect.center,self.player1.key.rect.center) < VISIBILITY_RADIUS:
+            self.player1.key.update()
             self.key1_sprite.draw(self.display_surface)
-            self.player1_key.animate()
-        if self.player2_active and math.dist(self.player2.torch.rect.center,self.player2_key.rect.center) < VISIBILITY_RADIUS:
-            self.player2_key.update()
+            self.player1.key.animate()
+        if self.player2_active and math.dist(self.player2.torch.rect.center,self.player2.key.rect.center) < VISIBILITY_RADIUS:
+            self.player2.key.update()
             self.key2_sprite.draw(self.display_surface)
-            self.player2_key.animate()
+            self.player2.key.animate()
 
         # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))

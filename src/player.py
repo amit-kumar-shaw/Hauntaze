@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.player2 = player2
         self.lives = LIVES
         self.score = 0
+        self.key_picked = False
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -99,6 +100,12 @@ class Player(pygame.sprite.Sprite):
                 self.score += 1
                 sprite.kill()
 
+    def key_collisions(self):
+        if self.rect.colliderect(self.key.rect) and not self.key_picked:
+            print("key picked")
+            self.key_picked = True
+            self.key.kill()
+
     def display_details(self):
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         player_name = font.render('Player 1', False, 'white')
@@ -140,6 +147,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
         self.collectible_collisions()
+        self.key_collisions()
         self.animate()
 
         self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
