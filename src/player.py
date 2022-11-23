@@ -102,7 +102,6 @@ class Player(pygame.sprite.Sprite):
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
-            print("key picked")
             self.key_picked = True
             self.key.kill()
 
@@ -113,6 +112,9 @@ class Player(pygame.sprite.Sprite):
         hearts_rect = []
         heart = pygame.image.load("./assets/images/heart.png").convert_alpha()
         heart = pygame.transform.rotozoom(heart, 0, 0.75)
+        key = pygame.image.load("./assets/images/key/3.png").convert_alpha()
+        #key = pygame.transform.rotozoom(key, 0, 0.75)
+        key_rect = key.get_rect(bottomleft = player_rect.bottomright)
         for i in range(0,self.lives):
             hearts_rect.append(heart.get_rect(topleft = (16 + (i*12), (ROWS*CELL_SIZE*TILE_HEIGHT) + 14) ))
 
@@ -124,14 +126,19 @@ class Player(pygame.sprite.Sprite):
         score_rect = score_msg.get_rect(topleft=(30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
 
         if self.player2:
+            key = pygame.image.load("./assets/images/key/1.png").convert_alpha()
+            #key = pygame.transform.rotozoom(key, 0, 0.75)
             player_name = font.render('Player 2', False, 'white')
             player_rect = player_name.get_rect(midright=(SCREEN_WIDTH - 16, (ROWS*CELL_SIZE*TILE_HEIGHT) + 5))
+            key_rect = key.get_rect(bottomright=player_rect.bottomleft)
             for i in range(0, self.lives):
                 hearts_rect[i] = heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14))
             coin_rect = coin.get_rect(topright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
             score_rect = score_msg.get_rect(topright=(SCREEN_WIDTH - 30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
 
         pygame.display.get_surface().blit(player_name, player_rect)
+        if self.key_picked:
+            pygame.display.get_surface().blit(key, key_rect)
         for i in range(0, self.lives):
             pygame.display.get_surface().blit(heart, hearts_rect[i])
         pygame.display.get_surface().blit(coin, coin_rect)
