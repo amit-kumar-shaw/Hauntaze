@@ -1,3 +1,5 @@
+from math import sin
+
 import pygame
 from pygame.locals import *
 from settings import *
@@ -97,6 +99,19 @@ class Player(pygame.sprite.Sprite):
             if self.player_index >= len(self.player_walk): self.player_index = 0
             self.image = self.player_walk[int(self.player_index)]
 
+        if self.is_invincible:
+            alpha = self.wave_value()
+            self.image.set_alpha(alpha)
+        else:
+            self.image.set_alpha(255)
+
+    def wave_value(self):
+        value = sin(pygame.time.get_ticks())
+        if value >= 0:
+            return 255
+        else:
+            return 0
+
     def collectible_collisions(self):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -109,6 +124,7 @@ class Player(pygame.sprite.Sprite):
                 self.is_invincible = True
                 self.lives -= 1
                 self.hurt_time = pygame.time.get_ticks()
+
 
     def invincibility_timer(self):
         if self.is_invincible:
