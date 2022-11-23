@@ -28,6 +28,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.speed = 1
+        self.tog = True
         self.collision_sprites = collision_sprites
 
         self.timer = 5
@@ -81,15 +82,17 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
 
         self.animate()
-        random_time = random.choice(range(5,10))
+        random_time = random.choice(range(10, 15))
         self.timer += 0.1
         if self.timer >= random_time:
             self.timer = 0
             self.movement_update()
 
-
-        self.rect.x += self.direction.x #* self.speed
+        if self.tog:
+            self.rect.x += self.direction.x * self.speed
         self.horizontal_collisions()
-        self.rect.y += self.direction.y #* self.speed
+        if self.tog:
+            self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
+        self.tog = not self.tog
 

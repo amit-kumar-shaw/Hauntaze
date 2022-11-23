@@ -79,7 +79,7 @@ class Level:
 
 
         self.coins = []
-        coin_cells = random.sample(other_cells, 15)
+        coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
         for cell in coin_cells:
             c = random.choice(list(cell.room))
             self.coins.append(Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
