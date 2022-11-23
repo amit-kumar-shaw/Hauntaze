@@ -118,11 +118,17 @@ class Level:
             self.key2_sprite.draw(self.display_surface)
             self.player2.key.animate()
 
+        self.check_player_status()
         # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
 
         self.cover_surf.fill(COVER_COLOR)
 
+    def check_player_status(self):
+        if self.player1_active and self.player1.lives == 0:
+            self.player1_active = False
+        if self.player2_active and self.player2.lives == 0:
+            self.player2_active = False
 
     def draw_visible_region(self):
 

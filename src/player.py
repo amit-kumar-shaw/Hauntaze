@@ -36,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.hurt_time = 0
         self.score = 0
         self.key_picked = False
+        self.visibility_radius = VISIBILITY_RADIUS
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -124,7 +125,18 @@ class Player(pygame.sprite.Sprite):
                 self.is_invincible = True
                 self.lives -= 1
                 self.hurt_time = pygame.time.get_ticks()
+                if self.lives == 0:
+                    self.death_animate()
+                    self.torch.kill()
+                    self.kill()
 
+    def death_animate(self):
+        visibility = VISIBILITY_RADIUS
+        while visibility > 0:
+            pygame.draw.circle(pygame.display.get_surface(), (0, 0, 0, 0),
+                               self.torch.rect.center,
+                               visibility)
+            visibility -= 1
 
     def invincibility_timer(self):
         if self.is_invincible:
