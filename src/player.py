@@ -4,7 +4,7 @@ from settings import *
 from torch import Torch
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, collectible_sprites, player2=False):
+    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, player2=False):
         super().__init__(groups)
 
         if player2:
@@ -30,6 +30,8 @@ class Player(pygame.sprite.Sprite):
         self.torch = Torch(pos, groups)
         self.player2 = player2
         self.lives = LIVES
+        self.is_invincible = False
+        self.hurt_time = 0
         self.score = 0
         self.key_picked = False
 
@@ -39,6 +41,7 @@ class Player(pygame.sprite.Sprite):
 
         self.collision_sprites = collision_sprites
         self.collectible_sprites = collectible_sprites
+        self.enemy_sprites = enemy_sprites
 
         # player keys
         if player2:
@@ -100,6 +103,20 @@ class Player(pygame.sprite.Sprite):
                 self.score += 1
                 sprite.kill()
 
+    def enemy_collisions(self):
+        for sprite in self.enemy_sprites.sprites():
+            if sprite.rect.colliderect(self.rect) and not self.is_invincible:
+                self.is_invincible = True
+                self.lives -= 1
+                self.hurt_time = pygame.time.get_ticks()
+
+    def invincibility_timer(self):
+        if self.is_invincible:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.hurt_time >= INVINSIBILITY_DURATION:
+                self.is_invincible = False
+
+
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
             self.key_picked = True
@@ -155,6 +172,8 @@ class Player(pygame.sprite.Sprite):
         self.vertical_collisions()
         self.collectible_collisions()
         self.key_collisions()
+        self.invincibility_timer()
+        self.enemy_collisions()
         self.animate()
 
         self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))

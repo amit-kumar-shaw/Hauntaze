@@ -35,7 +35,7 @@ while True:
     screen.fill(BG_COLOR)
     if start:
         if not level_loaded:
-            level = Level(player1=menu.is_player1_ready,player2=menu.is_player2_ready)
+            level = Level(player1=menu.is_player1_ready, player2=menu.is_player2_ready)
             level_loaded = True
         level.run()
         # display fps
@@ -45,7 +45,6 @@ while True:
         screen.blit(fps_msg, msg_rect)
     else:
         menu.update()
-
 
     # drawing logic
     pygame.display.update()

@@ -24,6 +24,7 @@ class Level:
         self.active_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.collectible_sprites = pygame.sprite.Group()
+        self.enemy_sprites = pygame.sprite.Group()
         self.key1_sprite = pygame.sprite.GroupSingle()
         self.key2_sprite = pygame.sprite.GroupSingle()
 
@@ -65,14 +66,14 @@ class Level:
         if self.player1_active:
             self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]),
                                   [self.visible_sprites, self.active_sprites],
-                              self.collision_sprites, self.collectible_sprites)
+                              self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
             c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
 
         if self.player2_active:
             self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]),
                                   [self.visible_sprites, self.active_sprites],
-                              self.collision_sprites, self.collectible_sprites,
+                              self.collision_sprites, self.collectible_sprites, self.enemy_sprites,
                                       player2=True)
             c = random.choice(list(key_door_cells[1].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
@@ -91,7 +92,7 @@ class Level:
         for enemy in enemy_cells:
             e = random.choice(list(enemy.room))
             self.enemys.append(
-                Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites],
+                Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                               self.collision_sprites))
 
 
