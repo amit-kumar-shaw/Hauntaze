@@ -134,3 +134,7 @@ class Level:
                 pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50*i)),
                                    (self.player2.torch.rect.centerx, self.player2.torch.rect.centery),
                                    VISIBILITY_RADIUS * float(1 - (i*i)/100))
+
+        # draw enemy indicator
+        for enemy in self.enemys:
+            pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
