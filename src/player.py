@@ -134,18 +134,15 @@ class Player(pygame.sprite.Sprite):
                 self.sounds.play_enemy_collision()
                 self.lives -= 1
                 self.hurt_time = pygame.time.get_ticks()
-                if self.lives == 0:
-                    self.death_animate()
-                    self.torch.kill()
-                    self.kill()
+
 
     def death_animate(self):
-        visibility = VISIBILITY_RADIUS
-        while visibility > 0:
-            pygame.draw.circle(pygame.display.get_surface(), (0, 0, 0, 0),
-                               self.torch.rect.center,
-                               visibility)
-            visibility -= 1
+        if self.visibility_radius > 1:
+            self.visibility_radius -= 0.5
+        else:
+            self.is_alive = False
+            self.torch.kill()
+            self.kill()
 
     def invincibility_timer(self):
         if self.is_invincible:
@@ -207,23 +204,26 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
+        if self.lives > 0:
+            self.input()
 
-        self.input()
+            self.rect.x += self.direction.x * self.speed
+            self.horizontal_collisions()
 
-        self.rect.x += self.direction.x * self.speed
-        self.horizontal_collisions()
+            self.rect.y += self.direction.y * self.speed
+            self.vertical_collisions()
+            self.collectible_collisions()
+            self.key_collisions()
+            self.door_collisions()
+            self.invincibility_timer()
 
-        self.rect.y += self.direction.y * self.speed
-        self.vertical_collisions()
-        self.collectible_collisions()
-        self.key_collisions()
-        self.door_collisions()
-        self.invincibility_timer()
-        self.enemy_collisions()
-        self.animate()
+            self.animate()
 
-        self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
-        self.torch.animate()
+            self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
+            self.torch.animate()
+            self.enemy_collisions()
+        else:
+            self.death_animate()
 
         # self.display_details()
 
