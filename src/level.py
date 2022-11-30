@@ -101,7 +101,7 @@ class Level:
 
         # draw enemies
         self.enemys = []
-        enemy_cells = random.sample(other_cells, 12)
+        enemy_cells = random.sample(other_cells, 5)
         for enemy in enemy_cells:
             e = random.choice(list(enemy.room))
             self.enemys.append(

@@ -140,9 +140,10 @@ class Player(pygame.sprite.Sprite):
         if self.visibility_radius > 1:
             self.visibility_radius -= 0.5
         else:
-            self.is_alive = False
-            self.torch.kill()
-            self.kill()
+            if not self.level_completed:
+                self.is_alive = False
+                self.torch.kill()
+                self.kill()
 
     def invincibility_timer(self):
         if self.is_invincible:
@@ -204,9 +205,9 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-        if self.lives > 0:
+        if self.lives > 0 and not self.level_completed:
             self.input()
-
+            self.animate()
             self.rect.x += self.direction.x * self.speed
             self.horizontal_collisions()
 
@@ -214,13 +215,14 @@ class Player(pygame.sprite.Sprite):
             self.vertical_collisions()
             self.collectible_collisions()
             self.key_collisions()
-            self.door_collisions()
+
             self.invincibility_timer()
 
-            self.animate()
+
 
             self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
             self.torch.animate()
+            self.door_collisions()
             self.enemy_collisions()
         else:
             self.death_animate()
