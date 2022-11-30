@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.torch = Torch(pos, groups)
         self.player2 = player2
         self.lives = LIVES
+        self.is_alive = True
         self.is_invincible = False
         self.hurt_time = 0
         self.score = 0
@@ -42,6 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.door = None
         self.key = None
         self.level_completed = False
+
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -205,6 +207,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
+
         self.input()
 
         self.rect.x += self.direction.x * self.speed
@@ -216,13 +219,15 @@ class Player(pygame.sprite.Sprite):
         self.key_collisions()
         self.door_collisions()
         self.invincibility_timer()
-        #self.enemy_collisions()
+        self.enemy_collisions()
         self.animate()
 
         self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
         self.torch.animate()
 
-        self.display_details()
+        # self.display_details()
+
+
         # font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         # score_msg = font.render(f'Player 1 Score: {self.score}', False, 'white')
         # msg_rect = score_msg.get_rect(midleft=(10, SCREEN_HEIGHT - 10))

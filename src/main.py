@@ -3,6 +3,7 @@ import random
 import pygame, sys
 from settings import *
 from level import Level
+from ui import UI
 from music import GameSound
 from menu import Menu
 import os
@@ -21,6 +22,7 @@ level = Level(player1=True, player2=True)
 sound = GameSound()
 sound.playbackgroundmusic()
 menu = Menu()
+ui = None
 
 while True:
     # event loop
@@ -36,8 +38,10 @@ while True:
     if start:
         if not level_loaded:
             level = Level(player1=menu.is_player1_ready, player2=menu.is_player2_ready)
+            ui = UI(menu.is_player1_ready, menu.is_player2_ready, level)
             level_loaded = True
         level.run()
+        ui.update()
         # display fps
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')

@@ -204,10 +204,14 @@ class Level:
             if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS):
                 pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
 
-        pygame.draw.circle(self.cover_surf,'green', self.player1.door.rect.center, 1)
-        pygame.draw.circle(self.cover_surf, 'pink', self.player2.door.rect.center, 1)
-        pygame.draw.circle(self.cover_surf, 'yellow', self.player1.key.rect.center, 1)
-        pygame.draw.circle(self.cover_surf, 'orange', self.player2.key.rect.center, 1)
+        # TODO: remove in final game. Only for testing and debugging
+        if self.player1_active:
+            pygame.draw.circle(self.cover_surf,'green', self.player1.door.rect.center, 3)
+            pygame.draw.circle(self.cover_surf, 'yellow', self.player1.key.rect.center, 3)
+
+        if self.player2_active:
+            pygame.draw.circle(self.cover_surf, 'pink', self.player2.door.rect.center, 3)
+            pygame.draw.circle(self.cover_surf, 'orange', self.player2.key.rect.center, 3)
 
     def game_over(self):
 
