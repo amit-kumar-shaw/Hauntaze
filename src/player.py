@@ -216,7 +216,7 @@ class Player(pygame.sprite.Sprite):
         self.key_collisions()
         self.door_collisions()
         self.invincibility_timer()
-        self.enemy_collisions()
+        #self.enemy_collisions()
         self.animate()
 
         self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))

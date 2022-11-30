@@ -68,23 +68,29 @@ class Level:
 
         # draw player and keys
         if self.player1_active:
+            # c = random.choice(list(key_door_cells[1].room))
+            # door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
             self.player1 = Player(tuple(TILE_SIZE*x for x in player_cells[0]),
-                                  [self.visible_sprites, self.active_sprites],
+                                  [self.active_sprites],
                               self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
             c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
             c = random.choice(list(key_door_cells[1].room))
             self.player1.door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
+            # self.player1.door = door
 
         if self.player2_active:
+            # c = random.choice(list(key_door_cells[3].room))
+            # door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
             self.player2 = Player(tuple(TILE_SIZE*x for x in player_cells[1]),
-                                  [self.visible_sprites, self.active_sprites],
+                                  [self.active_sprites],
                               self.collision_sprites, self.collectible_sprites, self.enemy_sprites,
                                       player2=True)
             c = random.choice(list(key_door_cells[2].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
             c = random.choice(list(key_door_cells[3].room))
             self.player2.door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
+            # self.player2.door = door
 
 
         self.coins = []
@@ -126,7 +132,7 @@ class Level:
             self.key2_sprite.draw(self.display_surface)
             self.player2.key.animate()
 
-        # draw key if the player is nearby
+        # draw door if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                                  self.player1.door.rect.center) < VISIBILITY_RADIUS:
             self.player1.door.update()
@@ -149,6 +155,8 @@ class Level:
             pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player2.door.rect)
             self.player2.door.open()
             self.door2_sprite.draw(self.display_surface)
+
+        self.active_sprites.draw(self.display_surface)
 
         # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
@@ -190,11 +198,16 @@ class Level:
         # draw enemy indicator
         for enemy in self.enemys:
             if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and not self.player2_active:
-                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
             if (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and not self.player1_active:
-                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
             if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS):
-                pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
+
+        pygame.draw.circle(self.cover_surf,'green', self.player1.door.rect.center, 1)
+        pygame.draw.circle(self.cover_surf, 'pink', self.player2.door.rect.center, 1)
+        pygame.draw.circle(self.cover_surf, 'yellow', self.player1.key.rect.center, 1)
+        pygame.draw.circle(self.cover_surf, 'orange', self.player2.key.rect.center, 1)
 
     def game_over(self):
 
