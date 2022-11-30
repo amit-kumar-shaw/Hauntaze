@@ -19,6 +19,8 @@ class Level:
         # level setup
         self.display_surface = pygame.display.get_surface()
 
+        self.animation_index = 0
+
         # sprite group setup
         self.visible_sprites = pygame.sprite.Group()
         self.active_sprites = pygame.sprite.Group()
@@ -131,6 +133,11 @@ class Level:
 
         self.cover_surf.fill(COVER_COLOR)
 
+        # display game over
+        if ((not self.player1_active) and
+                (not self.player2_active)):
+            self.game_over()
+
     def check_player_status(self):
         if self.player1_active and self.player1.lives == 0:
             self.player1_active = False
@@ -157,3 +164,19 @@ class Level:
                 pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
             if (self.player1_active and math.dist(self.player1.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS) and (self.player2_active and math.dist(self.player2.torch.rect.center,enemy.rect.center) > VISIBILITY_RADIUS):
                 pygame.draw.circle(self.cover_surf, ('red'), enemy.rect.center, 1)
+
+    def game_over(self):
+        # title animation
+        self.animation_index += 0.08
+
+        if self.animation_index >= 2: self.animation_index = 0
+
+        # title
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 75 + int(self.animation_index))
+        title = font.render('Game Over', False, 'yellow')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        self.display_surface.blit(title, title_rect)
+
+        title = font.render('Game Over', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        self.display_surface.blit(title, title_rect)
