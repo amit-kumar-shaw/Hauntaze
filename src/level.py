@@ -121,25 +121,25 @@ class Level:
 
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
-                                             self.player1.key.rect.center) < VISIBILITY_RADIUS:
+                                             self.player1.key.rect.center) < self.player1.visibility_radius:
             self.player1.key.update()
             self.key1_sprite.draw(self.display_surface)
             self.player1.key.animate()
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
-                                             self.player2.key.rect.center) < VISIBILITY_RADIUS:
+                                             self.player2.key.rect.center) < self.player2.visibility_radius:
             self.player2.key.update()
             self.key2_sprite.draw(self.display_surface)
             self.player2.key.animate()
 
         # draw door if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
-                                             self.player1.door.rect.center) < VISIBILITY_RADIUS:
+                                             self.player1.door.rect.center) < self.player1.visibility_radius:
             self.player1.door.update()
             self.door1_sprite.draw(self.display_surface)
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
-                                             self.player2.door.rect.center) < VISIBILITY_RADIUS:
+                                             self.player2.door.rect.center) < self.player2.visibility_radius:
             self.player2.door.update()
             self.door2_sprite.draw(self.display_surface)
 
@@ -202,15 +202,15 @@ class Level:
         # draw enemy indicator
         for enemy in self.enemys:
             if (self.player1_active and math.dist(self.player1.torch.rect.center,
-                                                  enemy.rect.center) > VISIBILITY_RADIUS) and not self.player2_active:
+                                                  enemy.rect.center) > self.player1.visibility_radius) and not self.player2_active:
                 pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
             if (self.player2_active and math.dist(self.player2.torch.rect.center,
-                                                  enemy.rect.center) > VISIBILITY_RADIUS) and not self.player1_active:
+                                                  enemy.rect.center) > self.player2.visibility_radius) and not self.player1_active:
                 pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
             if (self.player1_active and math.dist(self.player1.torch.rect.center,
-                                                  enemy.rect.center) > VISIBILITY_RADIUS) and (
+                                                  enemy.rect.center) > self.player1.visibility_radius) and (
                     self.player2_active and math.dist(self.player2.torch.rect.center,
-                                                      enemy.rect.center) > VISIBILITY_RADIUS):
+                                                      enemy.rect.center) > self.player2.visibility_radius):
                 pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
 
         # TODO: remove in final game. Only for testing and debugging
