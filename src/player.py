@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.sounds = PlayerSound()
         self.door = None
         self.key = None
+        self.level_completed = False
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -157,6 +158,12 @@ class Player(pygame.sprite.Sprite):
             self.key_picked = True
             self.key.kill()
 
+    def door_collisions(self):
+        if self.rect.colliderect(self.door.rect) and self.key_picked:
+            # self.sounds.play_key_collection()
+            self.level_completed = True
+
+
     def display_details(self):
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         player_name = font.render('Player 1', False, 'white')
@@ -207,6 +214,7 @@ class Player(pygame.sprite.Sprite):
         self.vertical_collisions()
         self.collectible_collisions()
         self.key_collisions()
+        self.door_collisions()
         self.invincibility_timer()
         self.enemy_collisions()
         self.animate()
