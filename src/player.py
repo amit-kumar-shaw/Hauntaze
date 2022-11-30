@@ -39,6 +39,8 @@ class Player(pygame.sprite.Sprite):
         self.key_picked = False
         self.visibility_radius = VISIBILITY_RADIUS
         self.sounds = PlayerSound()
+        self.door = None
+        self.key = None
 
         # player movement
         self.direction = pygame.math.Vector2()
