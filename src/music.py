@@ -20,12 +20,24 @@ class PlayerSound(object):
         # pygame.mixer.music.load('./assets/Audio/Magic Escape Room.mp3')
         # pygame.mixer.music.set_volume(0.5)
 
+        # self.coin_collection = pygame.mixer.Sound('./assets/Audio/collect coins2.mp3')
+        # self.coin_collection.set_volume(0.7)
+        self.enemy_collision = pygame.mixer.Sound('./assets/Audio/Find_key.mp3')
+        # self.enemy_collision.set_volume(0.7)
+
     def play_enemy_collision(self):
-        pygame.mixer.music.load('./assets/Audio/enemy_collision.mp3')
-        pygame.mixer.music.set_volume(0.7)
-        pygame.mixer.music.play()
+        sound = pygame.mixer.Sound('./assets/Audio/enemy_collision.mp3')
+        sound.set_volume(0.7)
+        sound.play()
+        # self.enemy_collision.play()
 
     def play_coin_collection(self):
-        pygame.mixer.music.load('./assets/Audio/collect_coins.mp3')
-        pygame.mixer.music.set_volume(0.7)
-        pygame.mixer.music.play()
+        sound = pygame.mixer.Sound('./assets/Audio/collect coins2.mp3')
+        sound.set_volume(0.7)
+        sound.play()
+        # self.coin_collection.play()
+
+    def play_key_collection(self):
+        sound = pygame.mixer.Sound('./assets/Audio/Find_key.mp3')
+        sound.set_volume(0.7)
+        sound.play()

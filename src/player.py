@@ -151,6 +151,7 @@ class Player(pygame.sprite.Sprite):
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
+            self.sounds.play_key_collection()
             self.key_picked = True
             self.key.kill()
 
