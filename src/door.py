@@ -34,4 +34,12 @@ class Door(pygame.sprite.Sprite):
             self.image = self.open_frame
             return
 
+        if self.animation_index > 6:
+            self.play_open_sound()
+
         self.image = self.animation_frames[int(self.animation_index)]
+
+    def play_open_sound(self):
+        sound = pygame.mixer.Sound('./assets/Audio/doorOpen_4.mp3')
+        sound.set_volume(0.7)
+        sound.play()
