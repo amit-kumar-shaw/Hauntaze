@@ -119,6 +119,13 @@ class Level:
             self.player2.key.animate()
 
         self.check_player_status()
+
+        # open door if key collected
+        if ((self.player1_active and self.player1.key_picked) or
+            (self.player2_active and self.player2.key_picked)) and not self.door.isOpen:
+            pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.door.rect)
+            self.door.open()
+
         # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
 
