@@ -4,6 +4,7 @@ import pygame
 from pygame.locals import *
 from settings import *
 from torch import Torch
+from  music import PlayerSound
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, player2=False):
@@ -37,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.key_picked = False
         self.visibility_radius = VISIBILITY_RADIUS
+        self.sounds = PlayerSound()
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -117,12 +119,14 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
                 self.score += 1
+                self.sounds.play_coin_collection()
                 sprite.kill()
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible:
                 self.is_invincible = True
+                self.sounds.play_enemy_collision()
                 self.lives -= 1
                 self.hurt_time = pygame.time.get_ticks()
                 if self.lives == 0:
@@ -147,6 +151,7 @@ class Player(pygame.sprite.Sprite):
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
+            self.sounds.play_key_collection()
             self.key_picked = True
             self.key.kill()
 
