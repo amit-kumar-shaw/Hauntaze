@@ -21,11 +21,12 @@ class Game:
         self.status = Status.MENU
         self.menu = Menu()
         self.mode = None
+        self.pause_animation = 0
 
     def run(self):
+        keys = pygame.key.get_pressed()
         if self.status == Status.MENU:
             self.menu.update()
-            keys = pygame.key.get_pressed()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
                 self.status = Status.RUNNING
                 self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
@@ -33,8 +34,36 @@ class Game:
             pass
         elif self.status == Status.RUNNING:
             self.mode.run()
+            if keys[pygame.K_ESCAPE]:
+                self.status = Status.PAUSED
         elif self.status == Status.PAUSED:
-            pass
+            self.pause()
+            if keys[pygame.K_RETURN]:
+                self.status = Status.RUNNING
         elif self.status == Status.OVER:
             pass
 
+    def pause(self):
+        pause_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pause_surface.fill('black')
+
+        self.pause_animation += 0.08
+
+        if self.pause_animation >= 2: self.pause_animation = 0
+
+        # Pause message
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.pause_animation))
+        title = font.render('Game Paused', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface.blit(title, title_rect)
+
+        title = font.render('Game Paused', False, 'yellow')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface.blit(title, title_rect)
+
+        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        start_msg = font.render('Press ENTER to resume', False, 'white')
+        msg_rect = start_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        pause_surface.blit(start_msg, msg_rect)
+
+        pygame.display.get_surface().blit(pause_surface, (0, 0))
