@@ -1,3 +1,4 @@
+import math
 from math import sin
 
 import pygame
@@ -87,8 +88,15 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
                 if self.direction.x < 0:
+
                     self.rect.left = sprite.rect.right
                 if self.direction.x > 0:
+                    # if self.direction.y <= 0 and ((sprite.rect.bottomleft[1] - self.rect.topright[1]) < 3) and
+                    #     pygame.Rect.collidepoint():
+                    #     self.rect.topright = sprite.rect.bottomleft #+ (0,1)
+                    # if self.direction.y >= 0 and ((self.rect.bottomright[1] - sprite.rect.topleft[1]) < 3):
+                    #     self.rect.bottomright = sprite.rect.topleft #- (0,1)
+                    # print(sprite.rect.bottomleft, sprite.rect.bottomleft[0])
                     self.rect.right = sprite.rect.left
 
     def vertical_collisions(self):
