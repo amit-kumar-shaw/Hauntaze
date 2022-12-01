@@ -38,6 +38,12 @@ while True:
 
     #screen.fill(BG_COLOR)
     game.run()
+
+    # TODO: Remove later. display FPS
+    font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+    fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
+    msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2 + 150, 20))
+    UI_SURFACE.blit(fps_msg, msg_rect)
     # if start:
     #     if not level_loaded:
     #         level = Level(player1=menu.is_player1_ready, player2=menu.is_player2_ready)
