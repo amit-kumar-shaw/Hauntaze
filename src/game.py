@@ -4,17 +4,28 @@ import pygame
 from settings import *
 from menu import Menu
 
+
+# Enum for game status
 class Status(Enum):
     MENU = 1
-    STORY = 2
+    INTRO = 2
     RUNNING = 3
     OVER = 4
+
 
 class Game:
     def __init__(self):
         self.status = Status.MENU
         self.menu = Menu()
+        self.mode = None
 
     def run(self):
         if self.status == Status.MENU:
             self.menu.update()
+        elif self.status == Status.INTRO:
+            pass
+        elif self.status == Status.RUNNING:
+            pass
+        elif self.status == Status.OVER:
+            pass
+
