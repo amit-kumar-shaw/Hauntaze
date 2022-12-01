@@ -36,7 +36,7 @@ while True:
         # if keys[pygame.K_RETURN] and (menu.is_player1_ready or menu.is_player2_ready):
         #     start = True
 
-    screen.fill(BG_COLOR)
+    #screen.fill(BG_COLOR)
     game.run()
     # if start:
     #     if not level_loaded:

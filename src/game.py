@@ -12,7 +12,8 @@ class Status(Enum):
     MENU = 1
     INTRO = 2
     RUNNING = 3
-    OVER = 4
+    PAUSED = 4
+    OVER = 5
 
 
 class Game:
@@ -32,6 +33,8 @@ class Game:
             pass
         elif self.status == Status.RUNNING:
             self.mode.run()
+        elif self.status == Status.PAUSED:
+            pass
         elif self.status == Status.OVER:
             pass
 
