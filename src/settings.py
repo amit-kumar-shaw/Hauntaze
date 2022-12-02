@@ -1,3 +1,4 @@
+import pygame
 
 # screen
 FPS = 60
@@ -29,3 +30,7 @@ TILE_COLOR = '#612903'
 COVER_COLOR = (0,0,0,255)
 
 TITLE_COLOR = (230,14,14)
+
+# UI Surface
+UI_SURFACE = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT - (ROWS * CELL_SIZE * TILE_HEIGHT)))
+UI_SURFACE.fill('black')

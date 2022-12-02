@@ -1,10 +1,12 @@
+import math
 from math import sin
 
 import pygame
 from pygame.locals import *
 from settings import *
 from torch import Torch
-from  music import PlayerSound
+from music import PlayerSound
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, player2=False):
@@ -33,12 +35,16 @@ class Player(pygame.sprite.Sprite):
         self.torch = Torch(pos, groups)
         self.player2 = player2
         self.lives = LIVES
+        self.is_alive = True
         self.is_invincible = False
         self.hurt_time = 0
         self.score = 0
         self.key_picked = False
         self.visibility_radius = VISIBILITY_RADIUS
         self.sounds = PlayerSound()
+        self.door = None
+        self.key = None
+        self.level_completed = False
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -84,6 +90,12 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.x < 0:
                     self.rect.left = sprite.rect.right
                 if self.direction.x > 0:
+                    # if self.direction.y <= 0 and ((sprite.rect.bottomleft[1] - self.rect.topright[1]) < 3) and
+                    #     pygame.Rect.collidepoint():
+                    #     self.rect.topright = sprite.rect.bottomleft #+ (0,1)
+                    # if self.direction.y >= 0 and ((self.rect.bottomright[1] - sprite.rect.topleft[1]) < 3):
+                    #     self.rect.bottomright = sprite.rect.topleft #- (0,1)
+                    # print(sprite.rect.bottomleft, sprite.rect.bottomleft[0])
                     self.rect.right = sprite.rect.left
 
     def vertical_collisions(self):
@@ -129,18 +141,15 @@ class Player(pygame.sprite.Sprite):
                 self.sounds.play_enemy_collision()
                 self.lives -= 1
                 self.hurt_time = pygame.time.get_ticks()
-                if self.lives == 0:
-                    self.death_animate()
-                    self.torch.kill()
-                    self.kill()
 
     def death_animate(self):
-        visibility = VISIBILITY_RADIUS
-        while visibility > 0:
-            pygame.draw.circle(pygame.display.get_surface(), (0, 0, 0, 0),
-                               self.torch.rect.center,
-                               visibility)
-            visibility -= 1
+        if self.visibility_radius >= 1:
+            self.visibility_radius -= 0.5
+        else:
+            if not self.level_completed:
+                self.is_alive = False
+                self.torch.kill()
+                self.kill()
 
     def invincibility_timer(self):
         if self.is_invincible:
@@ -148,25 +157,30 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.hurt_time >= INVINSIBILITY_DURATION:
                 self.is_invincible = False
 
-
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
             self.sounds.play_key_collection()
             self.key_picked = True
             self.key.kill()
 
+    def door_collisions(self):
+        # if self.rect.colliderect(self.door.rect) and self.key_picked:
+        if pygame.sprite.collide_rect_ratio(0.3)(self, self.door) and self.key_picked:
+            # self.sounds.play_key_collection()
+            self.level_completed = True
+
     def display_details(self):
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         player_name = font.render('Player 1', False, 'white')
-        player_rect = player_name.get_rect(midleft=(16, (ROWS*CELL_SIZE*TILE_HEIGHT) + 8))
+        player_rect = player_name.get_rect(midleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 8))
         hearts_rect = []
         heart = pygame.image.load("./assets/images/heart.png").convert_alpha()
         heart = pygame.transform.rotozoom(heart, 0, 0.75)
         key = pygame.image.load("./assets/images/key/3.png").convert_alpha()
-        #key = pygame.transform.rotozoom(key, 0, 0.75)
-        key_rect = key.get_rect(bottomleft = player_rect.bottomright)
-        for i in range(0,self.lives):
-            hearts_rect.append(heart.get_rect(topleft = (16 + (i*12), (ROWS*CELL_SIZE*TILE_HEIGHT) + 14) ))
+        # key = pygame.transform.rotozoom(key, 0, 0.75)
+        key_rect = key.get_rect(bottomleft=player_rect.bottomright)
+        for i in range(0, self.lives):
+            hearts_rect.append(heart.get_rect(topleft=(16 + (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14)))
 
         coin = pygame.image.load("./assets/images/coin.png").convert_alpha()
         coin_rect = coin.get_rect(topleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
@@ -177,12 +191,13 @@ class Player(pygame.sprite.Sprite):
 
         if self.player2:
             key = pygame.image.load("./assets/images/key/1.png").convert_alpha()
-            #key = pygame.transform.rotozoom(key, 0, 0.75)
+            # key = pygame.transform.rotozoom(key, 0, 0.75)
             player_name = font.render('Player 2', False, 'white')
-            player_rect = player_name.get_rect(midright=(SCREEN_WIDTH - 16, (ROWS*CELL_SIZE*TILE_HEIGHT) + 5))
+            player_rect = player_name.get_rect(midright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 5))
             key_rect = key.get_rect(bottomright=player_rect.bottomleft)
             for i in range(0, self.lives):
-                hearts_rect[i] = heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14))
+                hearts_rect[i] = heart.get_rect(
+                    topright=(SCREEN_WIDTH - 16 - (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14))
             coin_rect = coin.get_rect(topright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
             score_rect = score_msg.get_rect(topright=(SCREEN_WIDTH - 30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
 
@@ -194,25 +209,29 @@ class Player(pygame.sprite.Sprite):
         pygame.display.get_surface().blit(coin, coin_rect)
         pygame.display.get_surface().blit(score_msg, score_rect)
 
-
     def update(self):
-        self.input()
+        if self.lives > 0 and not self.level_completed:
+            self.input()
+            self.animate()
+            self.rect.x += self.direction.x * self.speed
+            self.horizontal_collisions()
 
-        self.rect.x += self.direction.x * self.speed
-        self.horizontal_collisions()
+            self.rect.y += self.direction.y * self.speed
+            self.vertical_collisions()
+            self.collectible_collisions()
+            self.key_collisions()
 
-        self.rect.y += self.direction.y * self.speed
-        self.vertical_collisions()
-        self.collectible_collisions()
-        self.key_collisions()
-        self.invincibility_timer()
-        self.enemy_collisions()
-        self.animate()
+            self.invincibility_timer()
 
-        self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
-        self.torch.animate()
+            self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
+            self.torch.animate()
+            self.door_collisions()
+            self.enemy_collisions()
+        else:
+            self.death_animate()
 
-        self.display_details()
+        # self.display_details()
+
         # font = pygame.font.Font('./assets/fonts/1.ttf', 10)
         # score_msg = font.render(f'Player 1 Score: {self.score}', False, 'white')
         # msg_rect = score_msg.get_rect(midleft=(10, SCREEN_HEIGHT - 10))
