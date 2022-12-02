@@ -78,11 +78,8 @@ class Level:
             # self.player1 = Player(tuple(TILE_SIZE * x for x in player_cells[0]),
             #                       [self.active_sprites],
             #                       self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
-            print(self.player1.rect)
             self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
             self.player1.attach_torch()
-            # self.player1.torch.rect = self.player1.image.get_rect(midtop=(self.player1.rect.x + 2, self.player1.rect.y))
-            print(self.player1.rect)
             self.player1.collision_sprites = self.collision_sprites
             self.player1.collectible_sprites = self.collectible_sprites
             self.player1.enemy_sprites = self.enemy_sprites
