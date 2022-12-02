@@ -45,6 +45,7 @@ while True:
     # print(clock.get_fps())
     msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2 + 200, 20))
     UI_SURFACE.blit(fps_msg, msg_rect)
+    game.fps = f'FPS: {float("{:.2f}".format(clock.get_fps()))}'
     # if start:
     #     if not level_loaded:
     #         level = Level(player1=menu.is_player1_ready, player2=menu.is_player2_ready)
