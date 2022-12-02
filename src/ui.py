@@ -7,6 +7,7 @@ class UI:
         self.player1_playing = player1
         self.player2_playing = player2
         self.level = level
+        self.current_level = None
 
     def update(self):
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
@@ -64,7 +65,7 @@ class UI:
             UI_SURFACE.blit(score_msg, score_rect)
 
         font = pygame.font.Font('./assets/fonts/1.ttf', 16)
-        level = font.render('LEVEL 0', False, 'white')
+        level = font.render(f'LEVEL {self.current_level}', False, 'white')
         level_rect = level.get_rect(center=(SCREEN_WIDTH // 2, 15))
         UI_SURFACE.blit(level, level_rect)
 

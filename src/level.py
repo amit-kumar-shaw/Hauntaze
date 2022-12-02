@@ -14,11 +14,12 @@ from door import Door
 
 
 class Level:
-    def __init__(self, player1=False, player2=False):
+    def __init__(self, player1_active, player1, player2_active, player2):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
 
+        self.completed = False
         self.animation_index = 0
 
         # sprite group setup
@@ -36,8 +37,12 @@ class Level:
         self.cover_surf = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA)
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
-        self.player1_active = player1
-        self.player2_active = player2
+
+        self.player1_active = player1_active
+        self.player2_active = player2_active
+        self.player1 = player1
+        self.player2 = player2
+
         self.setup_level()
 
     def setup_level(self):
@@ -70,9 +75,18 @@ class Level:
         if self.player1_active:
             # c = random.choice(list(key_door_cells[1].room))
             # door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
-            self.player1 = Player(tuple(TILE_SIZE * x for x in player_cells[0]),
-                                  [self.active_sprites],
-                                  self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
+            # self.player1 = Player(tuple(TILE_SIZE * x for x in player_cells[0]),
+            #                       [self.active_sprites],
+            #                       self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
+            print(self.player1.rect)
+            self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
+            self.player1.attach_torch()
+            # self.player1.torch.rect = self.player1.image.get_rect(midtop=(self.player1.rect.x + 2, self.player1.rect.y))
+            print(self.player1.rect)
+            self.player1.collision_sprites = self.collision_sprites
+            self.player1.collectible_sprites = self.collectible_sprites
+            self.player1.enemy_sprites = self.enemy_sprites
+
             c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
             c = random.choice(list(key_door_cells[1].room))
@@ -82,10 +96,17 @@ class Level:
         if self.player2_active:
             # c = random.choice(list(key_door_cells[3].room))
             # door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
-            self.player2 = Player(tuple(TILE_SIZE * x for x in player_cells[1]),
-                                  [self.active_sprites],
-                                  self.collision_sprites, self.collectible_sprites, self.enemy_sprites,
-                                  player2=True)
+            # self.player2 = Player(tuple(TILE_SIZE * x for x in player_cells[1]),
+            #                       [self.active_sprites],
+            #                       self.collision_sprites, self.collectible_sprites, self.enemy_sprites,
+            #                       player2=True)
+
+            self.player2.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[1])
+            self.player2.attach_torch()
+            self.player2.collision_sprites = self.collision_sprites
+            self.player2.collectible_sprites = self.collectible_sprites
+            self.player2.enemy_sprites = self.enemy_sprites
+
             c = random.choice(list(key_door_cells[2].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
             c = random.choice(list(key_door_cells[3].room))
@@ -111,6 +132,14 @@ class Level:
     def run(self):
         # run the entire game (level)
         self.active_sprites.update()
+
+        if self.player1_active:
+            PLAYER1_SPRITE.update()
+            # PLAYER1_SPRITE.draw(self.display_surface)
+            # print("draw p1")
+        if self.player2_active:
+            PLAYER2_SPRITE.update()
+            # PLAYER2_SPRITE.draw(self.display_surface)
 
         self.draw_visible_region()
 
@@ -157,6 +186,11 @@ class Level:
             self.door2_sprite.draw(self.display_surface)
 
         self.active_sprites.draw(self.display_surface)
+
+        if self.player1_active:
+            PLAYER1_SPRITE.draw(self.display_surface)
+        if self.player2_active:
+            PLAYER2_SPRITE.draw(self.display_surface)
 
         # draw the cover surface to hide the map
         self.display_surface.blit(self.cover_surf, (0, 0))
@@ -240,7 +274,9 @@ class Level:
 
     # TODO: Level completed
     def level_completed(self):
-
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            self.completed = True
         self.animation_index += 0.08
 
         if self.animation_index >= 2: self.animation_index = 0

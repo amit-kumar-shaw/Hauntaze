@@ -30,7 +30,8 @@ class Game:
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
                 self.status = Status.RUNNING
-                self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
+                #self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
+                self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
         elif self.status == Status.INTRO:
             pass
         elif self.status == Status.RUNNING:
