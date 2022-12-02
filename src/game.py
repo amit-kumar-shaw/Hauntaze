@@ -26,6 +26,8 @@ class Game:
 
     def run(self):
         keys = pygame.key.get_pressed()
+
+        # show menu screen
         if self.status == Status.MENU:
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
@@ -34,12 +36,24 @@ class Game:
                     self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
                 else:
                     self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
+
+        # show game intro
         elif self.status == Status.INTRO:
             pass
+
+        # run the game
         elif self.status == Status.RUNNING:
             self.mode.run()
             if keys[pygame.K_ESCAPE]:
                 self.status = Status.PAUSED
+                # events = pygame.event.get()
+                # for event in events:
+                #     if event.type == pygame.KEYDOWN:
+                #         self.status = Status.RUNNING
+            if self.mode.level.failed:
+                self.status = Status.OVER
+
+        # show pause screen
         elif self.status == Status.PAUSED:
             self.pause()
             if keys[pygame.K_RETURN]:
@@ -48,8 +62,11 @@ class Game:
                 pass
                 # pygame.quit()
                 # sys.exit()
+
+        # end game and load menu
         elif self.status == Status.OVER:
-            pass
+            self.status = Status.MENU
+            self.menu = Menu()
 
     def pause(self):
         pause_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))

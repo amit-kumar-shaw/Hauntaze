@@ -20,6 +20,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         self.completed = False
+        self.failed = False
         self.animation_index = 0
 
         # sprite group setup
@@ -254,7 +255,9 @@ class Level:
             pygame.draw.circle(self.cover_surf, 'orange', self.player2.key.rect.center, 3)
 
     def game_over(self):
-
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_RETURN]:
+            self.failed = True
         self.animation_index += 0.08
 
         if self.animation_index >= 2: self.animation_index = 0
@@ -268,6 +271,12 @@ class Level:
         title = font.render('Game Over', False, 'red')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         self.display_surface.blit(title, title_rect)
+
+        # Restart game message
+        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        resume_msg = font.render('Press ENTER to restart', False, 'white')
+        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        self.display_surface.blit(resume_msg, msg_rect)
 
     # TODO: Level completed
     def level_completed(self):
@@ -287,3 +296,9 @@ class Level:
         title = font.render('Level Completed', False, 'yellow')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         self.display_surface.blit(title, title_rect)
+
+        # Continue game message
+        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        resume_msg = font.render('Press ENTER to continue', False, 'white')
+        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        self.display_surface.blit(resume_msg, msg_rect)
