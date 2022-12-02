@@ -1,3 +1,4 @@
+import sys
 from enum import Enum
 
 import pygame
@@ -40,6 +41,10 @@ class Game:
             self.pause()
             if keys[pygame.K_RETURN]:
                 self.status = Status.RUNNING
+            elif keys[pygame.K_ESCAPE]:
+                pass
+                # pygame.quit()
+                # sys.exit()
         elif self.status == Status.OVER:
             pass
 
@@ -61,9 +66,16 @@ class Game:
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         pause_surface.blit(title, title_rect)
 
+        # Resume game message
         font = pygame.font.Font('./assets/fonts/1.ttf', 15)
-        start_msg = font.render('Press ENTER to resume', False, 'white')
-        msg_rect = start_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
-        pause_surface.blit(start_msg, msg_rect)
+        resume_msg = font.render('Press ENTER to resume', False, 'white')
+        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        pause_surface.blit(resume_msg, msg_rect)
+
+        # Exit game message
+        font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+        exit_msg = font.render('ESC: Exit', False, 'white')
+        msg_rect = exit_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 20))
+        pause_surface.blit(exit_msg, msg_rect)
 
         pygame.display.get_surface().blit(pause_surface, (0, 0))
