@@ -1,12 +1,12 @@
 import random
 
 import pygame, sys
-from settings import *
-from level import Level
-from ui import UI
-from music import GameSound
-from menu import Menu
-from game import Game
+from src.settings import *
+# from level import Level
+# from ui import UI
+from src.music import GameSound
+# from menu import Menu
+from src.game import Game
 import os
 
 os.chdir('..')

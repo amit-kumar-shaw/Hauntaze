@@ -209,6 +209,9 @@ class Player(pygame.sprite.Sprite):
         pygame.display.get_surface().blit(coin, coin_rect)
         pygame.display.get_surface().blit(score_msg, score_rect)
 
+    def attach_torch(self):
+        self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))
+
     def update(self):
         if self.lives > 0 and not self.level_completed:
             self.input()
@@ -240,3 +243,8 @@ class Player(pygame.sprite.Sprite):
         #     msg_rect = score_msg.get_rect(midright=(SCREEN_WIDTH -10, SCREEN_HEIGHT - 10))
         #
         # pygame.display.get_surface().blit(score_msg, msg_rect)
+
+    def reset(self):
+        self.visibility_radius = VISIBILITY_RADIUS
+        self.level_completed = False
+        self.key_picked = False
