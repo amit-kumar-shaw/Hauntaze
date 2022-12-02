@@ -43,7 +43,9 @@ class Game:
 
         # run the game
         elif self.status == Status.RUNNING:
+            self.mode.fps = self.fps
             self.mode.run()
+
             if keys[pygame.K_ESCAPE]:
                 self.status = Status.PAUSED
                 # events = pygame.event.get()

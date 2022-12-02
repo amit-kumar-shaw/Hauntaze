@@ -75,10 +75,11 @@ class UI:
         UI_SURFACE.blit(msg, msg_rect)
 
         # # TODO: Remove later. display FPS
-        # font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+        font = pygame.font.Font('./assets/fonts/4.ttf', 16)
         # fps_msg = font.render(f'FPS: {float("{:.2f}".format(pygame.time.Clock().get_fps()))}', False, 'white')
-        # msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2 + 50, 35))
-        # UI_SURFACE.blit(fps_msg, msg_rect)
+        fps_msg = font.render(self.fps, False, 'white')
+        msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2 + 170, 20))
+        UI_SURFACE.blit(fps_msg, msg_rect)
 
         pygame.display.get_surface().blit(UI_SURFACE, (0, (ROWS * CELL_SIZE * TILE_HEIGHT)))
         UI_SURFACE.fill('black')

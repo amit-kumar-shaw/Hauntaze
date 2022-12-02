@@ -6,6 +6,7 @@ from pygame.locals import *
 from settings import *
 from torch import Torch
 from music import PlayerSound
+from utilities import import_frames
 
 
 class Player(pygame.sprite.Sprite):
@@ -13,23 +14,31 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
 
         if player2:
-            self.player_still = pygame.image.load('./assets/images/player/p2_01.png').convert_alpha()
-            self.player_walk_1 = pygame.image.load('./assets/images/player/p2_02.png').convert_alpha()
-            self.player_walk_2 = pygame.image.load('./assets/images/player/p2_03.png').convert_alpha()
+            # self.player_still = pygame.image.load('./assets/images/player/p2_01.png').convert_alpha()
+            # self.player_walk_1 = pygame.image.load('./assets/images/player/p2_02.png').convert_alpha()
+            # self.player_walk_2 = pygame.image.load('./assets/images/player/p2_03.png').convert_alpha()
             # self.image = pygame.image.load("./v1/p1_01.png").convert_alpha()
+            self.import_assets(2)
         else:
-            self.player_still = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
-            self.player_walk_1 = pygame.image.load('./assets/images/player/p1_02.png').convert_alpha()
-            self.player_walk_2 = pygame.image.load('./assets/images/player/p1_03.png').convert_alpha()
+            self.import_assets(1)
+            # self.player_still = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
+            # self.player_walk_1 = pygame.image.load('./assets/images/player/p1_02.png').convert_alpha()
+            # self.player_walk_2 = pygame.image.load('./assets/images/player/p1_03.png').convert_alpha()
+            # self.player_still = pygame.image.load('./assets/images/player/p1/idle/PlayerIdle1.png').convert_alpha()
+            # self.player_walk_1 = pygame.image.load('./assets/images/player/p1/walk/PlayerWalk1.png').convert_alpha()
+            # self.player_walk_2 = pygame.image.load('./assets/images/player/p1/walk/PlayerWalk2.png').convert_alpha()
         # self.image = pygame.transform.rotozoom(self.image, 0, 0.7)
-        self.player_walk_1 = pygame.transform.rotozoom(self.player_walk_1, 0, 0.7)
-        self.player_walk_2 = pygame.transform.rotozoom(self.player_walk_2, 0, 0.7)
-        self.player_still = pygame.transform.rotozoom(self.player_still, 0, 0.7)
-        self.player_walk = [self.player_walk_1, self.player_walk_2]
-        self.player_index = 0
 
-        self.image = self.player_still
+        # self.player_walk_1 = pygame.transform.rotozoom(self.player_walk_1, 0, 0.7)
+        # self.player_walk_2 = pygame.transform.rotozoom(self.player_walk_2, 0, 0.7)
+        # self.player_still = pygame.transform.rotozoom(self.player_still, 0, 0.7)
+        # self.player_walk = [self.player_walk_1, self.player_walk_2]
 
+        self.frame_index = 0
+
+        # self.image = self.player_still
+        self.status = 'idle'
+        self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
         self.torch = Torch(pos, groups)
@@ -66,6 +75,14 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_RIGHT = K_d
             self.MOVE_UP = K_w
             self.MOVE_DOWN = K_s
+
+    def import_assets(self, player):
+        path = f'./assets/images/player/p{player}/'
+        self.frames = {'idle': [], 'walk': [], 'dead': [], 'attack': []}
+
+        for status in self.frames.keys():
+            full_path = path + status
+            self.frames[status] = import_frames(full_path, scale=0.7)
 
     def input(self):
         keys = pygame.key.get_pressed()
@@ -106,13 +123,35 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
 
-    def animate(self):
+    def update_status(self):
         if self.direction.x == 0 and self.direction.y == 0:
-            self.image = self.player_still
+            self.status = 'idle'
         else:
-            self.player_index += 0.1
-            if self.player_index >= len(self.player_walk): self.player_index = 0
-            self.image = self.player_walk[int(self.player_index)]
+            self.status = 'walk'
+
+    def animate(self):
+        # if self.direction.x == 0 and self.direction.y == 0:
+        #     self.image = self.player_still
+        # else:
+        #     self.frame_index += 0.1
+        #     if self.frame_index >= len(self.player_walk): self.frame_index = 0
+        #     self.image = self.player_walk[int(self.frame_index)]
+
+        status = self.frames[self.status]
+
+        # loop over frame index
+        self.frame_index += 0.1
+        if self.frame_index >= len(status):
+            self.frame_index = 0
+            if self.status =='dead':
+                self.frame_index = len(status) - 1
+
+        image = status[int(self.frame_index)]
+        if self.direction.x >= 0:
+            self.image = image
+        else:
+            flipped_image = pygame.transform.flip(image, True, False)
+            self.image = flipped_image
 
         if self.is_invincible:
             alpha = self.wave_value()
@@ -215,6 +254,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         if self.lives > 0 and not self.level_completed:
             self.input()
+            self.update_status()
             self.animate()
             self.rect.x += self.direction.x * self.speed
             self.horizontal_collisions()
@@ -231,7 +271,15 @@ class Player(pygame.sprite.Sprite):
             self.door_collisions()
             self.enemy_collisions()
         else:
-            self.death_animate()
+            if not self.status == 'dead' and self.lives == 0:
+                self.status = 'dead'
+                self.frame_index = 0
+            if self.status == 'dead':
+                self.animate()
+            if self.frame_index >= len(self.frames[self.status]) - 1 and self.status == 'dead':
+                self.death_animate()
+            if self.level_completed:
+                self.death_animate()
 
         # self.display_details()
 
@@ -248,3 +296,4 @@ class Player(pygame.sprite.Sprite):
         self.visibility_radius = VISIBILITY_RADIUS
         self.level_completed = False
         self.key_picked = False
+        self.status = 'idle'
