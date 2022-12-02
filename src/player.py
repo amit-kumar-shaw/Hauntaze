@@ -143,6 +143,8 @@ class Player(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(status):
             self.frame_index = 0
+            if self.status =='dead':
+                self.frame_index = len(status) - 1
 
         image = status[int(self.frame_index)]
         if self.direction.x >= 0:
@@ -269,6 +271,8 @@ class Player(pygame.sprite.Sprite):
             self.door_collisions()
             self.enemy_collisions()
         else:
+            self.status = 'dead'
+            self.animate()
             self.death_animate()
 
         # self.display_details()
