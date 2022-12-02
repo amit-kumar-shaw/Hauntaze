@@ -271,9 +271,15 @@ class Player(pygame.sprite.Sprite):
             self.door_collisions()
             self.enemy_collisions()
         else:
-            self.status = 'dead'
-            self.animate()
-            self.death_animate()
+            if not self.status == 'dead' and self.lives == 0:
+                self.status = 'dead'
+                self.frame_index = 0
+            if self.status == 'dead':
+                self.animate()
+            if self.frame_index >= len(self.frames[self.status]) - 1 and self.status == 'dead':
+                self.death_animate()
+            if self.level_completed:
+                self.death_animate()
 
         # self.display_details()
 
@@ -290,3 +296,4 @@ class Player(pygame.sprite.Sprite):
         self.visibility_radius = VISIBILITY_RADIUS
         self.level_completed = False
         self.key_picked = False
+        self.status = 'idle'
