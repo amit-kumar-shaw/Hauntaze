@@ -23,6 +23,7 @@ class Game:
         self.menu = Menu()
         self.mode = None
         self.pause_animation = 0
+        self.exit_active = False
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -48,6 +49,7 @@ class Game:
 
             if keys[pygame.K_ESCAPE]:
                 self.status = Status.PAUSED
+                self.exit_active = False
                 # events = pygame.event.get()
                 # for event in events:
                 #     if event.type == pygame.KEYDOWN:
@@ -58,12 +60,14 @@ class Game:
         # show pause screen
         elif self.status == Status.PAUSED:
             self.pause()
+            if not keys[pygame.K_ESCAPE]:
+                self.exit_active = True
             if keys[pygame.K_RETURN]:
                 self.status = Status.RUNNING
-            elif keys[pygame.K_ESCAPE]:
-                pass
-                # pygame.quit()
-                # sys.exit()
+            elif keys[pygame.K_ESCAPE] and self.exit_active:
+                # pass
+                pygame.quit()
+                sys.exit()
 
         # end game and load menu
         elif self.status == Status.OVER:
