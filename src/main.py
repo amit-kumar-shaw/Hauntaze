@@ -7,6 +7,8 @@ from src.settings import *
 from src.music import GameSound
 # from menu import Menu
 from src.game import Game
+from pyvidplayer import Video
+
 import os
 
 os.chdir('..')
