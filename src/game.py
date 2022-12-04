@@ -26,9 +26,9 @@ class Game:
 
     def run(self):
         keys = pygame.key.get_pressed()
-
         # show menu screen
         if self.status == Status.MENU:
+
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
                 self.status = Status.RUNNING
