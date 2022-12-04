@@ -8,6 +8,8 @@ from story_mode import StoryMode
 from survival_mode import SurvivalMode
 
 
+
+
 # Enum for game status
 class Status(Enum):
     MENU = 1
@@ -18,6 +20,7 @@ class Status(Enum):
 
 
 class Game:
+
     def __init__(self):
         self.status = Status.MENU
         self.menu = Menu()

@@ -7,6 +7,7 @@ from src.settings import *
 from src.music import GameSound
 # from menu import Menu
 from src.game import Game
+from src.pyvidplayer import Video
 
 import os
 
@@ -26,7 +27,17 @@ sound.playbackgroundmusic()
 # menu = Menu()
 # ui = None
 game = Game()
+vid = Video('./assets/test_video.mp4')
+vid.set_size((640, 360))
 
+def intro():
+    while True:
+        vid.draw(screen, (0, 0))
+        pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                vid.close()
+                game.run()
 while True:
     # event loop
     keys = pygame.key.get_pressed()
@@ -38,7 +49,7 @@ while True:
         #     start = True
 
     #screen.fill(BG_COLOR)
-    game.run()
+    intro()
 
     # TODO: Remove later. display FPS
     font = pygame.font.Font('./assets/fonts/4.ttf', 16)
