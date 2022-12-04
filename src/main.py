@@ -37,7 +37,7 @@ def intro():
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 vid.close()
-        qgame.run()
+            game.run()
 
 while True:
     # event loop
