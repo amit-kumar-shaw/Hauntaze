@@ -37,7 +37,8 @@ def intro():
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 vid.close()
-                game.run()
+        qgame.run()
+
 while True:
     # event loop
     keys = pygame.key.get_pressed()
@@ -50,6 +51,7 @@ while True:
 
     #screen.fill(BG_COLOR)
     intro()
+
 
     # TODO: Remove later. display FPS
     font = pygame.font.Font('./assets/fonts/4.ttf', 16)

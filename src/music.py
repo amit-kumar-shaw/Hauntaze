@@ -17,13 +17,6 @@ class PlayerSound(object):
 
     def __init__(self):
         pygame.mixer.init()
-        # pygame.mixer.music.load('./assets/Audio/Magic Escape Room.mp3')
-        # pygame.mixer.music.set_volume(0.5)
-        # sound = pygame.mixer.Sound('./assets/Audio/doorOpen_4.mp3')
-        # self.coin_collection = pygame.mixer.Sound('./assets/Audio/collect coins2.mp3')
-        # self.coin_collection.set_volume(0.7)
-        # self.enemy_collision = pygame.mixer.Sound('./assets/Audio/Find_key.mp3')
-        # self.enemy_collision.set_volume(0.7)
 
     def play_enemy_collision(self):
         sound = pygame.mixer.Sound('./assets/Audio/enemy_collision.mp3')
