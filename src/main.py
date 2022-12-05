@@ -7,7 +7,8 @@ from src.settings import *
 from src.music import GameSound
 # from menu import Menu
 from src.game import Game
-from src.pyvidplayer import Video
+from moviepy.editor import *
+
 
 import os
 
@@ -17,6 +18,7 @@ os.chdir('..')
 pygame.init()
 flags = pygame.SCALED #| pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
+screen_for_vid = (SCREEN_WIDTH, SCREEN_HEIGHT)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
 # start = False
@@ -27,17 +29,9 @@ sound.playbackgroundmusic()
 # menu = Menu()
 # ui = None
 game = Game()
-vid = Video('./assets/test_video.mp4')
-vid.set_size((640, 360))
 
-def intro():
-    while True:
-        vid.draw(screen, (0, 0))
-        pygame.display.update()
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                vid.close()
-            game.run()
+Videoisplayed = False
+
 
 while True:
     # event loop
@@ -50,7 +44,12 @@ while True:
         #     start = True
 
     #screen.fill(BG_COLOR)
-    intro()
+    if Videoisplayed == False:
+        clip = VideoFileClip('assets/test_video.mp4')
+        clip.resize(screen_for_vid).preview()
+        Videoisplayed = True
+    else:
+        game.run()
 
 
     # TODO: Remove later. display FPS
