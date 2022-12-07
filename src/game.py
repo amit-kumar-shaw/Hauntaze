@@ -6,6 +6,7 @@ from settings import *
 from menu import Menu
 from story_mode import StoryMode
 from survival_mode import SurvivalMode
+from music import GameSound
 
 
 # Enum for game status
@@ -23,6 +24,8 @@ class Game:
         self.menu = Menu()
         self.mode = None
         self.pause_animation = 0
+        self.exit_active = False
+        self.sound = GameSound()
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -31,6 +34,8 @@ class Game:
         if self.status == Status.MENU:
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
+                self.sound.play_confirmation()
+                self.menu.sound.menu.stop()
                 self.status = Status.RUNNING
                 if self.menu.is_story_mode:
                     self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
@@ -48,6 +53,7 @@ class Game:
 
             if keys[pygame.K_ESCAPE]:
                 self.status = Status.PAUSED
+                self.exit_active = False
                 # events = pygame.event.get()
                 # for event in events:
                 #     if event.type == pygame.KEYDOWN:
@@ -58,12 +64,14 @@ class Game:
         # show pause screen
         elif self.status == Status.PAUSED:
             self.pause()
+            if not keys[pygame.K_ESCAPE]:
+                self.exit_active = True
             if keys[pygame.K_RETURN]:
                 self.status = Status.RUNNING
-            elif keys[pygame.K_ESCAPE]:
-                pass
-                # pygame.quit()
-                # sys.exit()
+            elif keys[pygame.K_ESCAPE] and self.exit_active:
+                # pass
+                pygame.quit()
+                sys.exit()
 
         # end game and load menu
         elif self.status == Status.OVER:
@@ -101,3 +109,7 @@ class Game:
         pause_surface.blit(exit_msg, msg_rect)
 
         pygame.display.get_surface().blit(pause_surface, (0, 0))
+
+    def exit_menu(self):
+        pass
+
