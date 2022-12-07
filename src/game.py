@@ -25,7 +25,7 @@ class Game:
         self.mode = None
         self.pause_animation = 0
         self.exit_active = False
-        # self.sound = GameSound()
+        self.sound = GameSound()
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -34,6 +34,7 @@ class Game:
         if self.status == Status.MENU:
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
+                self.sound.play_confirmation()
                 self.status = Status.RUNNING
                 if self.menu.is_story_mode:
                     self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)

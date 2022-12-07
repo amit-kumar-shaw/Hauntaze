@@ -35,11 +35,13 @@ class Menu():
             self.is_story_mode = False
             self.mode_transition = True
             self.transition_index = -5
+            self.sound.play_mode_select()
 
         if keys[pygame.K_UP] and not self.is_story_mode:
             self.is_story_mode = True
             self.mode_transition = True
             self.transition_index = -5
+            self.sound.play_mode_select()
 
     def game_mode(self):
 

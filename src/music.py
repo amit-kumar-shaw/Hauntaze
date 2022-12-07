@@ -18,6 +18,15 @@ class GameSound(object):
         sound.set_volume(0.7)
         sound.play()
 
+    def play_mode_select(self):
+        sound = pygame.mixer.Sound('./assets/Audio/select_004.ogg')
+        sound.set_volume(0.7)
+        sound.play()
+
+    def play_confirmation(self):
+        sound = pygame.mixer.Sound('./assets/Audio/confirmation_004.ogg')
+        sound.set_volume(0.7)
+        sound.play()
 
 class PlayerSound(object):
 
