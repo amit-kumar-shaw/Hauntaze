@@ -6,6 +6,7 @@ from settings import *
 from menu import Menu
 from story_mode import StoryMode
 from survival_mode import SurvivalMode
+from music import GameSound
 
 
 # Enum for game status
@@ -24,6 +25,7 @@ class Game:
         self.mode = None
         self.pause_animation = 0
         self.exit_active = False
+        # self.sound = GameSound()
 
     def run(self):
         keys = pygame.key.get_pressed()

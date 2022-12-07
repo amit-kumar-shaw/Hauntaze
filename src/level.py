@@ -11,6 +11,7 @@ from enemy import Enemy
 from collectible import Collectible
 from key import Key
 from door import Door
+from music import GameSound
 
 
 class Level:
@@ -43,6 +44,9 @@ class Level:
         self.player2_active = player2_active
         self.player1 = player1
         self.player2 = player2
+
+        self.sound = GameSound()
+        self.sound.playbackgroundmusic()
 
         self.setup_level()
 

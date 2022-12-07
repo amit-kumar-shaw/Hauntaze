@@ -2,6 +2,7 @@ import random
 
 import pygame
 from settings import *
+from music import GameSound
 
 class Menu():
     def __init__(self, ):
@@ -14,6 +15,7 @@ class Menu():
         self.animation_direction = 1
         self.mode_transition = False
         self.transition_index = 5
+        self.sound = GameSound()
 
     def check_input(self):
         keys = pygame.key.get_pressed()
@@ -21,10 +23,12 @@ class Menu():
         # insert coin for player 1
         if keys[pygame.K_1] and not self.is_player1_ready:
             self.is_player1_ready = True
+            self.sound.play_insert_coin()
 
         # insert coin for player 2
         if keys[pygame.K_2] and not self.is_player2_ready:
             self.is_player2_ready = True
+            self.sound.play_insert_coin()
 
         # toggle game modes
         if keys[pygame.K_DOWN] and self.is_story_mode:
