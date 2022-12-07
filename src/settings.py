@@ -1,3 +1,4 @@
+import pygame
 
 # screen
 FPS = 60
@@ -20,11 +21,18 @@ CELL_SIZE = 5
 PLAYER_SPEED = 1
 VISIBILITY_RADIUS = 45
 LIVES = 3
+INVINSIBILITY_DURATION = 2500
+PLAYER1_SPRITE = pygame.sprite.Group()
+PLAYER2_SPRITE = pygame.sprite.Group()
 
 # colors
 BG_COLOR = 'black'
 PLAYER_COLOR = '#C4F7FF'
 TILE_COLOR = '#612903'
-COVER_COLOR = (0,0,0,255)
+COVER_COLOR = (0, 0, 0, 255)
 
-TITLE_COLOR = (230,14,14)
+TITLE_COLOR = (230, 14, 14)
+
+# UI Surface
+UI_SURFACE = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT - (ROWS * CELL_SIZE * TILE_HEIGHT)))
+UI_SURFACE.fill('black')
