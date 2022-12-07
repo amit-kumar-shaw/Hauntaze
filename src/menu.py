@@ -16,6 +16,7 @@ class Menu():
         self.mode_transition = False
         self.transition_index = 5
         self.sound = GameSound()
+        self.sound.menu.play(loops=-1)
 
     def check_input(self):
         keys = pygame.key.get_pressed()
