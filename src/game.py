@@ -105,3 +105,7 @@ class Game:
         pause_surface.blit(exit_msg, msg_rect)
 
         pygame.display.get_surface().blit(pause_surface, (0, 0))
+
+    def exit_menu(self):
+        pass
+
