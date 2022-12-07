@@ -9,7 +9,7 @@ class GameSound(object):
         pygame.mixer.music.set_volume(0.5)
         # sound = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
         self.menu = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
-        self.menu.set_volume(0.7)
+        self.menu.set_volume(0.8)
         # sound.play(loops=-1)
 
     @staticmethod
