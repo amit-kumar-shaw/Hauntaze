@@ -26,7 +26,7 @@ PLAYER1_SPRITE = pygame.sprite.Group()
 PLAYER2_SPRITE = pygame.sprite.Group()
 
 # colors
-BG_COLOR = 'black'
+BG_COLOR = 'pink'
 PLAYER_COLOR = '#C4F7FF'
 TILE_COLOR = '#612903'
 COVER_COLOR = (0, 0, 0, 255)

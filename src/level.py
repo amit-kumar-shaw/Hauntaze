@@ -40,6 +40,9 @@ class Level:
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 
+        # create map surface
+        self.map_surf = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
+
         self.player1_active = player1_active
         self.player2_active = player2_active
         self.player1 = player1
@@ -69,6 +72,7 @@ class Level:
                     p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], wall=False)
 
+        self.visible_sprites.draw(self.map_surf)
         key_door_cells = random.sample(other_cells, 4)
 
         # # draw door
@@ -137,41 +141,46 @@ class Level:
 
         if self.player1_active:
             PLAYER1_SPRITE.update()
-            # PLAYER1_SPRITE.draw(self.display_surface)
-            # print("draw p1")
+
         if self.player2_active:
             PLAYER2_SPRITE.update()
-            # PLAYER2_SPRITE.draw(self.display_surface)
 
         self.draw_visible_region()
 
-        self.visible_sprites.draw(self.display_surface)
+        # self.visible_sprites.draw(self.display_surface)
+        # self.collision_sprites.draw(self.display_surface)
 
-        for coin in self.coins:
-            coin.animate()
+
+        # draw the map surface
+        self.display_surface.blit(self.map_surf, (0, 0))
+
+        # for coin in self.coins:
+        #     coin.animate()
+        self.collectible_sprites.draw(self.display_surface)
+        self.collectible_sprites.update()
 
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.key.rect.center) < self.player1.visibility_radius:
-            self.player1.key.update()
+            # self.player1.key.update()
             self.key1_sprite.draw(self.display_surface)
             self.player1.key.animate()
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
                                              self.player2.key.rect.center) < self.player2.visibility_radius:
-            self.player2.key.update()
+            # self.player2.key.update()
             self.key2_sprite.draw(self.display_surface)
             self.player2.key.animate()
 
         # draw door if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.door.rect.center) < self.player1.visibility_radius:
-            self.player1.door.update()
+            # self.player1.door.update()
             self.door1_sprite.draw(self.display_surface)
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
                                              self.player2.door.rect.center) < self.player2.visibility_radius:
-            self.player2.door.update()
+            # self.player2.door.update()
             self.door2_sprite.draw(self.display_surface)
 
 

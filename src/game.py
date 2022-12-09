@@ -79,7 +79,7 @@ class Game:
             self.menu = Menu()
 
     def pause(self):
-        pause_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pause_surface = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
         pause_surface.fill('black')
 
         self.pause_animation += 0.08
