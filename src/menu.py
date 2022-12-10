@@ -81,8 +81,8 @@ class Menu():
         self.check_input()
 
         # set background image
-        background = pygame.image.load(f'./assets/images/background/7.jpg').convert()
-        background = pygame.transform.rotozoom(background, 0, 1/3)
+        background = pygame.image.load(f'./assets/images/background/8.png').convert()
+        # background = pygame.transform.rotozoom(background, 0, 1/3)
         self.screen.blit(background, (0, 0))
 
         # player1 = pygame.image.load('./assets/images/player/p1_01.png').convert_alpha()
@@ -100,14 +100,14 @@ class Menu():
 
 
         # title
-        title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50)#+int(self.animation_index))
-        title = title_font.render('HAUNTAZE', False, 'red')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 1, 50 + 2))
-        self.screen.blit(title, title_rect)
-
-        title = title_font.render('HAUNTAZE', False, 'white')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 50))
-        self.screen.blit(title, title_rect)
+        # title_font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 50)#+int(self.animation_index))
+        # title = title_font.render('HAUNTAZE', False, 'red')
+        # title_rect = title.get_rect(center=(SCREEN_WIDTH//2 + 1, 50 + 2))
+        # self.screen.blit(title, title_rect)
+        #
+        # title = title_font.render('HAUNTAZE', False, 'white')
+        # title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, 50))
+        # self.screen.blit(title, title_rect)
 
         # player 1
         font = pygame.font.Font('./assets/fonts/1.ttf', 20)
