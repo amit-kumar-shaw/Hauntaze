@@ -133,6 +133,11 @@ class Game:
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         pause_surface.blit(title, title_rect)
 
+        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        resume_msg = font.render('Press ENTER to next page', False, 'white')
+        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        pause_surface.blit(resume_msg, msg_rect)
+
         pause_surface_2 = pygame.image.load(f'assets/images/background/intro_2.jpeg').convert()
         pause_surface_2 = pygame.transform.rotozoom(pause_surface_2, 0, 1 / 3)
         font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
