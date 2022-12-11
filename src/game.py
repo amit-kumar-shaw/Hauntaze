@@ -1,4 +1,5 @@
 import sys
+import time
 from enum import Enum
 
 import pygame
@@ -23,12 +24,13 @@ class Status(Enum):
 class Game:
 
     def __init__(self):
-        self.status = Status.MENU
+        self.status = Status.INTRO
         self.menu = Menu()
         self.mode = None
         self.pause_animation = 0
         self.exit_active = False
         self.sound = GameSound()
+        self.page = 1
 
     def run(self):
         keys = pygame.key.get_pressed()
@@ -47,7 +49,7 @@ class Game:
 
         # show game intro
         elif self.status == Status.INTRO:
-            pass
+            self.intro()
 
         # run the game
         elif self.status == Status.RUNNING:
@@ -112,6 +114,133 @@ class Game:
         pause_surface.blit(exit_msg, msg_rect)
 
         pygame.display.get_surface().blit(pause_surface, (0, 0))
+
+    def intro(self):
+
+        keys = pygame.key.get_pressed()
+
+        pause_surface = pygame.image.load(f'assets/images/background/intro_1.jpeg').convert()
+        pause_surface = pygame.transform.rotozoom(pause_surface, 0, 1 / 3)
+
+        self.pause_animation += 0.08
+        if self.pause_animation >= 2: self.pause_animation = 0
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+
+        title = font.render('Here it is, the castle of Dracula', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface.blit(title, title_rect)
+        title = font.render('Here it is, the castle of Dracula', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface.blit(title, title_rect)
+
+        pause_surface_2 = pygame.image.load(f'assets/images/background/intro_2.jpeg').convert()
+        pause_surface_2 = pygame.transform.rotozoom(pause_surface_2, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('Full of treasure', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_2.blit(title, title_rect)
+        title = font.render('Full of treasure', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_2.blit(title, title_rect)
+
+        pause_surface_3 = pygame.image.load(f'assets/images/background/intro_3.jpeg').convert()
+        pause_surface_3 = pygame.transform.rotozoom(pause_surface_3, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('Also with danger', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_3.blit(title, title_rect)
+        title = font.render('Also with danger', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_3.blit(title, title_rect)
+
+        pause_surface_4 = pygame.image.load(f'assets/images/background/intro_4.jpeg').convert()
+        pause_surface_4 = pygame.transform.rotozoom(pause_surface_4, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('This night', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_4.blit(title, title_rect)
+        title = font.render('This night', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_4.blit(title, title_rect)
+
+        pause_surface_5 = pygame.image.load(f'assets/images/background/intro_5.jpeg').convert()
+        pause_surface_5 = pygame.transform.rotozoom(pause_surface_5, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('The treasure hunter comes here', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_5.blit(title, title_rect)
+        title = font.render('The treasure hunter comes here', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_5.blit(title, title_rect)
+
+        pause_surface_6 = pygame.image.load(f'assets/images/background/intro_5.jpeg').convert()
+        pause_surface_6 = pygame.transform.rotozoom(pause_surface_6, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('Can you escape the maze?', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_6.blit(title, title_rect)
+        title = font.render('Can you escape the maze?', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_6.blit(title, title_rect)
+
+        pause_surface_7 = pygame.image.load(f'assets/images/background/intro_5.jpeg').convert()
+        pause_surface_7 = pygame.transform.rotozoom(pause_surface_7, 0, 1 / 3)
+        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 40 + int(self.pause_animation))
+        title = font.render('Or you will lost forever..', False, 'red')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        pause_surface_7.blit(title, title_rect)
+        title = font.render('Or you will lost forever..', False, 'white')
+        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        pause_surface_7.blit(title, title_rect)
+
+        if self.page == 1:
+          pygame.display.get_surface().blit(pause_surface, (0, 0))
+
+        elif self.page == 2:
+          pygame.display.get_surface().blit(pause_surface_2, (0, 0))
+
+        elif self.page == 3:
+          pygame.display.get_surface().blit(pause_surface_3, (0, 0))
+
+        elif self.page == 4:
+          pygame.display.get_surface().blit(pause_surface_4, (0, 0))
+
+        elif self.page == 5:
+          pygame.display.get_surface().blit(pause_surface_5, (0, 0))
+
+        elif self.page == 6:
+          pygame.display.get_surface().blit(pause_surface_6, (0, 0))
+
+        elif self.page == 7:
+          pygame.display.get_surface().blit(pause_surface_7, (0, 0))
+
+        elif self.page == 8:
+          self.status = Status.MENU
+
+
+        if keys[pygame.K_RETURN] and self.page == 1 :
+            self.page = 2
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 2 :
+            self.page = 3
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 3 :
+            self.page = 4
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 4 :
+            self.page = 5
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 5 :
+            self.page = 6
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 6 :
+            self.page = 7
+            time.sleep(0.1)
+        elif keys[pygame.K_RETURN] and self.page == 7 :
+            self.page = 8
+            time.sleep(0.2)
+
+
 
     def exit_menu(self):
         pass
