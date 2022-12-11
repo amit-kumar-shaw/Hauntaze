@@ -7,11 +7,34 @@ class GameSound(object):
         pygame.mixer.init()
         pygame.mixer.music.load('./assets/Audio/Magic Escape Room.mp3')
         pygame.mixer.music.set_volume(0.5)
+        # sound = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
+        self.menu = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
+        self.menu.set_volume(0.8)
+        # sound.play(loops=-1)
 
     @staticmethod
     def playbackgroundmusic():
         pygame.mixer.music.play(-1)
 
+    def play_insert_coin(self):
+        sound = pygame.mixer.Sound('./assets/Audio/handleCoins.ogg')
+        sound.set_volume(0.7)
+        sound.play()
+
+    def play_mode_select(self):
+        sound = pygame.mixer.Sound('./assets/Audio/select_004.ogg')
+        sound.set_volume(0.7)
+        sound.play()
+
+    def play_confirmation(self):
+        sound = pygame.mixer.Sound('./assets/Audio/confirmation_004.ogg')
+        sound.set_volume(0.7)
+        sound.play()
+
+    # def play_menu_sound(self):
+    #     sound = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
+    #     sound.set_volume(0.7)
+    #     sound.play(loops=-1)
 
 class PlayerSound(object):
 
@@ -34,3 +57,4 @@ class PlayerSound(object):
         sound = pygame.mixer.Sound('./assets/Audio/Find_key.mp3')
         sound.set_volume(0.7)
         sound.play()
+
