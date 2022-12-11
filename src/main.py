@@ -7,7 +7,6 @@ from src.settings import *
 from src.music import GameSound
 # from menu import Menu
 from src.game import Game
-from moviepy.editor import *
 
 
 import os
@@ -30,7 +29,6 @@ sound.playbackgroundmusic()
 # ui = None
 game = Game()
 
-Videoisplayed = False
 
 
 while True:
@@ -44,12 +42,7 @@ while True:
         #     start = True
 
     #screen.fill(BG_COLOR)
-    if Videoisplayed == False:
-        clip = VideoFileClip('assets/test_video.mp4')
-        clip.resize(screen_for_vid).preview()
-        Videoisplayed = True
-    else:
-        game.run()
+    game.run()
 
 
     # TODO: Remove later. display FPS
