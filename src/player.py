@@ -54,6 +54,7 @@ class Player(pygame.sprite.Sprite):
         self.door = None
         self.key = None
         self.level_completed = False
+        self.ui_update = True
 
         # player movement
         self.direction = pygame.math.Vector2()
@@ -170,6 +171,7 @@ class Player(pygame.sprite.Sprite):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
                 self.score += 1
+                self.ui_update = True
                 self.sounds.play_coin_collection()
                 sprite.kill()
 
@@ -179,6 +181,7 @@ class Player(pygame.sprite.Sprite):
                 self.is_invincible = True
                 self.sounds.play_enemy_collision()
                 self.lives -= 1
+                self.ui_update = True
                 self.hurt_time = pygame.time.get_ticks()
 
     def death_animate(self):
@@ -207,46 +210,46 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.collide_rect_ratio(0.3)(self, self.door) and self.key_picked:
             # self.sounds.play_key_collection()
             self.level_completed = True
-
-    def display_details(self):
-        font = pygame.font.Font('./assets/fonts/1.ttf', 10)
-        player_name = font.render('Player 1', False, 'white')
-        player_rect = player_name.get_rect(midleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 8))
-        hearts_rect = []
-        heart = pygame.image.load("./assets/images/heart.png").convert_alpha()
-        heart = pygame.transform.rotozoom(heart, 0, 0.75)
-        key = pygame.image.load("./assets/images/key/3.png").convert_alpha()
-        # key = pygame.transform.rotozoom(key, 0, 0.75)
-        key_rect = key.get_rect(bottomleft=player_rect.bottomright)
-        for i in range(0, self.lives):
-            hearts_rect.append(heart.get_rect(topleft=(16 + (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14)))
-
-        coin = pygame.image.load("./assets/images/coin.png").convert_alpha()
-        coin_rect = coin.get_rect(topleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
-
-        score_font = pygame.font.Font('./assets/fonts/1.ttf', 10)
-        score_msg = score_font.render(f'{self.score}', False, 'white')
-        score_rect = score_msg.get_rect(topleft=(30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
-
-        if self.player2:
-            key = pygame.image.load("./assets/images/key/1.png").convert_alpha()
-            # key = pygame.transform.rotozoom(key, 0, 0.75)
-            player_name = font.render('Player 2', False, 'white')
-            player_rect = player_name.get_rect(midright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 5))
-            key_rect = key.get_rect(bottomright=player_rect.bottomleft)
-            for i in range(0, self.lives):
-                hearts_rect[i] = heart.get_rect(
-                    topright=(SCREEN_WIDTH - 16 - (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14))
-            coin_rect = coin.get_rect(topright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
-            score_rect = score_msg.get_rect(topright=(SCREEN_WIDTH - 30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
-
-        pygame.display.get_surface().blit(player_name, player_rect)
-        if self.key_picked:
-            pygame.display.get_surface().blit(key, key_rect)
-        for i in range(0, self.lives):
-            pygame.display.get_surface().blit(heart, hearts_rect[i])
-        pygame.display.get_surface().blit(coin, coin_rect)
-        pygame.display.get_surface().blit(score_msg, score_rect)
+    #
+    # def display_details(self):
+    #     font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+    #     player_name = font.render('Player 1', False, 'white')
+    #     player_rect = player_name.get_rect(midleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 8))
+    #     hearts_rect = []
+    #     heart = pygame.image.load("./assets/images/heart.png").convert_alpha()
+    #     heart = pygame.transform.rotozoom(heart, 0, 0.75)
+    #     key = pygame.image.load("./assets/images/key/3.png").convert_alpha()
+    #     # key = pygame.transform.rotozoom(key, 0, 0.75)
+    #     key_rect = key.get_rect(bottomleft=player_rect.bottomright)
+    #     for i in range(0, self.lives):
+    #         hearts_rect.append(heart.get_rect(topleft=(16 + (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14)))
+    #
+    #     coin = pygame.image.load("./assets/images/coin.png").convert_alpha()
+    #     coin_rect = coin.get_rect(topleft=(16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
+    #
+    #     score_font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+    #     score_msg = score_font.render(f'{self.score}', False, 'white')
+    #     score_rect = score_msg.get_rect(topleft=(30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
+    #
+    #     if self.player2:
+    #         key = pygame.image.load("./assets/images/key/1.png").convert_alpha()
+    #         # key = pygame.transform.rotozoom(key, 0, 0.75)
+    #         player_name = font.render('Player 2', False, 'white')
+    #         player_rect = player_name.get_rect(midright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 5))
+    #         key_rect = key.get_rect(bottomright=player_rect.bottomleft)
+    #         for i in range(0, self.lives):
+    #             hearts_rect[i] = heart.get_rect(
+    #                 topright=(SCREEN_WIDTH - 16 - (i * 12), (ROWS * CELL_SIZE * TILE_HEIGHT) + 14))
+    #         coin_rect = coin.get_rect(topright=(SCREEN_WIDTH - 16, (ROWS * CELL_SIZE * TILE_HEIGHT) + 24))
+    #         score_rect = score_msg.get_rect(topright=(SCREEN_WIDTH - 30, (ROWS * CELL_SIZE * TILE_HEIGHT) + 26))
+    #
+    #     pygame.display.get_surface().blit(player_name, player_rect)
+    #     if self.key_picked:
+    #         pygame.display.get_surface().blit(key, key_rect)
+    #     for i in range(0, self.lives):
+    #         pygame.display.get_surface().blit(heart, hearts_rect[i])
+    #     pygame.display.get_surface().blit(coin, coin_rect)
+    #     pygame.display.get_surface().blit(score_msg, score_rect)
 
     def attach_torch(self):
         self.torch.rect = self.image.get_rect(midtop=(self.rect.x + 2, self.rect.y))

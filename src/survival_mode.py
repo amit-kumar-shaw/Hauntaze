@@ -39,7 +39,12 @@ class SurvivalMode:
     def run(self):
         if self.status == Status.RUNNING:
             self.level.run()
-            self.ui.update()
+            if (self.player1_active and self.player1.ui_update) or (self.player2_active and self.player2.ui_update):
+                self.ui.update()
+                if self.player1_active:
+                    self.player1.ui_update = False
+                if self.player2_active:
+                    self.player2.ui_update = False
             if self.level.completed:
                 self.status = Status.COMPLETED
         elif self.status == Status.COMPLETED:

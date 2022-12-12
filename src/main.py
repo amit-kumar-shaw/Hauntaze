@@ -37,15 +37,10 @@ while True:
         # if keys[pygame.K_RETURN] and (menu.is_player1_ready or menu.is_player2_ready):
         #     start = True
 
-    screen.fill(BG_COLOR)
+    screen.fill(BG_COLOR, (0, 0, SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
     game.run()
 
-    # TODO: Remove later. display FPS
-    font = pygame.font.Font('./assets/fonts/4.ttf', 16)
-    fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
     print(clock.get_fps())
-    msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2 - 170, SCREEN_HEIGHT - 20))
-    screen.blit(fps_msg, msg_rect)
 
     # if start:
     #     if not level_loaded:
