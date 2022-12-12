@@ -27,6 +27,7 @@ class UI:
 
             self.key1 = pygame.image.load("./assets/images/key/3.png").convert_alpha()
             self.key1_rect = self.key1.get_rect(bottomleft=player_rect.bottomright)
+            self.key1_rect.x += 16
 
             self.p1_score = -1
 
@@ -42,21 +43,22 @@ class UI:
             self.p2_surf.blit(coin, coin_rect)
 
             self.key2 = pygame.image.load("./assets/images/key/1.png").convert_alpha()
-            self.key2_rect = self.key1.get_rect(bottomleft=player_rect.bottomleft)
+            self.key2_rect = self.key1.get_rect(bottomright=player_rect.bottomleft)
+            self.key2_rect.x += SCREEN_WIDTH - 116
 
             self.p2_score = -1
 
         self.info_surf = pygame.Surface((200, SCREEN_HEIGHT - (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
-        font = pygame.font.Font('./assets/fonts/1.ttf', 16)
-        level = font.render(f'LEVEL {self.current_level}', False, 'white')
-        level_rect = level.get_rect(center=(100, 15))
-        self.info_surf.blit(level, level_rect)
+        # font = pygame.font.Font('./assets/fonts/1.ttf', 16)
+        # level = font.render(f'LEVEL {self.current_level}', False, 'white')
+        # level_rect = level.get_rect(center=(100, 15))
+        # self.info_surf.blit(level, level_rect)
 
-        font = pygame.font.Font('./assets/fonts/4.ttf', 16)
-        msg = font.render('ESC: Pause', False, 'white')
-        msg_rect = msg.get_rect(center=(100, 35))
-        self.info_surf.blit(msg, msg_rect)
+        # font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+        # msg = font.render('ESC: Pause', False, 'white')
+        # msg_rect = msg.get_rect(center=(100, 35))
+        # self.info_surf.blit(msg, msg_rect)
 
     def update(self):
         font = pygame.font.Font('./assets/fonts/1.ttf', 10)
@@ -122,3 +124,16 @@ class UI:
 
         pygame.display.get_surface().blit(UI_SURFACE, (0, (ROWS * CELL_SIZE * TILE_HEIGHT)))
         UI_SURFACE.fill('black')
+
+    def update_level(self):
+        self.info_surf.fill('black')
+
+        font = pygame.font.Font('./assets/fonts/1.ttf', 16)
+        level = font.render(f'LEVEL {self.current_level}', False, 'white')
+        level_rect = level.get_rect(center=(100, 15))
+        self.info_surf.blit(level, level_rect)
+
+        font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+        msg = font.render('ESC: Pause', False, 'white')
+        msg_rect = msg.get_rect(center=(100, 35))
+        self.info_surf.blit(msg, msg_rect)

@@ -35,6 +35,7 @@ class SurvivalMode:
         self.level = Level(self.player1_active, self.player1, self.player2_active, self.player2)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
+        self.ui.update_level()
 
     def run(self):
         if self.status == Status.RUNNING:
@@ -52,5 +53,6 @@ class SurvivalMode:
             if self.player2_active: self.player2.reset()
             self.current_level += 1
             self.ui.current_level = self.current_level
+            self.ui.update_level()
             self.level = Level(self.player1_active, self.player1, self.player2_active, self.player2)
             self.status = Status.RUNNING

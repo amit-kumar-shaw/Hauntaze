@@ -177,8 +177,10 @@ class Level:
         # self.collectible_sprites.draw(self.display_surface)
         self.collectible_sprites.update()
         for sprite in self.collectible_sprites.sprites():
-            if (self.player1_active and sprite.rect.colliderect(self.cropped_rect1)) or (
-                    self.player2_active and sprite.rect.colliderect(self.cropped_rect2)):
+            # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf1) or (
+            #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf2))):
+            if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
+                    self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.display_surface)
 
         # draw key if the player is nearby
@@ -218,13 +220,15 @@ class Level:
 
         #self.active_sprites.draw(self.display_surface)
         for sprite in self.enemy_sprites.sprites():
-            if (self.player1_active and sprite.rect.colliderect(self.cropped_rect1)) or (
-                    self.player2_active and sprite.rect.colliderect(self.cropped_rect2)):
+            # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect1)) or (
+            #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect2)):
+            if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
+                        self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.display_surface)
 
-        if self.player1_active:
+        if self.player1_active and self.player1.visibility_radius > 2:
             PLAYER1_SPRITE.draw(self.display_surface)
-        if self.player2_active:
+        if self.player2_active and self.player2.visibility_radius > 2:
             PLAYER2_SPRITE.draw(self.display_surface)
 
         # draw the cover surface to hide the map

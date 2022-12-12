@@ -203,6 +203,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
             self.sounds.play_key_collection()
             self.key_picked = True
+            self.ui_update = True
             self.key.kill()
 
     def door_collisions(self):
@@ -300,3 +301,4 @@ class Player(pygame.sprite.Sprite):
         self.level_completed = False
         self.key_picked = False
         self.status = 'idle'
+        self.ui_update = True
