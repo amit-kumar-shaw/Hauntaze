@@ -168,7 +168,7 @@ class Level:
             if self.player2.visibility_radius != VISIBILITY_RADIUS:
                 self.cropped_surf2 = pygame.Surface(
                     (self.player2.visibility_radius * 2, self.player2.visibility_radius * 2))
-            self.cropped_rect2 = self.cropped_surf1.get_rect(center=self.player2.torch.rect.center)
+            self.cropped_rect2 = self.cropped_surf2.get_rect(center=self.player2.torch.rect.center)
             self.display_surface.blit(self.map_surf, self.cropped_rect2, self.cropped_rect2)
 
         # for coin in self.coins:
@@ -288,12 +288,12 @@ class Level:
 
         # TODO: remove in final game. Only for testing and debugging
         if self.player1_active:
-            pygame.draw.circle(self.cover_surf, 'green', self.player1.door.rect.center, 3)
-            pygame.draw.circle(self.cover_surf, 'yellow', self.player1.key.rect.center, 3)
+            pygame.draw.circle(self.display_surface, 'green', self.player1.door.rect.center, 3)
+            pygame.draw.circle(self.display_surface, 'yellow', self.player1.key.rect.center, 3)
 
         if self.player2_active:
-            pygame.draw.circle(self.cover_surf, 'pink', self.player2.door.rect.center, 3)
-            pygame.draw.circle(self.cover_surf, 'orange', self.player2.key.rect.center, 3)
+            pygame.draw.circle(self.display_surface, 'pink', self.player2.door.rect.center, 3)
+            pygame.draw.circle(self.display_surface, 'orange', self.player2.key.rect.center, 3)
 
     def game_over(self):
         keys = pygame.key.get_pressed()
