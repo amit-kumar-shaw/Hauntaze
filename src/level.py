@@ -43,6 +43,13 @@ class Level:
         # create map surface
         self.map_surf = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
+        # create cropped surface
+        self.cropped_surf1 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
+        self.cropped_surf2 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
+        self.cropped_rect1 = self.cropped_surf1.get_rect()
+        self.cropped_rect2 = self.cropped_surf2.get_rect()
+
+
         self.player1_active = player1_active
         self.player2_active = player2_active
         self.player1 = player1
@@ -152,7 +159,18 @@ class Level:
 
 
         # draw the map surface
-        self.display_surface.blit(self.map_surf, (0, 0))
+        #self.display_surface.blit(self.map_surf, (0, 0))
+        if self.player1_active:
+            if self.player1.visibility_radius != VISIBILITY_RADIUS:
+                self.cropped_surf1 = pygame.Surface((self.player1.visibility_radius * 2, self.player1.visibility_radius * 2))
+            self.cropped_rect1 = self.cropped_surf1.get_rect(center = self.player1.torch.rect.center)
+            self.display_surface.blit(self.map_surf, self.cropped_rect1, self.cropped_rect1)
+        if self.player2_active:
+            if self.player2.visibility_radius != VISIBILITY_RADIUS:
+                self.cropped_surf2 = pygame.Surface(
+                    (self.player2.visibility_radius * 2, self.player2.visibility_radius * 2))
+            self.cropped_rect2 = self.cropped_surf1.get_rect(center=self.player2.torch.rect.center)
+            self.display_surface.blit(self.map_surf, self.cropped_rect2, self.cropped_rect2)
 
         # for coin in self.coins:
         #     coin.animate()
@@ -204,7 +222,11 @@ class Level:
             PLAYER2_SPRITE.draw(self.display_surface)
 
         # draw the cover surface to hide the map
-        self.display_surface.blit(self.cover_surf, (0, 0))
+        #self.display_surface.blit(self.cover_surf, (0, 0))
+        if self.player1_active:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
+        if self.player2_active:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
 
         self.cover_surf.fill(COVER_COLOR)
 
