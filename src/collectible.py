@@ -29,3 +29,6 @@ class Collectible(pygame.sprite.Sprite):
 
     def update(self):
         self.animate()
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

@@ -49,7 +49,6 @@ class Level:
         self.cropped_rect1 = self.cropped_surf1.get_rect()
         self.cropped_rect2 = self.cropped_surf2.get_rect()
 
-
         self.player1_active = player1_active
         self.player2_active = player2_active
         self.player1 = player1
@@ -157,13 +156,13 @@ class Level:
         # self.visible_sprites.draw(self.display_surface)
         # self.collision_sprites.draw(self.display_surface)
 
-
         # draw the map surface
-        #self.display_surface.blit(self.map_surf, (0, 0))
+        # self.display_surface.blit(self.map_surf, (0, 0))
         if self.player1_active:
             if self.player1.visibility_radius != VISIBILITY_RADIUS:
-                self.cropped_surf1 = pygame.Surface((self.player1.visibility_radius * 2, self.player1.visibility_radius * 2))
-            self.cropped_rect1 = self.cropped_surf1.get_rect(center = self.player1.torch.rect.center)
+                self.cropped_surf1 = pygame.Surface(
+                    (self.player1.visibility_radius * 2, self.player1.visibility_radius * 2))
+            self.cropped_rect1 = self.cropped_surf1.get_rect(center=self.player1.torch.rect.center)
             self.display_surface.blit(self.map_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
             if self.player2.visibility_radius != VISIBILITY_RADIUS:
@@ -174,8 +173,13 @@ class Level:
 
         # for coin in self.coins:
         #     coin.animate()
-        self.collectible_sprites.draw(self.display_surface)
+
+        # self.collectible_sprites.draw(self.display_surface)
         self.collectible_sprites.update()
+        for sprite in self.collectible_sprites.sprites():
+            if (self.player1_active and sprite.rect.colliderect(self.cropped_rect1)) or (
+                    self.player2_active and sprite.rect.colliderect(self.cropped_rect2)):
+                sprite.draw(self.display_surface)
 
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
@@ -201,8 +205,6 @@ class Level:
             # self.player2.door.update()
             self.door2_sprite.draw(self.display_surface)
 
-
-
         # open door if key collected
         if (self.player1_active and self.player1.key_picked) and not self.player1.door.isOpen:
             pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player1.door.rect)
@@ -214,7 +216,11 @@ class Level:
             self.player2.door.open()
             self.door2_sprite.draw(self.display_surface)
 
-        self.active_sprites.draw(self.display_surface)
+        #self.active_sprites.draw(self.display_surface)
+        for sprite in self.enemy_sprites.sprites():
+            if (self.player1_active and sprite.rect.colliderect(self.cropped_rect1)) or (
+                    self.player2_active and sprite.rect.colliderect(self.cropped_rect2)):
+                sprite.draw(self.display_surface)
 
         if self.player1_active:
             PLAYER1_SPRITE.draw(self.display_surface)
@@ -222,7 +228,7 @@ class Level:
             PLAYER2_SPRITE.draw(self.display_surface)
 
         # draw the cover surface to hide the map
-        #self.display_surface.blit(self.cover_surf, (0, 0))
+        # self.display_surface.blit(self.cover_surf, (0, 0))
         if self.player1_active:
             self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
@@ -270,15 +276,15 @@ class Level:
         for enemy in self.enemys:
             if (self.player1_active and math.dist(self.player1.torch.rect.center,
                                                   enemy.rect.center) > self.player1.visibility_radius) and not self.player2_active:
-                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
+                pygame.draw.circle(self.display_surface, 'red', enemy.rect.center, 1)
             if (self.player2_active and math.dist(self.player2.torch.rect.center,
                                                   enemy.rect.center) > self.player2.visibility_radius) and not self.player1_active:
-                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
+                pygame.draw.circle(self.display_surface, 'red', enemy.rect.center, 1)
             if (self.player1_active and math.dist(self.player1.torch.rect.center,
                                                   enemy.rect.center) > self.player1.visibility_radius) and (
                     self.player2_active and math.dist(self.player2.torch.rect.center,
                                                       enemy.rect.center) > self.player2.visibility_radius):
-                pygame.draw.circle(self.cover_surf, 'red', enemy.rect.center, 1)
+                pygame.draw.circle(self.display_surface, 'red', enemy.rect.center, 1)
 
         # TODO: remove in final game. Only for testing and debugging
         if self.player1_active:
