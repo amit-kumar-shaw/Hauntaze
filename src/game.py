@@ -225,22 +225,22 @@ class Game:
 
         if keys[pygame.K_RETURN] and self.page == 1 :
             self.page = 2
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 2 :
             self.page = 3
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 3 :
             self.page = 4
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 4 :
             self.page = 5
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 5 :
             self.page = 6
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 6 :
             self.page = 7
-            time.sleep(0.1)
+            time.sleep(0.2)
         elif keys[pygame.K_RETURN] and self.page == 7 :
             self.page = 8
             time.sleep(0.2)
