@@ -33,7 +33,6 @@ class StoryMode:
     def run(self):
         if self.status == Status.RUNNING:
             self.level.run()
-            self.ui.fps = self.fps
             self.ui.update()
             if self.level.completed:
                 self.status = Status.COMPLETED
