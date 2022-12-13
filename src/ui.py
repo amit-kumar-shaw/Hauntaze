@@ -43,7 +43,7 @@ class UI:
             self.p2_surf.blit(coin, coin_rect)
 
             self.key2 = pygame.image.load("./assets/images/key/1.png").convert_alpha()
-            self.key2_rect = self.key1.get_rect(bottomright=player_rect.bottomleft)
+            self.key2_rect = self.key2.get_rect(bottomright=player_rect.bottomleft)
             self.key2_rect.x += SCREEN_WIDTH - 116
 
             self.p2_score = -1

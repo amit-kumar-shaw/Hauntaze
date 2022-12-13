@@ -226,9 +226,9 @@ class Level:
                         self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.display_surface)
 
-        if self.player1_active and self.player1.visibility_radius > 2:
+        if self.player1_active and self.player1.visibility_radius > 1:
             PLAYER1_SPRITE.draw(self.display_surface)
-        if self.player2_active and self.player2.visibility_radius > 2:
+        if self.player2_active and self.player2.visibility_radius > 1:
             PLAYER2_SPRITE.draw(self.display_surface)
 
         # draw the cover surface to hide the map
