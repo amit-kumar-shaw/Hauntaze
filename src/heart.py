@@ -1,13 +1,10 @@
 import pygame
-import random
 
 
-class Heart (pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+class Item (pygame.sprite.Sprite):
+    def __init__(self, pos, groups, itemtype, name):
         super().__init__(groups)
-        t1 = pygame.image.load("./assets/images/heart01.png").convert_alpha()
-        t2 = pygame.image.load("./assets/images/heart02.png").convert_alpha()
-        t3 = pygame.image.load("./assets/images/heart03.png").convert_alpha()
+        self.image = pygame.image.load(name).convert_alpha()
 
         self.frames = [pygame.transform.rotozoom(t1, 0, 0.5),
                        pygame.transform.rotozoom(t2, 0, 0.5), pygame.transform.rotozoom(t3, 0, 0.5)]
