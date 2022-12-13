@@ -213,12 +213,12 @@ class Level:
 
         # open door if key collected
         if (self.player1_active and self.player1.key_picked) and not self.player1.door.isOpen:
-            pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player1.door.rect)
+            # pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player1.door.rect)
             self.player1.door.open()
             self.door1_sprite.draw(self.display_surface)
 
         if (self.player2_active and self.player2.key_picked) and not self.player2.door.isOpen:
-            pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player2.door.rect)
+            # pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player2.door.rect)
             self.player2.door.open()
             self.door2_sprite.draw(self.display_surface)
 
