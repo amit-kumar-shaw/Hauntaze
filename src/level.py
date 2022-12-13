@@ -130,7 +130,11 @@ class Level:
         for cell in coin_cells:
             c = random.choice(list(cell.room))
             self.coins.append(
-                Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites]))
+                Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='coin'))
+
+        cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
+        c = random.choice(list(cell[0].room))
+        Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
 
         # draw enemies
         self.enemys = []

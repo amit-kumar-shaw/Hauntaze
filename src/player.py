@@ -157,12 +157,14 @@ class Player(pygame.sprite.Sprite):
     def collectible_collisions(self):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
-                self.score += 1
-                self.ui_update = True
-                self.sounds.play_coin_collection()
-                # self.is_big_torch = True
-                # self.torch.scale(1)
-                # self.big_torch_time = pygame.time.get_ticks()
+                if sprite.type == 'coin':
+                    self.score += 1
+                    self.ui_update = True
+                    self.sounds.play_coin_collection()
+                elif sprite.type == 'torch':
+                    self.is_big_torch = True
+                    self.torch.scale(1)
+                    self.big_torch_time = pygame.time.get_ticks()
                 sprite.kill()
 
     def enemy_collisions(self):
@@ -221,6 +223,7 @@ class Player(pygame.sprite.Sprite):
             self.invincibility_timer()
 
             self.torch.rect = self.torch.image.get_rect(center=(self.rect.x + 2, self.rect.y + 2))
+            self.torch.animate()
             if self.is_big_torch:
                 self.torch_update()
             self.door_collisions()
@@ -237,9 +240,9 @@ class Player(pygame.sprite.Sprite):
                 self.death_animate()
 
     def torch_update(self):
-        if pygame.time.get_ticks() - self.big_torch_time < 5000:
+        if pygame.time.get_ticks() - self.big_torch_time < 7000:
             if self.visibility_radius < 2 * VISIBILITY_RADIUS:
-                self.visibility_radius += 0.2
+                self.visibility_radius += 0.5
         else:
             if self.visibility_radius > VISIBILITY_RADIUS:
                 self.visibility_radius -= 0.2
