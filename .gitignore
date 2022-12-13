@@ -2,3 +2,5 @@ venv
 .idea
 __pycache__
 .DS_Store
+assets/.DS_Store
+assets/images/.DS_Store
