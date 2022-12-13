@@ -7,6 +7,7 @@ from settings import *
 # from music import GameSound
 # from menu import Menu
 from game import Game
+
 import os
 
 os.chdir('..')
