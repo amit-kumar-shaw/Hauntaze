@@ -12,6 +12,7 @@ from collectible import Collectible
 from key import Key
 from door import Door
 from music import GameSound
+from player_ghost import Ghost
 
 
 class Level:
@@ -46,13 +47,19 @@ class Level:
         # create cropped surface
         self.cropped_surf1 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
         self.cropped_surf2 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
+        self.cropped_surf3 = pygame.Surface((GHOST_VISIBILITY * 2, GHOST_VISIBILITY * 2))
         self.cropped_rect1 = self.cropped_surf1.get_rect()
         self.cropped_rect2 = self.cropped_surf2.get_rect()
+        self.cropped_rect3 = self.cropped_surf3.get_rect()
 
         self.player1_active = player1_active
         self.player2_active = player2_active
         self.player1 = player1
         self.player2 = player2
+
+        # Ghost
+        self.ghost_active = False
+        self.ghost = None
 
         self.sound = GameSound()
         self.sound.playbackgroundmusic()
@@ -146,6 +153,10 @@ class Level:
                       self.collision_sprites))
 
     def run(self):
+
+        # Activate ghost
+
+
         # run the entire game (level)
         self.active_sprites.update()
 
@@ -174,6 +185,9 @@ class Level:
                     (self.player2.visibility_radius * 2, self.player2.visibility_radius * 2))
             self.cropped_rect2 = self.cropped_surf2.get_rect(center=self.player2.torch.rect.center)
             self.display_surface.blit(self.map_surf, self.cropped_rect2, self.cropped_rect2)
+        if self.ghost_active:
+            self.cropped_rect3 = self.cropped_surf3.get_rect(center=self.ghost.rect.center)
+            self.display_surface.blit(self.map_surf, self.cropped_rect3, self.cropped_rect3)
 
         # for coin in self.coins:
         #     coin.animate()
@@ -227,7 +241,8 @@ class Level:
             # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect1)) or (
             #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect2)):
             if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
-                        self.player2_active and self.cropped_rect2.contains(sprite)):
+                        self.player2_active and self.cropped_rect2.contains(sprite)) or (
+                        self.ghost_active and self.cropped_rect3.contains(sprite)):
                 sprite.draw(self.display_surface)
 
         if self.player1_active and self.player1.visibility_radius > 1:
@@ -235,12 +250,19 @@ class Level:
         if self.player2_active and self.player2.visibility_radius > 1:
             PLAYER2_SPRITE.draw(self.display_surface)
 
+        # Ghost update
+        if self.ghost_active:
+            self.ghost.update()
+            self.display_surface.blit(self.ghost.image,self.ghost.rect)
+
         # draw the cover surface to hide the map
         # self.display_surface.blit(self.cover_surf, (0, 0))
         if self.player1_active:
             self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
             self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
+        if self.ghost_active:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
 
         self.cover_surf.fill(COVER_COLOR)
 
@@ -260,13 +282,30 @@ class Level:
             self.level_completed()
 
         self.check_player_status()
+
+        # TODO: Tower - remove after test
+        tower = pygame.image.load("./assets/images/tower.png").convert_alpha()
+        self.display_surface.blit(tower, (560,0))
         # print(self.player1_active, self.player1.is_alive, self.player1.lives)
 
     def check_player_status(self):
         if self.player1_active and not self.player1.is_alive:
             self.player1_active = False
+            if not self.ghost_active:
+                self.ghost = Ghost(self.player1.rect.topleft, 'dead', player2=False)
+                self.ghost_active = True
         if self.player2_active and not self.player2.is_alive:
             self.player2_active = False
+            if not self.ghost_active:
+                self.ghost = Ghost(self.player2.rect.topleft, 'dead', player2=True)
+                self.ghost_active = True
+
+        if self.player1_active and self.player1.is_ghost and not self.ghost_active:
+            self.ghost = Ghost(self.player1.rect.topleft, 'alive', player2=False)
+            self.ghost_active = True
+        if self.player2_active and self.player2.is_ghost and not self.ghost_active:
+            self.ghost = Ghost(self.player2.rect.topleft, 'alive', player2=True)
+            self.ghost_active = True
 
     def draw_visible_region(self):
 
@@ -279,6 +318,10 @@ class Level:
                 pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50 * i)),
                                    (self.player2.torch.rect.centerx, self.player2.torch.rect.centery),
                                    self.player2.visibility_radius * float(1 - (i * i) / 100))
+            if self.ghost_active:
+                pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50 * i)),
+                                   (self.ghost.rect.centerx, self.ghost.rect.centery),
+                                   self.ghost.visibility_radius * float(1 - (i * i) / 100))
 
         # draw enemy indicator
         for enemy in self.enemys:

@@ -43,6 +43,8 @@ class Player(pygame.sprite.Sprite):
         self.is_big_torch = False
         self.big_torch_time = 0
 
+        self.is_ghost = False
+
         # player movement
         self.direction = pygame.math.Vector2()
         self.speed = PLAYER_SPEED
@@ -184,6 +186,8 @@ class Player(pygame.sprite.Sprite):
                 self.is_alive = False
                 self.torch.kill()
                 self.kill()
+            elif not self.is_ghost:
+                self.is_ghost = True
 
     def invincibility_timer(self):
         if self.is_invincible:
@@ -257,3 +261,4 @@ class Player(pygame.sprite.Sprite):
         self.key_picked = False
         self.status = 'idle'
         self.ui_update = True
+        self.is_ghost = False
