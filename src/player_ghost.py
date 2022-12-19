@@ -12,7 +12,7 @@ class Ghost(pygame.sprite.Sprite):
         if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         else:
-            self.frames = import_frames('./assets/images/ghost', scale=0.5)
+            self.frames = import_frames('./assets/images/ghost/idle', scale=0.7)
         self.frame_index = 0
         self.image = self.frames[self.frame_index]
 
@@ -22,6 +22,9 @@ class Ghost(pygame.sprite.Sprite):
         self.speed = PLAYER_SPEED
 
         self.visibility_radius = GHOST_VISIBILITY
+
+        if not story_mode:
+            self.smoke = Smoke(self.rect.center)
 
         # ghost keys
         if player2:
@@ -69,7 +72,7 @@ class Ghost(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(self.frames): self.frame_index = 0
         self.image = self.frames[int(self.frame_index)]
-        if self.direction.x > 0:
+        if self.direction.x < 0:
             self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self):
@@ -80,3 +83,27 @@ class Ghost(pygame.sprite.Sprite):
         self.horizontal_border()
         self.rect.y += self.direction.y * self.speed
         self.vertical_border()
+
+        if not self.story_mode:
+            self.smoke.animate()
+            self.smoke.rect = self.smoke.image.get_rect(center = self.rect.center)
+            pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
+
+
+class Smoke(pygame.sprite.Sprite):
+    def __init__(self, pos):
+        super().__init__()
+
+        self.frames = import_frames('./assets/images/ghost/Smoke', scale=0.5)
+        self.frame_index = 0
+
+        self.image = self.frames[self.frame_index]
+
+        self.rect = self.image.get_rect(center=pos)
+
+
+    def animate(self):
+
+        self.frame_index += 0.1
+        if self.frame_index >= len(self.frames): self.frame_index = 0
+        self.image = self.frames[int(self.frame_index)]

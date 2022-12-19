@@ -191,10 +191,10 @@ class Level:
             if self.story_mode:
                 self.cropped_rect3 = self.cropped_surf3.get_rect(center=self.ghost.rect.center)
                 self.display_surface.blit(self.map_surf, self.cropped_rect3, self.cropped_rect3)
-            else:
-                pygame.draw.circle(self.display_surface, (0, 0, 0),
-                                   (self.ghost.rect.centerx, self.ghost.rect.centery),
-                                   self.ghost.visibility_radius)
+            # else:
+            #     pygame.draw.circle(self.display_surface, (0, 0, 0),
+            #                        (self.ghost.rect.centerx, self.ghost.rect.centery),
+            #                        self.ghost.visibility_radius)
 
         # for coin in self.coins:
         #     coin.animate()
