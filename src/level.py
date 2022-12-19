@@ -16,7 +16,7 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, player1_active, player1, player2_active, player2):
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -24,6 +24,8 @@ class Level:
         self.completed = False
         self.failed = False
         self.animation_index = 0
+
+        self.story_mode = story_mode
 
         # sprite group setup
         self.visible_sprites = pygame.sprite.Group()
@@ -186,8 +188,13 @@ class Level:
             self.cropped_rect2 = self.cropped_surf2.get_rect(center=self.player2.torch.rect.center)
             self.display_surface.blit(self.map_surf, self.cropped_rect2, self.cropped_rect2)
         if self.ghost_active:
-            self.cropped_rect3 = self.cropped_surf3.get_rect(center=self.ghost.rect.center)
-            self.display_surface.blit(self.map_surf, self.cropped_rect3, self.cropped_rect3)
+            if self.story_mode:
+                self.cropped_rect3 = self.cropped_surf3.get_rect(center=self.ghost.rect.center)
+                self.display_surface.blit(self.map_surf, self.cropped_rect3, self.cropped_rect3)
+            else:
+                pygame.draw.circle(self.display_surface, (0, 0, 0),
+                                   (self.ghost.rect.centerx, self.ghost.rect.centery),
+                                   self.ghost.visibility_radius)
 
         # for coin in self.coins:
         #     coin.animate()
@@ -261,7 +268,7 @@ class Level:
             self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
             self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
-        if self.ghost_active:
+        if self.ghost_active and self.story_mode:
             self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
 
         self.cover_surf.fill(COVER_COLOR)
@@ -292,19 +299,19 @@ class Level:
         if self.player1_active and not self.player1.is_alive:
             self.player1_active = False
             if not self.ghost_active:
-                self.ghost = Ghost(self.player1.rect.topleft, 'dead', player2=False)
+                self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
                 self.ghost_active = True
         if self.player2_active and not self.player2.is_alive:
             self.player2_active = False
             if not self.ghost_active:
-                self.ghost = Ghost(self.player2.rect.topleft, 'dead', player2=True)
+                self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
                 self.ghost_active = True
 
         if self.player1_active and self.player1.is_ghost and not self.ghost_active:
-            self.ghost = Ghost(self.player1.rect.topleft, 'alive', player2=False)
+            self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
             self.ghost_active = True
         if self.player2_active and self.player2.is_ghost and not self.ghost_active:
-            self.ghost = Ghost(self.player2.rect.topleft, 'alive', player2=True)
+            self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
             self.ghost_active = True
 
     def draw_visible_region(self):
@@ -318,7 +325,7 @@ class Level:
                 pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50 * i)),
                                    (self.player2.torch.rect.centerx, self.player2.torch.rect.centery),
                                    self.player2.visibility_radius * float(1 - (i * i) / 100))
-            if self.ghost_active:
+            if self.ghost_active and self.story_mode:
                 pygame.draw.circle(self.cover_surf, (0, 0, 0, 200 - (50 * i)),
                                    (self.ghost.rect.centerx, self.ghost.rect.centery),
                                    self.ghost.visibility_radius * float(1 - (i * i) / 100))

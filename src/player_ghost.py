@@ -4,17 +4,15 @@ from pygame.locals import *
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, pos, status, player2=False):
+    def __init__(self, pos, story_mode, player2=False):
         super().__init__()
 
-        self.status = status
+        self.story_mode = story_mode
 
-        if status == 'dead':
+        if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
-            # self.frame_index = 0
-            # self.image = self.frames[self.frame_index]
         else:
-            self.frames = import_frames('./assets/images/ghost', scale=0.7)
+            self.frames = import_frames('./assets/images/ghost', scale=0.5)
         self.frame_index = 0
         self.image = self.frames[self.frame_index]
 
@@ -55,15 +53,30 @@ class Ghost(pygame.sprite.Sprite):
         else:
             self.direction.y = 0
 
+    def horizontal_border(self):
+        if self.rect.x <= 16:
+            self.rect.x = 16
+        if self.rect.x >= 560 - self.rect.width - 16:
+            self.rect.x = 560 - self.rect.width - 16
+
+    def vertical_border(self):
+        if self.rect.y <= 16:
+            self.rect.y = 16
+        if self.rect.y >= 320 - self.rect.height - 16:
+            self.rect.y = 320 - self.rect.height - 16
+
     def animate(self):
-        if self.status == 'dead':
-            self.frame_index += 0.1
-            if self.frame_index >= len(self.frames): self.frame_index = 0
-            self.image = self.frames[int(self.frame_index)]
+        self.frame_index += 0.1
+        if self.frame_index >= len(self.frames): self.frame_index = 0
+        self.image = self.frames[int(self.frame_index)]
+        if self.direction.x > 0:
+            self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self):
         self.input()
         self.animate()
 
         self.rect.x += self.direction.x * self.speed
+        self.horizontal_border()
         self.rect.y += self.direction.y * self.speed
+        self.vertical_border()
