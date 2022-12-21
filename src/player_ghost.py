@@ -91,7 +91,7 @@ class Ghost(pygame.sprite.Sprite):
         if not self.story_mode:
             self.smoke.animate()
             self.smoke.rect = self.smoke.image.get_rect(center = self.rect.center)
-            pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
+            #pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
 
 
 class Smoke(pygame.sprite.Sprite):
