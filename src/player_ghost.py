@@ -18,6 +18,8 @@ class Ghost(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(topleft=pos)
 
+        self.is_flipped = False
+
         self.direction = pygame.math.Vector2()
         self.speed = PLAYER_SPEED
 
@@ -44,8 +46,10 @@ class Ghost(pygame.sprite.Sprite):
 
         if keys[self.MOVE_RIGHT]:
             self.direction.x = 1
+            self.is_flipped = False
         elif keys[self.MOVE_LEFT]:
             self.direction.x = -1
+            self.is_flipped = True
         else:
             self.direction.x = 0
 
@@ -72,7 +76,7 @@ class Ghost(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(self.frames): self.frame_index = 0
         self.image = self.frames[int(self.frame_index)]
-        if self.direction.x < 0:
+        if self.is_flipped:
             self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self):

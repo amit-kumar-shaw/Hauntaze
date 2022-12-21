@@ -25,6 +25,8 @@ class Player(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
+        self.is_flipped = False
+
         self.torch = Torch(pos, groups)
         self.player2 = player2
         self.lives = LIVES
@@ -79,8 +81,10 @@ class Player(pygame.sprite.Sprite):
 
         if keys[self.MOVE_RIGHT]:
             self.direction.x = 1
+            self.is_flipped = False
         elif keys[self.MOVE_LEFT]:
             self.direction.x = -1
+            self.is_flipped = True
         else:
             self.direction.x = 0
 
@@ -136,12 +140,14 @@ class Player(pygame.sprite.Sprite):
             if self.status =='dead':
                 self.frame_index = len(status) - 1
 
-        image = status[int(self.frame_index)]
-        if self.direction.x >= 0:
-            self.image = image
-        else:
-            flipped_image = pygame.transform.flip(image, True, False)
-            self.image = flipped_image
+        self.image = status[int(self.frame_index)]
+        if self.is_flipped:
+            self.image = pygame.transform.flip(self.image, True, False)
+        # if self.direction.x >= 0:
+        #     self.image = image
+        # else:
+        #     flipped_image = pygame.transform.flip(image, True, False)
+        #     self.image = flipped_image
 
         if self.is_invincible:
             alpha = self.wave_value()

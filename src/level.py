@@ -196,6 +196,14 @@ class Level:
             #                        (self.ghost.rect.centerx, self.ghost.rect.centery),
             #                        self.ghost.visibility_radius)
 
+        # cover surface
+        if self.player1_active:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
+        if self.player2_active:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
+        if self.ghost_active and self.story_mode:
+            self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
+
         # for coin in self.coins:
         #     coin.animate()
 
@@ -264,12 +272,12 @@ class Level:
 
         # draw the cover surface to hide the map
         # self.display_surface.blit(self.cover_surf, (0, 0))
-        if self.player1_active:
-            self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
-        if self.player2_active:
-            self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
-        if self.ghost_active and self.story_mode:
-            self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
+        # if self.player1_active:
+        #     self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
+        # if self.player2_active:
+        #     self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
+        # if self.ghost_active and self.story_mode:
+        #     self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
 
         self.cover_surf.fill(COVER_COLOR)
 
