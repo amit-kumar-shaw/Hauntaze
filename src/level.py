@@ -69,9 +69,12 @@ class Level:
         self.sound = GameSound()
         self.sound.playbackgroundmusic()
 
-        self.setup_level()
+        if story_mode:
+            self.story_setup()
+        else:
+            self.survival_setup()
 
-    def setup_level(self):
+    def survival_setup(self):
 
         level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
 
@@ -100,11 +103,6 @@ class Level:
 
         # draw player and keys
         if self.player1_active:
-            # c = random.choice(list(key_door_cells[1].room))
-            # door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
-            # self.player1 = Player(tuple(TILE_SIZE * x for x in player_cells[0]),
-            #                       [self.active_sprites],
-            #                       self.collision_sprites, self.collectible_sprites, self.enemy_sprites)
             self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
             self.player1.attach_torch()
             self.player1.collision_sprites = self.collision_sprites
@@ -115,16 +113,8 @@ class Level:
             self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
             c = random.choice(list(key_door_cells[1].room))
             self.player1.door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
-            # self.player1.door = door
 
         if self.player2_active:
-            # c = random.choice(list(key_door_cells[3].room))
-            # door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
-            # self.player2 = Player(tuple(TILE_SIZE * x for x in player_cells[1]),
-            #                       [self.active_sprites],
-            #                       self.collision_sprites, self.collectible_sprites, self.enemy_sprites,
-            #                       player2=True)
-
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[1])
             self.player2.attach_torch()
             self.player2.collision_sprites = self.collision_sprites
@@ -156,6 +146,82 @@ class Level:
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites))
+
+    def story_setup(self):
+
+        data = STORY_DATA[0]
+        # level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
+        level_map = data['map']
+        for row_index, row in enumerate(level_map):
+            for col_index, col in enumerate(row):
+                x = col_index * 16
+                y = row_index * 16
+                # if level_map[(row_index, col_index)] == '.':
+                #     Tile((x, y), [self.visible_sprites], wall=False)
+                if col == '#':
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
+                else:
+                    Tile((x, y), [self.visible_sprites], wall=False)
+                # if level_map[(row_index, col_index)] == 'A':
+                #     p1 = (x, y)
+                #     Tile((x, y), [self.visible_sprites], wall=False)
+                # if level_map[(row_index, col_index)] == 'B':
+                #     p2 = (x, y)
+                #     Tile((x, y), [self.visible_sprites], wall=False)
+
+        self.visible_sprites.draw(self.map_surf)
+        # key_door_cells = random.sample(other_cells, 4)
+
+        # # draw door
+        # d = random.choice(list(key_door_cells[2].room))
+        # self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
+        #                  )
+
+        # draw player and keys
+        if self.player1_active:
+            self.player1.rect.topleft = tuple(TILE_SIZE * x for x in data['player1'])
+            self.player1.attach_torch()
+            self.player1.collision_sprites = self.collision_sprites
+            self.player1.collectible_sprites = self.collectible_sprites
+            self.player1.enemy_sprites = self.enemy_sprites
+
+            # c = random.choice(list(key_door_cells[0].room))
+            self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
+            # c = random.choice(list(key_door_cells[1].room))
+            self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
+
+        if self.player2_active:
+            self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
+            self.player2.attach_torch()
+            self.player2.collision_sprites = self.collision_sprites
+            self.player2.collectible_sprites = self.collectible_sprites
+            self.player2.enemy_sprites = self.enemy_sprites
+
+            # c = random.choice(list(key_door_cells[2].room))
+            self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
+            # c = random.choice(list(key_door_cells[3].room))
+            self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
+            # self.player2.door = door
+
+        self.coins = []
+        # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
+        # for cell in coin_cells:
+        #     c = random.choice(list(cell.room))
+        #     self.coins.append(
+        #         Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='coin'))
+        #
+        # cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
+        # c = random.choice(list(cell[0].room))
+        # Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
+        #
+        # # draw enemies
+        self.enemys = []
+        # enemy_cells = random.sample(other_cells, 5)
+        # for enemy in enemy_cells:
+        #     e = random.choice(list(enemy.room))
+        #     self.enemys.append(
+        #         Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+        #               self.collision_sprites))
 
     def run(self):
 
@@ -308,7 +374,7 @@ class Level:
 
         # TODO: Tower - remove after test
         tower = pygame.image.load("./assets/images/tower.png").convert_alpha()
-        self.display_surface.blit(tower, (560,0))
+        self.display_surface.blit(tower, (576, 0))
         # print(self.player1_active, self.player1.is_alive, self.player1.lives)
 
     def check_player_status(self):
@@ -381,17 +447,17 @@ class Level:
         font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 75 + int(self.animation_index))
         title = font.render('Game Over', False, 'yellow')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
-        self.display_surface.blit(title, title_rect)
+        self.level_window.blit(title, title_rect)
 
         title = font.render('Game Over', False, 'red')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        self.display_surface.blit(title, title_rect)
+        self.level_window.blit(title, title_rect)
 
         # Restart game message
         font = pygame.font.Font('./assets/fonts/1.ttf', 15)
         resume_msg = font.render('Press ENTER to restart', False, 'white')
         msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
-        self.display_surface.blit(resume_msg, msg_rect)
+        self.level_window.blit(resume_msg, msg_rect)
 
     # TODO: Level completed
     def level_completed(self):
@@ -406,14 +472,14 @@ class Level:
         font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.animation_index))
         title = font.render('Level Completed', False, 'red')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
-        self.display_surface.blit(title, title_rect)
+        self.level_window.blit(title, title_rect)
 
         title = font.render('Level Completed', False, 'yellow')
         title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
-        self.display_surface.blit(title, title_rect)
+        self.level_window.blit(title, title_rect)
 
         # Continue game message
         font = pygame.font.Font('./assets/fonts/1.ttf', 15)
         resume_msg = font.render('Press ENTER to continue', False, 'white')
         msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
-        self.display_surface.blit(resume_msg, msg_rect)
+        self.level_window.blit(resume_msg, msg_rect)

@@ -25,6 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
+        #self.mask = pygame
         self.is_flipped = False
 
         self.torch = Torch(pos, groups)
@@ -101,17 +102,12 @@ class Player(pygame.sprite.Sprite):
                 if self.direction.x < 0:
                     self.rect.left = sprite.rect.right
                 if self.direction.x > 0:
-                    # if self.direction.y <= 0 and ((sprite.rect.bottomleft[1] - self.rect.topright[1]) < 3) and
-                    #     pygame.Rect.collidepoint():
-                    #     self.rect.topright = sprite.rect.bottomleft #+ (0,1)
-                    # if self.direction.y >= 0 and ((self.rect.bottomright[1] - sprite.rect.topleft[1]) < 3):
-                    #     self.rect.bottomright = sprite.rect.topleft #- (0,1)
-                    # print(sprite.rect.bottomleft, sprite.rect.bottomleft[0])
                     self.rect.right = sprite.rect.left
 
     def vertical_collisions(self):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
+                # if pygame.sprite.spritecollide(player.sprite, obstacle, False, pygame.sprite.collide_mask):
                 if self.direction.y > 0:
                     self.rect.bottom = sprite.rect.top
                 if self.direction.y < 0:
