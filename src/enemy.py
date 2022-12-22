@@ -9,10 +9,12 @@ from utilities import import_frames
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, type='None'):
         super().__init__(groups)
-
-        self.type = random.choice(['bat','slime'])
+        if type == 'None':
+            self.type = random.choice(['bat', 'slime'])
+        else:
+            self.type = type
 
         self.frames = import_frames(f"./assets/images/enemy/{self.type}", scale=0.75)
 

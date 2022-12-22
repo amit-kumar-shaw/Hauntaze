@@ -158,18 +158,10 @@ class Level:
             for col_index, col in enumerate(row):
                 x = col_index * 16
                 y = row_index * 16
-                # if level_map[(row_index, col_index)] == '.':
-                #     Tile((x, y), [self.visible_sprites], wall=False)
                 if col == '#':
                     Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
                 else:
                     Tile((x, y), [self.visible_sprites], wall=False)
-                # if level_map[(row_index, col_index)] == 'A':
-                #     p1 = (x, y)
-                #     Tile((x, y), [self.visible_sprites], wall=False)
-                # if level_map[(row_index, col_index)] == 'B':
-                #     p2 = (x, y)
-                #     Tile((x, y), [self.visible_sprites], wall=False)
 
         self.visible_sprites.draw(self.map_surf)
 
@@ -210,7 +202,14 @@ class Level:
         for _, cell in enumerate(bat_cells):
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites))
+                      self.collision_sprites, type='bat'))
+
+        slime_cells = data['slime']
+        for _, cell in enumerate(slime_cells):
+            self.enemys.append(
+                Enemy(tuple(TILE_SIZE * x for x in cell),
+                      [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                      self.collision_sprites, type='slime'))
 
     def run(self):
 
