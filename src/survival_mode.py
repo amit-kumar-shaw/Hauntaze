@@ -32,7 +32,7 @@ class SurvivalMode:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
                                   collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
         self.current_level = 1
-        self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2)
+        self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
@@ -54,5 +54,5 @@ class SurvivalMode:
             self.current_level += 1
             self.ui.current_level = self.current_level
             self.ui.update_level()
-            self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2)
+            self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level)
             self.status = Status.RUNNING

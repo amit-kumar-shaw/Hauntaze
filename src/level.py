@@ -16,7 +16,7 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, story_mode, player1_active, player1, player2_active, player2):
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -26,6 +26,7 @@ class Level:
         self.animation_index = 0
 
         self.story_mode = story_mode
+        self.current_level = level
 
         # sprite group setup
         self.visible_sprites = pygame.sprite.Group()
@@ -148,10 +149,11 @@ class Level:
                       self.collision_sprites))
 
     def story_setup(self):
+        from level_design import STORY_DATA
+        data = STORY_DATA[self.current_level - 1]
 
-        data = STORY_DATA[0]
-        # level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
         level_map = data['map']
+
         for row_index, row in enumerate(level_map):
             for col_index, col in enumerate(row):
                 x = col_index * 16
@@ -170,12 +172,6 @@ class Level:
                 #     Tile((x, y), [self.visible_sprites], wall=False)
 
         self.visible_sprites.draw(self.map_surf)
-        # key_door_cells = random.sample(other_cells, 4)
-
-        # # draw door
-        # d = random.choice(list(key_door_cells[2].room))
-        # self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
-        #                  )
 
         # draw player and keys
         if self.player1_active:
@@ -185,9 +181,7 @@ class Level:
             self.player1.collectible_sprites = self.collectible_sprites
             self.player1.enemy_sprites = self.enemy_sprites
 
-            # c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
-            # c = random.choice(list(key_door_cells[1].room))
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
 
         if self.player2_active:
@@ -197,31 +191,26 @@ class Level:
             self.player2.collectible_sprites = self.collectible_sprites
             self.player2.enemy_sprites = self.enemy_sprites
 
-            # c = random.choice(list(key_door_cells[2].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
-            # c = random.choice(list(key_door_cells[3].room))
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
-            # self.player2.door = door
 
         self.coins = []
-        # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
-        # for cell in coin_cells:
-        #     c = random.choice(list(cell.room))
-        #     self.coins.append(
-        #         Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='coin'))
-        #
-        # cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
-        # c = random.choice(list(cell[0].room))
-        # Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
-        #
-        # # draw enemies
+        coin_cells = data['coins']
+        for _, cell in enumerate(coin_cells):
+            self.coins.append(
+                Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites], type='coin'))
+
+        torch_cells = data['torch']
+        for _, cell in enumerate(torch_cells):
+            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites], type='torch')
+
+        # draw enemies
         self.enemys = []
-        # enemy_cells = random.sample(other_cells, 5)
-        # for enemy in enemy_cells:
-        #     e = random.choice(list(enemy.room))
-        #     self.enemys.append(
-        #         Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-        #               self.collision_sprites))
+        bat_cells = data['bats']
+        for _, cell in enumerate(bat_cells):
+            self.enemys.append(
+                Enemy(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                      self.collision_sprites))
 
     def run(self):
 
