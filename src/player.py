@@ -107,6 +107,7 @@ class Player(pygame.sprite.Sprite):
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
+            self.weapon.status = 'attack'
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
@@ -257,7 +258,15 @@ class Player(pygame.sprite.Sprite):
 
             self.torch.rect = self.torch.image.get_rect(center=(self.rect.x, self.rect.y + 2))
             if self.weapon_active:
-                self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y ))
+                if self.weapon.status == 'idle':
+                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y ))
+                else:
+                    if self.is_flipped:
+                        self.weapon.rect = self.weapon.image.get_rect(midright=self.rect.midleft)
+                        self.weapon.animate(flipped=True)
+                    else:
+                        self.weapon.rect = self.weapon.image.get_rect(midleft=self.rect.midright)
+                        self.weapon.animate(flipped=False)
             self.torch.animate()
             if self.is_big_torch:
                 self.torch_update()
