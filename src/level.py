@@ -8,6 +8,7 @@ from settings import *
 from tile import Tile
 from player import Player
 from enemy import Enemy
+from enemy_boss import Eye
 from collectible import Collectible
 from key import Key
 from door import Door
@@ -29,6 +30,9 @@ class Level:
         self.story_mode = story_mode
         self.current_level = level
 
+        self.is_boss_level = False
+        self.boss = None
+
         # sprite group setup
         self.visible_sprites = pygame.sprite.Group()
         self.active_sprites = pygame.sprite.Group()
@@ -39,7 +43,7 @@ class Level:
         self.key2_sprite = pygame.sprite.GroupSingle()
         self.door1_sprite = pygame.sprite.GroupSingle()
         self.door2_sprite = pygame.sprite.GroupSingle()
-        self.weapon1_sprite = pygame.sprite.GroupSingle()
+        self.weapon_sprite = pygame.sprite.Group()
         self.weapon2_sprite = pygame.sprite.GroupSingle()
 
         # create map surface
@@ -149,11 +153,14 @@ class Level:
             e = random.choice(list(enemy.room))
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites))
+                      self.collision_sprites), self.weapon_sprite)
 
     def story_setup(self):
         from level_design import STORY_DATA
         data = STORY_DATA[self.current_level - 1]
+
+        if self.current_level % 5 == 0:
+            self.is_boss_level = True
 
         self.caption = data['caption']
         level_map = data['map']
@@ -180,7 +187,7 @@ class Level:
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
             if len(data['weapon1']):
-                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon1_sprite], type=data['weapon_type'])
+                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
 
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
@@ -192,7 +199,7 @@ class Level:
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
             if len(data['weapon2']):
-                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon2_sprite], type=data['weapon_type'])
+                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
 
 
         self.coins = []
@@ -211,14 +218,18 @@ class Level:
         for _, cell in enumerate(bat_cells):
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites, type='bat'))
+                      self.collision_sprites, self.weapon_sprite, type='bat'))
 
         slime_cells = data['slime']
         for _, cell in enumerate(slime_cells):
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell),
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites, type='slime'))
+                      self.collision_sprites, self.weapon_sprite, type='slime'))
+
+        if self.is_boss_level:
+            self.boss = Eye(tuple(TILE_SIZE * x for x in data['boss']), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                      self.collision_sprites, self.weapon_sprite)
 
     def run(self):
 
@@ -317,13 +328,15 @@ class Level:
             self.player2.door.open()
             self.door2_sprite.draw(self.level_window)
 
-        #self.active_sprites.draw(self.display_surface)
+        # draw Enemy sprites
         for sprite in self.enemy_sprites.sprites():
-            # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect1)) or (
-            #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_rect2)):
-            if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
-                        self.player2_active and self.cropped_rect2.contains(sprite)) or (
-                        self.ghost_active and self.cropped_rect3.contains(sprite)):
+            # if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
+            #             self.player2_active and self.cropped_rect2.contains(sprite)) or (
+            #             self.ghost_active and self.cropped_rect3.contains(sprite)):
+            #     sprite.draw(self.level_window)
+            if (self.player1_active and self.cropped_rect1.colliderect(sprite)) or (
+                        self.player2_active and self.cropped_rect2.colliderect(sprite)) or (
+                        self.ghost_active and self.cropped_rect3.colliderect(sprite)):
                 sprite.draw(self.level_window)
 
         if self.player1_active and self.player1.visibility_radius > 1:

@@ -14,9 +14,9 @@ class Player(pygame.sprite.Sprite):
         super().__init__(groups)
 
         if player2:
-            self.import_assets(2)
+            self.import_assets(2, 0.7)
         else:
-            self.import_assets(1)
+            self.import_assets(1, 0.7)
 
         self.frame_index = 0
 
@@ -76,13 +76,13 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_DOWN = K_s
             self.ATTACK = K_z
 
-    def import_assets(self, player):
+    def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
         self.frames = {'idle': [], 'walk': [], 'dead': [], 'attack': []}
 
         for status in self.frames.keys():
             full_path = path + status
-            self.frames[status] = import_frames(full_path, scale=0.7)
+            self.frames[status] = import_frames(full_path, scale=scale)
 
     def input(self):
         keys = pygame.key.get_pressed()

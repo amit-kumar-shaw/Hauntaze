@@ -9,7 +9,7 @@ from utilities import import_frames
 
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, pos, groups, collision_sprites, type='None'):
+    def __init__(self, pos, groups, collision_sprites, player_weapon_sprites, type='None'):
         super().__init__(groups)
         if type == 'None':
             self.type = random.choice(['bat', 'slime'])
@@ -28,6 +28,7 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 1
         self.tog = True
         self.collision_sprites = collision_sprites
+        self.player_weapon_sprites = player_weapon_sprites
 
         self.timer = 5
         self.movement_update()
@@ -79,6 +80,11 @@ class Enemy(pygame.sprite.Sprite):
         if self.direction.x < 0:
             self.image = pygame.transform.flip(self.image, True, False)
 
+    def weapon_collisions(self):
+        for sprite in self.player_weapon_sprites.sprites():
+            if sprite.rect.colliderect(self.rect) and sprite.status == 'attack':
+                self.kill()
+
     def update(self):
 
         self.animate()
@@ -94,6 +100,7 @@ class Enemy(pygame.sprite.Sprite):
         if self.tog:
             self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
+        self.weapon_collisions()
         self.tog = not self.tog
 
     def draw(self, screen):
