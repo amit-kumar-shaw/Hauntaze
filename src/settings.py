@@ -22,8 +22,8 @@ PLAYER_SPEED = 1
 VISIBILITY_RADIUS = 45
 LIVES = 3
 INVINSIBILITY_DURATION = 2500
-PLAYER1_SPRITE = pygame.sprite.Group()
-PLAYER2_SPRITE = pygame.sprite.Group()
+PLAYER1_SPRITE = pygame.sprite.GroupSingle()
+PLAYER2_SPRITE = pygame.sprite.GroupSingle()
 
 GHOST_VISIBILITY = 30
 

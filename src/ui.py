@@ -129,7 +129,10 @@ class UI:
         self.info_surf.fill('black')
 
         font = pygame.font.Font('./assets/fonts/1.ttf', 16)
-        level = font.render(f'LEVEL {self.current_level}', False, 'white')
+        if self.level.story_mode:
+            level = font.render(f'{self.level.caption}', False, 'white')
+        else:
+            level = font.render(f'LEVEL {self.current_level}', False, 'white')
         level_rect = level.get_rect(center=(100, 15))
         self.info_surf.blit(level, level_rect)
 

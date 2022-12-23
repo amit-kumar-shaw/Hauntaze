@@ -1,11 +1,13 @@
 import pygame
 from utilities import import_frames
 
-class Key(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
+
+class Weapon(pygame.sprite.Sprite):
+    def __init__(self, pos, groups, type):
         super().__init__(groups)
 
-        self.frames = import_frames("./assets/images/key", scale=0.75)
+        self.type =type
+        self.frames = import_frames(f"./assets/images/weapon/{type}", scale=0.75)
         self.animation_index = 0
 
         self.image = self.frames[self.animation_index]
@@ -13,7 +15,9 @@ class Key(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft=pos)
 
     def animate(self):
-
         self.animation_index += 0.1
         if self.animation_index >= len(self.frames): self.animation_index = 0
         self.image = self.frames[int(self.animation_index)]
+
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)

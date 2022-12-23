@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
         #self.mask = pygame
         self.is_flipped = False
 
-        self.torch = Torch(pos, groups)
+        self.torch = Torch(pos)
         self.player2 = player2
         self.lives = LIVES
         self.is_alive = True
@@ -48,6 +48,11 @@ class Player(pygame.sprite.Sprite):
 
         self.is_ghost = False
 
+        self.is_attacking = False
+        self.weapon_active = False
+        self.weapon = None
+        self.attack_end_time = 0
+
         # player movement
         self.direction = pygame.math.Vector2()
         self.speed = PLAYER_SPEED
@@ -62,12 +67,14 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_RIGHT = K_RIGHT
             self.MOVE_UP = K_UP
             self.MOVE_DOWN = K_DOWN
+            self.ATTACK = K_m
 
         else:
             self.MOVE_LEFT = K_a
             self.MOVE_RIGHT = K_d
             self.MOVE_UP = K_w
             self.MOVE_DOWN = K_s
+            self.ATTACK = K_z
 
     def import_assets(self, player):
         path = f'./assets/images/player/p{player}/'
@@ -96,6 +103,11 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.y = 0
 
+        if keys[self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= 00 and not self.is_attacking:
+            self.is_attacking = True
+            self.frame_index = 0
+            self.status = 'attack'
+
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -114,7 +126,9 @@ class Player(pygame.sprite.Sprite):
                     self.rect.top = sprite.rect.bottom
 
     def update_status(self):
-        if self.direction.x == 0 and self.direction.y == 0:
+        if self.is_attacking:
+            self.status = 'attack'
+        elif self.direction.x == 0 and self.direction.y == 0:
             self.status = 'idle'
         else:
             self.status = 'walk'
@@ -133,6 +147,9 @@ class Player(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(status):
             self.frame_index = 0
+            if self.is_attacking:
+                self.is_attacking = False
+                self.attack_end_time = pygame.time.get_ticks()
             if self.status =='dead':
                 self.frame_index = len(status) - 1
 
@@ -150,6 +167,7 @@ class Player(pygame.sprite.Sprite):
             self.image.set_alpha(alpha)
         else:
             self.image.set_alpha(255)
+        self.rect = self.image.get_rect(topleft=self.rect.topleft)
 
     def wave_value(self):
         value = sin(pygame.time.get_ticks())
@@ -161,24 +179,33 @@ class Player(pygame.sprite.Sprite):
     def collectible_collisions(self):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
+                self.collectible_sprites.remove(sprite)
                 if sprite.type == 'coin':
                     self.score += 1
                     self.ui_update = True
                     self.sounds.play_coin_collection()
+                    sprite.kill()
                 elif sprite.type == 'torch':
                     self.is_big_torch = True
                     self.torch.scale(1)
                     self.big_torch_time = pygame.time.get_ticks()
-                sprite.kill()
+                    sprite.kill()
+                elif sprite.type == 'sword':
+                    self.weapon_active = True
+
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible:
-                self.is_invincible = True
-                self.sounds.play_enemy_collision()
-                self.lives -= 1
-                self.ui_update = True
-                self.hurt_time = pygame.time.get_ticks()
+                if self.is_attacking:
+                    self.enemy_sprites.remove(sprite)
+                    sprite.kill()
+                else:
+                    self.is_invincible = True
+                    self.sounds.play_enemy_collision()
+                    self.lives -= 1
+                    self.ui_update = True
+                    self.hurt_time = pygame.time.get_ticks()
 
     def death_animate(self):
         if self.visibility_radius >= 1:
@@ -228,7 +255,9 @@ class Player(pygame.sprite.Sprite):
 
             self.invincibility_timer()
 
-            self.torch.rect = self.torch.image.get_rect(center=(self.rect.x + 2, self.rect.y + 2))
+            self.torch.rect = self.torch.image.get_rect(center=(self.rect.x, self.rect.y + 2))
+            if self.weapon_active:
+                self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y ))
             self.torch.animate()
             if self.is_big_torch:
                 self.torch_update()
@@ -264,3 +293,7 @@ class Player(pygame.sprite.Sprite):
         self.status = 'idle'
         self.ui_update = True
         self.is_ghost = False
+
+        self.is_attacking = False
+        self.weapon_active = False
+        self.weapon = None

@@ -11,6 +11,7 @@ from enemy import Enemy
 from collectible import Collectible
 from key import Key
 from door import Door
+from weapon import Weapon
 from music import GameSound
 from player_ghost import Ghost
 
@@ -38,6 +39,8 @@ class Level:
         self.key2_sprite = pygame.sprite.GroupSingle()
         self.door1_sprite = pygame.sprite.GroupSingle()
         self.door2_sprite = pygame.sprite.GroupSingle()
+        self.weapon1_sprite = pygame.sprite.GroupSingle()
+        self.weapon2_sprite = pygame.sprite.GroupSingle()
 
         # create map surface
         self.level_window = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
@@ -152,6 +155,7 @@ class Level:
         from level_design import STORY_DATA
         data = STORY_DATA[self.current_level - 1]
 
+        self.caption = data['caption']
         level_map = data['map']
 
         for row_index, row in enumerate(level_map):
@@ -175,6 +179,8 @@ class Level:
 
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
+            if len(data['weapon1']):
+                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon1_sprite], type=data['weapon_type'])
 
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
@@ -185,6 +191,9 @@ class Level:
 
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
+            if len(data['weapon2']):
+                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon2_sprite], type=data['weapon_type'])
+
 
         self.coins = []
         coin_cells = data['coins']
@@ -318,8 +327,17 @@ class Level:
                 sprite.draw(self.level_window)
 
         if self.player1_active and self.player1.visibility_radius > 1:
+
+            self.level_window.blit(self.player1.torch.image, self.player1.torch.rect)
+            if self.player1.weapon_active:
+                self.level_window.blit(self.player1.weapon.image, self.player1.weapon.rect)
             PLAYER1_SPRITE.draw(self.level_window)
+
         if self.player2_active and self.player2.visibility_radius > 1:
+
+            self.level_window.blit(self.player2.torch.image, self.player2.torch.rect)
+            if self.player2.weapon_active:
+                self.level_window.blit(self.player2.weapon.image, self.player2.weapon.rect)
             PLAYER2_SPRITE.draw(self.level_window)
 
         # Ghost update
@@ -401,7 +419,7 @@ class Level:
                                    self.ghost.visibility_radius * float(1 - (i * i) / 100))
 
         # draw enemy indicator
-        for enemy in self.enemys:
+        for enemy in self.enemy_sprites:
             if (self.player1_active and math.dist(self.player1.torch.rect.center,
                                                   enemy.rect.center) > self.player1.visibility_radius) and not self.player2_active:
                 pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)

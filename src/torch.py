@@ -4,8 +4,8 @@ from utilities import import_frames
 
 
 class Torch(pygame.sprite.Sprite):
-    def __init__(self, pos, groups):
-        super().__init__(groups)
+    def __init__(self, pos):
+        super().__init__()
 
         self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         self.torch_index = 0
