@@ -2,7 +2,6 @@ import sys
 import time
 from enum import Enum
 
-import pygame
 from settings import *
 from menu import Menu
 from story_mode import StoryMode
