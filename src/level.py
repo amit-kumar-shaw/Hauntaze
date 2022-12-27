@@ -183,6 +183,8 @@ class Level:
             self.player1.collision_sprites = self.collision_sprites
             self.player1.collectible_sprites = self.collectible_sprites
             self.player1.enemy_sprites = self.enemy_sprites
+            if self.is_boss_level:
+                self.player1.key_active = False
 
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
@@ -195,6 +197,8 @@ class Level:
             self.player2.collision_sprites = self.collision_sprites
             self.player2.collectible_sprites = self.collectible_sprites
             self.player2.enemy_sprites = self.enemy_sprites
+            if self.is_boss_level:
+                self.player2.key_active = False
 
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
@@ -293,6 +297,11 @@ class Level:
                     self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.level_window)
 
+        if self.is_boss_level:
+            if self.player1_active:
+                self.player1.key.rect = self.player1.key.image.get_rect(midright=self.boss.rect.midtop)
+            if self.player2_active:
+                self.player2.key.rect = self.player2.key.image.get_rect(midleft = self.boss.rect.midtop)
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.key.rect.center) < self.player1.visibility_radius:
@@ -414,6 +423,10 @@ class Level:
         if self.player2_active and self.player2.is_ghost and not self.ghost_active:
             self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
             self.ghost_active = True
+
+        if self.is_boss_level:
+            self.boss.player1_active = self.player1_active
+            self.boss.player2_active = self.player2_active
 
     def draw_visible_region(self):
 

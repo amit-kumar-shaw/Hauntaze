@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
-        #self.mask = pygame
+        # self.mask = pygame
         self.is_flipped = False
 
         self.torch = Torch(pos)
@@ -35,6 +35,7 @@ class Player(pygame.sprite.Sprite):
         self.is_invincible = False
         self.hurt_time = 0
         self.score = 0
+        self.key_active = True
         self.key_picked = False
         self.visibility_radius = VISIBILITY_RADIUS
         self.sounds = PlayerSound()
@@ -103,7 +104,8 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.y = 0
 
-        if keys[self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= 00 and not self.is_attacking:
+        if keys[
+            self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= 00 and not self.is_attacking:
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
@@ -151,7 +153,7 @@ class Player(pygame.sprite.Sprite):
             if self.is_attacking:
                 self.is_attacking = False
                 self.attack_end_time = pygame.time.get_ticks()
-            if self.status =='dead':
+            if self.status == 'dead':
                 self.frame_index = len(status) - 1
 
         self.image = status[int(self.frame_index)]
@@ -194,19 +196,14 @@ class Player(pygame.sprite.Sprite):
                 elif sprite.type == 'sword':
                     self.weapon_active = True
 
-
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible:
-                if self.is_attacking:
-                    self.enemy_sprites.remove(sprite)
-                    sprite.kill()
-                else:
-                    self.is_invincible = True
-                    self.sounds.play_enemy_collision()
-                    self.lives -= 1
-                    self.ui_update = True
-                    self.hurt_time = pygame.time.get_ticks()
+                self.is_invincible = True
+                self.sounds.play_enemy_collision()
+                self.lives -= 1
+                self.ui_update = True
+                self.hurt_time = pygame.time.get_ticks()
 
     def death_animate(self):
         if self.visibility_radius >= 1:
@@ -252,14 +249,15 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.direction.y * self.speed
             self.vertical_collisions()
             self.collectible_collisions()
-            self.key_collisions()
+            if self.key_active:
+                self.key_collisions()
 
             self.invincibility_timer()
 
             self.torch.rect = self.torch.image.get_rect(center=(self.rect.x, self.rect.y + 2))
             if self.weapon_active:
                 if self.weapon.status == 'idle':
-                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y ))
+                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y))
                 else:
                     if self.is_flipped:
                         self.weapon.rect = self.weapon.image.get_rect(midright=self.rect.midleft)
@@ -276,6 +274,8 @@ class Player(pygame.sprite.Sprite):
             if not self.status == 'dead' and self.lives == 0:
                 self.status = 'dead'
                 self.frame_index = 0
+                if self.weapon_active:
+                    self.weapon.kill()
             if self.status == 'dead':
                 self.animate()
             if self.frame_index >= len(self.frames[self.status]) - 1 and self.status == 'dead':
@@ -299,6 +299,7 @@ class Player(pygame.sprite.Sprite):
         self.visibility_radius = VISIBILITY_RADIUS
         self.level_completed = False
         self.key_picked = False
+        self.key_active = True
         self.status = 'idle'
         self.ui_update = True
         self.is_ghost = False
