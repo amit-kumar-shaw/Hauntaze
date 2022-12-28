@@ -70,6 +70,9 @@ class Level:
         self.player1 = player1
         self.player2 = player2
 
+        self.coins = []
+        self.enemys = []
+
         # Ghost
         self.ghost_active = False
         self.ghost = None
@@ -135,7 +138,6 @@ class Level:
             self.player2.door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
             # self.player2.door = door
 
-        self.coins = []
         coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
         for cell in coin_cells:
             c = random.choice(list(cell.room))
@@ -147,7 +149,6 @@ class Level:
         Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
 
         # draw enemies
-        self.enemys = []
         enemy_cells = random.sample(other_cells, 5)
         for enemy in enemy_cells:
             e = random.choice(list(enemy.room))
@@ -191,6 +192,11 @@ class Level:
             if len(data['weapon1']):
                 self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
 
+            torch_cells = data['torch1']
+            for _, cell in enumerate(torch_cells):
+                Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                            type='torch')
+
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
             self.player2.attach_torch()
@@ -205,8 +211,13 @@ class Level:
             if len(data['weapon2']):
                 self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
 
+            torch_cells = data['torch2']
+            for _, cell in enumerate(torch_cells):
+                Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                            type='torch')
 
-        self.coins = []
+
+
         if self.player1_active:
             coin_cells = data['coins1']
             for _, cell in enumerate(coin_cells):
@@ -220,12 +231,7 @@ class Level:
                     Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                                 type='coin'))
 
-        torch_cells = data['torch']
-        for _, cell in enumerate(torch_cells):
-            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites], type='torch')
-
         # draw enemies
-        self.enemys = []
         bat_cells = data['bats']
         for _, cell in enumerate(bat_cells):
             self.enemys.append(
@@ -239,7 +245,7 @@ class Level:
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='slime'))
 
-        skull_cells = data['slime']
+        skull_cells = data['skull']
         for _, cell in enumerate(skull_cells):
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell),
