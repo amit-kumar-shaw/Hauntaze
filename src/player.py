@@ -34,6 +34,10 @@ class Player(pygame.sprite.Sprite):
         self.is_alive = True
         self.is_invincible = False
         self.hurt_time = 0
+        self.move = True
+        self.is_slow = False
+        self.web_time = 0
+        self.web = pygame.image.load('./assets/images/web/web2.png').convert_alpha()
         self.score = 0
         self.key_active = True
         self.key_picked = False
@@ -195,6 +199,9 @@ class Player(pygame.sprite.Sprite):
                     sprite.kill()
                 elif sprite.type == 'sword':
                     self.weapon_active = True
+                elif sprite.type == 'web1' or sprite.type == 'web2':
+                    self.is_slow = True
+                    self.web_time = pygame.time.get_ticks()
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
@@ -243,10 +250,19 @@ class Player(pygame.sprite.Sprite):
             self.input()
             self.update_status()
             self.animate()
-            self.rect.x += self.direction.x * self.speed
+
+            if self.is_slow and pygame.time.get_ticks() - self.web_time > 5000:
+                self.is_slow = False
+
+            if not self.is_slow:
+                self.move = True
+
+            if self.move:
+                self.rect.x += self.direction.x * self.speed
             self.horizontal_collisions()
 
-            self.rect.y += self.direction.y * self.speed
+            if self.move:
+                self.rect.y += self.direction.y * self.speed
             self.vertical_collisions()
             self.collectible_collisions()
             if self.key_active:
@@ -270,6 +286,8 @@ class Player(pygame.sprite.Sprite):
                 self.torch_update()
             self.door_collisions()
             self.enemy_collisions()
+
+            self.move = not self.move
         else:
             if not self.status == 'dead' and self.lives == 0:
                 self.status = 'dead'
@@ -303,6 +321,7 @@ class Player(pygame.sprite.Sprite):
         self.status = 'idle'
         self.ui_update = True
         self.is_ghost = False
+        self.is_slow = False
 
         self.is_attacking = False
         self.weapon_active = False

@@ -1,5 +1,4 @@
 import pygame
-import random
 from utilities import import_frames
 
 
@@ -12,8 +11,12 @@ class Collectible(pygame.sprite.Sprite):
             self.frames = import_frames("./assets/images/coin", scale=0.5)
         elif type == 'torch':
             self.frames = import_frames("./assets/images/big_torch", scale=0.8)
+        elif type == 'web1':
+            self.frames.append(pygame.image.load('./assets/images/web/web.png').convert_alpha())
+        elif type == 'web2':
+            self.frames.append(pygame.image.load('./assets/images/web/web1.png').convert_alpha())
 
-        self.animation_index = random.choice([0, 1, 2, 3])
+        self.animation_index = 0
 
         self.image = self.frames[self.animation_index]
 

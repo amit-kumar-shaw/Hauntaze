@@ -256,6 +256,8 @@ STORY_DATA = [
         'skull': [],
         'torch1': [(2, 17)],
         'torch2': [(33, 2)],
+        'web1': [(22, 8)],
+        'web2': [(13, 8)],
         'weapon_type': 'sword',
         'weapon1': [],
         'weapon2': [],

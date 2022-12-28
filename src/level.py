@@ -216,7 +216,14 @@ class Level:
                 Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                             type='torch')
 
-
+        web_cells = data['web1']
+        for _, cell in enumerate(web_cells ):
+            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                        type='web1')
+        web_cells = data['web2']
+        for _, cell in enumerate(web_cells):
+            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                        type='web2')
 
         if self.player1_active:
             coin_cells = data['coins1']
@@ -376,12 +383,20 @@ class Level:
                 self.level_window.blit(self.player1.weapon.image, self.player1.weapon.rect)
             PLAYER1_SPRITE.draw(self.level_window)
 
+            if self.player1.is_slow:
+                rect = self.player1.web.get_rect(midtop = self.player1.rect.midtop)
+                self.level_window.blit(self.player1.web, rect)
+
         if self.player2_active and self.player2.visibility_radius > 1:
 
             self.level_window.blit(self.player2.torch.image, self.player2.torch.rect)
             if self.player2.weapon_active:
                 self.level_window.blit(self.player2.weapon.image, self.player2.weapon.rect)
             PLAYER2_SPRITE.draw(self.level_window)
+
+            if self.player2.is_slow:
+                rect = self.player2.web.get_rect(midtop = self.player2.rect.midtop)
+                self.level_window.blit(self.player2.web, rect)
 
         # Ghost update
         if self.ghost_active:
