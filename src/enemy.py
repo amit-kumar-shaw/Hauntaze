@@ -12,7 +12,7 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self, pos, groups, collision_sprites, player_weapon_sprites, type='None'):
         super().__init__(groups)
         if type == 'None':
-            self.type = random.choice(['bat', 'slime'])
+            self.type = random.choice(['bat', 'slime', 'skull'])
         else:
             self.type = type
 

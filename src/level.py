@@ -207,10 +207,18 @@ class Level:
 
 
         self.coins = []
-        coin_cells = data['coins']
-        for _, cell in enumerate(coin_cells):
-            self.coins.append(
-                Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites], type='coin'))
+        if self.player1_active:
+            coin_cells = data['coins1']
+            for _, cell in enumerate(coin_cells):
+                self.coins.append(
+                    Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                                type='coin'))
+        if self.player2_active:
+            coin_cells = data['coins2']
+            for _, cell in enumerate(coin_cells):
+                self.coins.append(
+                    Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                                type='coin'))
 
         torch_cells = data['torch']
         for _, cell in enumerate(torch_cells):
@@ -230,6 +238,13 @@ class Level:
                 Enemy(tuple(TILE_SIZE * x for x in cell),
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='slime'))
+
+        skull_cells = data['slime']
+        for _, cell in enumerate(skull_cells):
+            self.enemys.append(
+                Enemy(tuple(TILE_SIZE * x for x in cell),
+                      [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                      self.collision_sprites, self.weapon_sprite, type='skull'))
 
         if self.is_boss_level:
             self.boss = Eye(tuple(TILE_SIZE * x for x in data['boss']), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
