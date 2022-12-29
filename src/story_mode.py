@@ -19,6 +19,9 @@ class StoryMode:
         self.player2_active = player2
         self.player1 = None
         self.player2 = None
+        self.multiplayer = False
+        if player1 and player2:
+            self.multiplayer = True
         if player1:
             self.player1 = Player((0, 0), PLAYER1_SPRITE,
                                   collision_sprites=None, collectible_sprites=None, enemy_sprites=None)
@@ -26,7 +29,7 @@ class StoryMode:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
                                   collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
         self.current_level = 12
-        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level)
+        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
@@ -48,7 +51,7 @@ class StoryMode:
             if self.player1_active: self.player1.reset()
             if self.player2_active: self.player2.reset()
             self.current_level += 1
-            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level)
+            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
             self.ui.level = self.level
             self.ui.current_level = self.current_level
             self.ui.update_level()

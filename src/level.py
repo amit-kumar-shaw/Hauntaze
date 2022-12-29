@@ -19,7 +19,7 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level):
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer = False):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -30,6 +30,7 @@ class Level:
 
         self.story_mode = story_mode
         self.current_level = level
+        self.multiplayer = multiplayer
 
         self.is_boss_level = False
         self.boss = None
@@ -459,19 +460,19 @@ class Level:
     def check_player_status(self):
         if self.player1_active and not self.player1.is_alive:
             self.player1_active = False
-            if not self.ghost_active:
+            if not self.ghost_active and self.multiplayer:
                 self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
                 self.ghost_active = True
         if self.player2_active and not self.player2.is_alive:
             self.player2_active = False
-            if not self.ghost_active:
+            if not self.ghost_active and self.multiplayer:
                 self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
                 self.ghost_active = True
 
-        if self.player1_active and self.player1.is_ghost and not self.ghost_active:
+        if self.player1_active and self.player1.is_ghost and not self.ghost_active and self.multiplayer:
             self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
             self.ghost_active = True
-        if self.player2_active and self.player2.is_ghost and not self.ghost_active:
+        if self.player2_active and self.player2.is_ghost and not self.ghost_active and self.multiplayer:
             self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
             self.ghost_active = True
 
