@@ -122,6 +122,7 @@ class Level:
             self.player1.collision_sprites = self.collision_sprites
             self.player1.collectible_sprites = self.collectible_sprites
             self.player1.enemy_sprites = self.enemy_sprites
+            self.player1.trap_sprites = self.trap_sprites
 
             c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
@@ -134,6 +135,7 @@ class Level:
             self.player2.collision_sprites = self.collision_sprites
             self.player2.collectible_sprites = self.collectible_sprites
             self.player2.enemy_sprites = self.enemy_sprites
+            self.player2.trap_sprites = self.trap_sprites
 
             c = random.choice(list(key_door_cells[2].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
@@ -157,7 +159,7 @@ class Level:
             e = random.choice(list(enemy.room))
             self.enemys.append(
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites), self.weapon_sprite)
+                      self.collision_sprites, self.weapon_sprite))
 
     def story_setup(self):
         from level_design import STORY_DATA
