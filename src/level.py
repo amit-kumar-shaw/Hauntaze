@@ -8,6 +8,7 @@ from settings import *
 from tile import Tile
 from player import Player
 from enemy import Enemy
+from traps import Spike
 from enemy_boss import Eye
 from collectible import Collectible
 from key import Key
@@ -38,6 +39,7 @@ class Level:
         self.active_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
         self.collectible_sprites = pygame.sprite.Group()
+        self.trap_sprites = pygame.sprite.Group()
         self.enemy_sprites = pygame.sprite.Group()
         self.key1_sprite = pygame.sprite.GroupSingle()
         self.key2_sprite = pygame.sprite.GroupSingle()
@@ -238,6 +240,11 @@ class Level:
                     Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                                 type='coin'))
 
+        spike_cells = data['spikes']
+        for _, cell in enumerate(spike_cells):
+            Spike(tuple(TILE_SIZE * x for x in cell),
+                      [self.visible_sprites, self.trap_sprites])
+
         # draw enemies
         bat_cells = data['bats']
         for _, cell in enumerate(bat_cells):
@@ -321,6 +328,12 @@ class Level:
         for sprite in self.collectible_sprites.sprites():
             # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf1) or (
             #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf2))):
+            if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
+                    self.player2_active and self.cropped_rect2.contains(sprite)):
+                sprite.draw(self.level_window)
+
+        self.trap_sprites.update()
+        for sprite in self.trap_sprites.sprites():
             if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
                     self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.level_window)
