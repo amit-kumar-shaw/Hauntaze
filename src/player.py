@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
         self.collectible_sprites = collectible_sprites
         self.enemy_sprites = enemy_sprites
+        self.trap_sprites = None
 
         # player keys
         if player2:
@@ -212,6 +213,15 @@ class Player(pygame.sprite.Sprite):
                 self.ui_update = True
                 self.hurt_time = pygame.time.get_ticks()
 
+    def trap_collisions(self):
+        for sprite in self.trap_sprites.sprites():
+            if sprite.rect.colliderect(self.rect) and not self.is_invincible and not sprite.state == 'off':
+                self.is_invincible = True
+                self.sounds.play_enemy_collision()
+                self.lives -= 1
+                self.ui_update = True
+                self.hurt_time = pygame.time.get_ticks()
+
     def death_animate(self):
         if self.visibility_radius >= 1:
             self.visibility_radius -= 0.5
@@ -286,7 +296,7 @@ class Player(pygame.sprite.Sprite):
                 self.torch_update()
             self.door_collisions()
             self.enemy_collisions()
-
+            self.trap_collisions()
             self.move = not self.move
         else:
             if not self.status == 'dead' and self.lives == 0:

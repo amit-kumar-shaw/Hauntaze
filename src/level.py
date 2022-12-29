@@ -186,6 +186,7 @@ class Level:
             self.player1.collision_sprites = self.collision_sprites
             self.player1.collectible_sprites = self.collectible_sprites
             self.player1.enemy_sprites = self.enemy_sprites
+            self.player1.trap_sprites = self.trap_sprites
             if self.is_boss_level:
                 self.player1.key_active = False
 
@@ -205,6 +206,7 @@ class Level:
             self.player2.collision_sprites = self.collision_sprites
             self.player2.collectible_sprites = self.collectible_sprites
             self.player2.enemy_sprites = self.enemy_sprites
+            self.player2.trap_sprites = self.trap_sprites
             if self.is_boss_level:
                 self.player2.key_active = False
 
