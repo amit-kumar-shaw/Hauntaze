@@ -155,7 +155,7 @@ class Player(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(status):
             self.frame_index = 0
-            if self.is_attacking:
+            if self.is_attacking and not self.weapon.status == 'attack':
                 self.is_attacking = False
                 self.attack_end_time = pygame.time.get_ticks()
             if self.status == 'dead':
