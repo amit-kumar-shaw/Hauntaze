@@ -147,7 +147,7 @@ STORY_DATA = [
         'web1': [],
         'web2': [],
         'spikes': [],
-        'weapon_type': 'sword',
+        'weapon_type': 'flamethrower',
         'weapon1': (4, 4),
         'weapon2': (31, 4),
         'map': ['####################################',

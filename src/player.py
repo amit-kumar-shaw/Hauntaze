@@ -110,7 +110,7 @@ class Player(pygame.sprite.Sprite):
             self.direction.y = 0
 
         if keys[
-            self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= 00 and not self.is_attacking:
+            self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
@@ -198,7 +198,7 @@ class Player(pygame.sprite.Sprite):
                     self.torch.scale(1)
                     self.big_torch_time = pygame.time.get_ticks()
                     sprite.kill()
-                elif sprite.type == 'sword':
+                elif sprite.type == 'sword' or sprite.type == 'flamethrower':
                     self.weapon_active = True
                 elif sprite.type == 'web1' or sprite.type == 'web2':
                     self.is_slow = True
@@ -248,7 +248,7 @@ class Player(pygame.sprite.Sprite):
 
     def door_collisions(self):
         # if self.rect.colliderect(self.door.rect) and self.key_picked:
-        if pygame.sprite.collide_rect_ratio(0.3)(self, self.door) and self.key_picked:
+        if pygame.sprite.collide_rect_ratio(0.2)(self, self.door) and self.key_picked:
             # self.sounds.play_key_collection()
             self.level_completed = True
 
@@ -284,6 +284,7 @@ class Player(pygame.sprite.Sprite):
             if self.weapon_active:
                 if self.weapon.status == 'idle':
                     self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y))
+                    self.weapon.animate()
                 else:
                     if self.is_flipped:
                         self.weapon.rect = self.weapon.image.get_rect(midright=self.rect.midleft)

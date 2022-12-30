@@ -3,7 +3,7 @@ from utilities import import_frames
 
 
 class Weapon(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, type):
+    def __init__(self, pos, groups, collision_sprites, type):
         super().__init__(groups)
 
         self.type =type
@@ -23,10 +23,12 @@ class Weapon(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(topleft=pos)
 
+        self.collision_sprites = collision_sprites
+
     def animate(self, flipped=False):
         status = self.frames[self.status]
 
-        self.animation_index += 0.1
+        self.animation_index += 0.07
 
         if self.animation_index >= len(status):
             self.animation_index = 0
@@ -36,6 +38,16 @@ class Weapon(pygame.sprite.Sprite):
         self.image = status[int(self.animation_index)]
         if flipped:
             self.image = pygame.transform.flip(self.image, True, False)
+
+        if self.status == 'attack':
+            self.check_wall_collision()
+
+    def check_wall_collision(self):
+        for sprite in self.collision_sprites.sprites():
+            if sprite.rect.colliderect(self.rect):
+                self.animation_index = 0
+                self.status = 'idle'
+
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

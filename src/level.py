@@ -196,7 +196,7 @@ class Level:
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
             if len(data['weapon1']):
-                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
+                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon_sprite], self.collision_sprites, type=data['weapon_type'])
 
             torch_cells = data['torch1']
             for _, cell in enumerate(torch_cells):
@@ -216,7 +216,7 @@ class Level:
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
             if len(data['weapon2']):
-                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon_sprite], type=data['weapon_type'])
+                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon_sprite], self.collision_sprites, type=data['weapon_type'])
 
             torch_cells = data['torch2']
             for _, cell in enumerate(torch_cells):
