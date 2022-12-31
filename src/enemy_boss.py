@@ -165,7 +165,7 @@ class Mushroom(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.direction.x = 1
-        self.is_flipped = True
+        self.is_flipped = False
         self.speed = 1
         self.tog = True
         self.collision_sprites = collision_sprites
@@ -180,7 +180,7 @@ class Mushroom(pygame.sprite.Sprite):
         self.old_status = None
         self.old_direction = None
 
-        self.lives = 7
+        self.lives = 2
 
         self.timer = 5
         self.movement_update()
@@ -207,6 +207,7 @@ class Mushroom(pygame.sprite.Sprite):
     def movement_update(self):
 
         self.direction.x *= -1
+        self.is_flipped = not self.is_flipped
 
 
     def animate(self):
@@ -226,6 +227,8 @@ class Mushroom(pygame.sprite.Sprite):
                 self.status = 'attack'
             if self.status == 'hit':
                 self.status = self.old_status
+            if self.status == 'dead':
+                self.kill()
 
 
         self.image = status[int(self.animation_index)]
@@ -243,14 +246,15 @@ class Mushroom(pygame.sprite.Sprite):
                 self.lives -= 1
                 self.old_status = self.status
                 self.status = 'hit'
-                self.movement_update()
                 self.animation_index = 0
                 if self.lives == 0:
-                    self.kill()
+                    self.status = 'dead'
+                    self.animation_index = 0
                     if self.player1_active:
                         PLAYER1_SPRITE.sprite.key_active = True
                     if self.player2_active:
                         PLAYER2_SPRITE.sprite.key_active = True
+
 
     def player_nearby(self):
         if self.player1_active and math.dist(PLAYER1_SPRITE.sprite.rect.center, self.rect.center) < 30:
@@ -301,10 +305,10 @@ class Mushroom(pygame.sprite.Sprite):
             self.change_direction()
             # self.direction.x = -1
 
-        if self.tog:
+        if self.tog and self.status == 'run':
             self.rect.x += self.direction.x * self.speed
         self.horizontal_collisions()
-        if self.tog:
+        if self.tog and self.status == 'run':
             self.rect.y += self.direction.y * self.speed
         self.vertical_collisions()
         self.weapon_collisions()
