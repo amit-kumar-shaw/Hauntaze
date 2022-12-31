@@ -146,10 +146,17 @@ class Eye(pygame.sprite.Sprite):
 
 class Boss(pygame.sprite.Sprite):
 
-    def __init__(self, pos, groups, collision_sprites, player_weapon_sprites):
+    def __init__(self, pos, groups, collision_sprites, player_weapon_sprites, type):
         super().__init__(groups)
 
-        path = f'./assets/images/enemy/executioner/'
+        self.type = type
+        path = f'./assets/images/enemy/'
+
+        if type == 'boss2':
+            path += f'mushroom/'
+        elif type == 'boss3':
+            path += f'executioner/'
+
         self.frames = {'idle': [], 'attack': [], 'hit': [], 'dead': [], 'run': []}
 
         for status in self.frames.keys():
@@ -165,7 +172,8 @@ class Boss(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.direction.x = 1
-        self.direction.y = 1
+        if type == 'boss3':
+            self.direction.y = 1
         self.is_flipped = False
         self.speed = 1
         self.tog = True
@@ -291,7 +299,11 @@ class Boss(pygame.sprite.Sprite):
     def change_direction(self):
         if self.status == 'idle':
             self.direction.x = 0
+            if self.type == 'boss3':
+                self.direction.y = 0
         elif self.status == 'run':
+            if self.type == 'boss3':
+                self.direction.y = 1
             if self.is_flipped:
                 self.direction.x = -1
             else:
@@ -305,9 +317,10 @@ class Boss(pygame.sprite.Sprite):
         if self.tog and self.status == 'run':
             self.rect.x += self.direction.x * self.speed
         self.horizontal_collisions()
-        if self.tog and self.status == 'run':
-            self.rect.y += self.direction.y * self.speed
-        self.vertical_collisions()
+        if self.type == 'boss3':
+            if self.tog and self.status == 'run':
+                self.rect.y += self.direction.y * self.speed
+            self.vertical_collisions()
         self.weapon_collisions()
 
         if self.status == 'run' and pygame.time.get_ticks() - self.attack_end_time > 2000:

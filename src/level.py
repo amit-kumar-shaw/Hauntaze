@@ -285,11 +285,11 @@ class Level:
             elif self.current_level == 10:
                 self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
                                  [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                                 self.collision_sprites, self.weapon_sprite)
+                                 self.collision_sprites, self.weapon_sprite, type='boss2')
             elif self.current_level == 15:
                 self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
                                  [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                                 self.collision_sprites, self.weapon_sprite)
+                                 self.collision_sprites, self.weapon_sprite, type='boss3')
 
             if self.multiplayer:
                 self.boss.lives *= 2
