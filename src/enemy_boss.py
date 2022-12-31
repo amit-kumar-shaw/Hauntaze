@@ -154,7 +154,7 @@ class Mushroom(pygame.sprite.Sprite):
 
         for status in self.frames.keys():
             full_path = path + status
-            self.frames[status] = import_frames(full_path, scale=0.8)
+            self.frames[status] = import_frames(full_path, scale=0.5)
 
         self.animation_index = 0
         self.status = 'run'
