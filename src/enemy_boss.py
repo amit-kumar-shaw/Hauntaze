@@ -21,6 +21,8 @@ class Eye(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(topleft=pos)
 
+        self.mask = pygame.mask.from_surface(self.image)
+
         self.direction = pygame.math.Vector2()
         self.direction.x = 1
         self.speed = 1
@@ -81,19 +83,22 @@ class Eye(pygame.sprite.Sprite):
 
         self.rect = self.image.get_rect(topleft=self.rect.topleft)
 
+        self.mask = pygame.mask.from_surface(self.image)
+
     def weapon_collisions(self):
         for sprite in self.player_weapon_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and sprite.status == 'attack' and self.status == 'fly':
-                self.lives -= 1
-                self.status = 'hit'
-                self.movement_update()
-                self.animation_index = 0
-                if self.lives == 0:
-                    self.kill()
-                    if self.player1_active:
-                        PLAYER1_SPRITE.sprite.key_active = True
-                    if self.player2_active:
-                        PLAYER2_SPRITE.sprite.key_active = True
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.lives -= 1
+                    self.status = 'hit'
+                    self.movement_update()
+                    self.animation_index = 0
+                    if self.lives == 0:
+                        self.kill()
+                        if self.player1_active:
+                            PLAYER1_SPRITE.sprite.key_active = True
+                        if self.player2_active:
+                            PLAYER2_SPRITE.sprite.key_active = True
 
     def player_nearby(self):
         if self.player1_active and math.dist(PLAYER1_SPRITE.sprite.rect.center, self.rect.center) < 30:
@@ -169,6 +174,8 @@ class Boss(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.animation_index]
 
         self.rect = self.image.get_rect(topleft=pos)
+
+        self.mask = pygame.mask.from_surface(self.image)
 
         self.direction = pygame.math.Vector2()
         self.direction.x = 1
@@ -263,20 +270,23 @@ class Boss(pygame.sprite.Sprite):
         else:
             self.rect = self.image.get_rect(topleft=self.rect.topleft)
 
+        self.mask = pygame.mask.from_surface(self.image)
+
     def weapon_collisions(self):
         for sprite in self.player_weapon_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and sprite.status == 'attack' and (self.status == 'run' or self.status == 'idle'):
-                self.lives -= 1
-                self.old_status = self.status
-                self.status = 'hit'
-                self.animation_index = 0
-                if self.lives == 0:
-                    self.status = 'dead'
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.lives -= 1
+                    self.old_status = self.status
+                    self.status = 'hit'
                     self.animation_index = 0
-                    if self.player1_active:
-                        PLAYER1_SPRITE.sprite.key_active = True
-                    if self.player2_active:
-                        PLAYER2_SPRITE.sprite.key_active = True
+                    if self.lives == 0:
+                        self.status = 'dead'
+                        self.animation_index = 0
+                        if self.player1_active:
+                            PLAYER1_SPRITE.sprite.key_active = True
+                        if self.player2_active:
+                            PLAYER2_SPRITE.sprite.key_active = True
 
 
     def player_nearby(self):

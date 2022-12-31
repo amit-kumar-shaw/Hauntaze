@@ -31,7 +31,7 @@ class Enemy(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.animation_index]
 
         self.rect = self.image.get_rect(topleft=pos)
-
+        self.mask = pygame.mask.from_surface(self.image)
         self.direction = pygame.math.Vector2()
         self.speed = 1
         self.tog = True
@@ -91,11 +91,14 @@ class Enemy(pygame.sprite.Sprite):
         if self.direction.x < 0:
             self.image = pygame.transform.flip(self.image, True, False)
 
+        self.mask = pygame.mask.from_surface(self.image)
+
     def weapon_collisions(self):
         for sprite in self.player_weapon_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and sprite.status == 'attack':
-                self.status = 'dead'
-                self.animation_index = 0
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.status = 'dead'
+                    self.animation_index = 0
 
     def update(self):
 

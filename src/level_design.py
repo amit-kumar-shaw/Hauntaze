@@ -1,7 +1,7 @@
 STORY_DATA = [
     {
         'level': 1,
-        'caption': 'Where\'s my Key?',
+        'caption': 'Where\'s the Key?',
         'player1': (2, 2),
         'player2': (33, 2),
         'key1': (26, 6),
@@ -87,7 +87,7 @@ STORY_DATA = [
     },
     {
         'level': 3,
-        'caption': 'Red means Danger!',
+        'caption': 'Sword the Saviour!',
         'player1': (2, 2),
         'player2': (33, 2),
         'key1': (18, 13),
@@ -130,7 +130,7 @@ STORY_DATA = [
     },
     {
         'level': 4,
-        'caption': 'Sword my saviour!',
+        'caption': 'Where\'s the Sword?',
         'player1': (2, 2),
         'player2': (33, 2),
         'key1': (23, 15),
@@ -173,7 +173,7 @@ STORY_DATA = [
     },
     {
         'level': 'boss1',
-        'caption': 'Flying Eye',
+        'caption': 'The Life Stone',
         'player1': (16, 2),
         'player2': (33, 2),
         'key1': (-20, -20),
@@ -217,7 +217,7 @@ STORY_DATA = [
     },
 {
         'level': 6,
-        'caption': 'L6',
+        'caption': 'Make it Bright!',
         'player1': (10, 10),
         'player2': (25, 10),
         'key1': (29, 12),
@@ -260,7 +260,7 @@ STORY_DATA = [
     },
     {
         'level': 7,
-        'caption': 'L7',
+        'caption': 'Mind the Web!',
         'player1': (10, 10),
         'player2': (25, 10),
         'key1': (20, 12),
@@ -303,7 +303,7 @@ STORY_DATA = [
     },
     {
         'level': 8,
-        'caption': 'L8',
+        'caption': 'Burn them Down!',
         'player1': (10, 10),
         'player2': (25, 10),
         'key1': (23, 17),
@@ -389,7 +389,7 @@ STORY_DATA = [
     },
     {
         'level': 'boss2',
-        'caption': 'Flying Eye',
+        'caption': 'The Death Stone',
         'player1': (16, 2),
         'player2': (33, 2),
         'key1': (-20, -20),
@@ -433,7 +433,7 @@ STORY_DATA = [
     },
 {
         'level': 11,
-        'caption': 'Looks like a maze!',
+        'caption': 'L11',
         'player1': (2, 17),
         'player2': (33, 17),
         'key1': (18, 7),
@@ -476,7 +476,7 @@ STORY_DATA = [
     },
     {
         'level': 12,
-        'caption': 'Where\'s my Key?',
+        'caption': 'Don\'t get Spiked!',
         'player1': (2, 17),
         'player2': (33, 17),
         'key1': (3, 3),
@@ -519,7 +519,7 @@ STORY_DATA = [
     },
     {
         'level': 13,
-        'caption': 'Red means Danger!',
+        'caption': 'L13',
         'player1': (2, 17),
         'player2': (33, 17),
         'key1': (27, 17),
@@ -562,7 +562,7 @@ STORY_DATA = [
     },
     {
         'level': 14,
-        'caption': 'Sword my saviour!',
+        'caption': 'L14',
         'player1': (2, 17),
         'player2': (33, 17),
         'key1': (18, 8),
@@ -605,7 +605,7 @@ STORY_DATA = [
     },
     {
         'level': 'boss3',
-        'caption': 'Flying Eye',
+        'caption': 'The Curse Stone',
         'player1': (15, 2),
         'player2': (20, 17),
         'key1': (-20, -20),

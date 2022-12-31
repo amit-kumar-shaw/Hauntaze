@@ -22,7 +22,7 @@ class Weapon(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.animation_index]
 
         self.rect = self.image.get_rect(topleft=pos)
-
+        self.mask = pygame.mask.from_surface(self.image)
         self.collision_sprites = collision_sprites
 
     def animate(self, flipped=False):
@@ -38,6 +38,8 @@ class Weapon(pygame.sprite.Sprite):
         self.image = status[int(self.animation_index)]
         if flipped:
             self.image = pygame.transform.flip(self.image, True, False)
+
+        self.mask = pygame.mask.from_surface(self.image)
 
         if self.status == 'attack':
             self.check_wall_collision()

@@ -25,7 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
 
-        # self.mask = pygame
+        self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
         self.torch = Torch(pos)
@@ -142,13 +142,6 @@ class Player(pygame.sprite.Sprite):
             self.status = 'walk'
 
     def animate(self):
-        # if self.direction.x == 0 and self.direction.y == 0:
-        #     self.image = self.player_still
-        # else:
-        #     self.frame_index += 0.1
-        #     if self.frame_index >= len(self.player_walk): self.frame_index = 0
-        #     self.image = self.player_walk[int(self.frame_index)]
-
         status = self.frames[self.status]
 
         # loop over frame index
@@ -164,11 +157,6 @@ class Player(pygame.sprite.Sprite):
         self.image = status[int(self.frame_index)]
         if self.is_flipped:
             self.image = pygame.transform.flip(self.image, True, False)
-        # if self.direction.x >= 0:
-        #     self.image = image
-        # else:
-        #     flipped_image = pygame.transform.flip(image, True, False)
-        #     self.image = flipped_image
 
         if self.is_invincible:
             alpha = self.wave_value()
@@ -176,6 +164,7 @@ class Player(pygame.sprite.Sprite):
         else:
             self.image.set_alpha(255)
         self.rect = self.image.get_rect(topleft=self.rect.topleft)
+        self.mask = pygame.mask.from_surface(self.image)
 
     def wave_value(self):
         value = sin(pygame.time.get_ticks())
@@ -212,20 +201,22 @@ class Player(pygame.sprite.Sprite):
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible:
-                self.is_invincible = True
-                self.sounds.play_enemy_collision()
-                self.lives -= 1
-                self.ui_update = True
-                self.hurt_time = pygame.time.get_ticks()
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.is_invincible = True
+                    self.sounds.play_enemy_collision()
+                    self.lives -= 1
+                    self.ui_update = True
+                    self.hurt_time = pygame.time.get_ticks()
 
     def trap_collisions(self):
         for sprite in self.trap_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible and not sprite.state == 'off':
-                self.is_invincible = True
-                self.sounds.play_enemy_collision()
-                self.lives -= 1
-                self.ui_update = True
-                self.hurt_time = pygame.time.get_ticks()
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.is_invincible = True
+                    self.sounds.play_enemy_collision()
+                    self.lives -= 1
+                    self.ui_update = True
+                    self.hurt_time = pygame.time.get_ticks()
 
     def death_animate(self):
         if self.visibility_radius >= 1:
