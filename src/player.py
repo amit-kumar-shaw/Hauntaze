@@ -201,7 +201,7 @@ class Player(pygame.sprite.Sprite):
                     self.big_torch_time = pygame.time.get_ticks()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
-                elif sprite.type == 'sword' or sprite.type == 'flamethrower':
+                elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
                     self.weapon_active = True
                 elif sprite.type == 'web1' or sprite.type == 'web2' and sprite.status == 'active':
                     sprite.status = 'picked'
