@@ -144,17 +144,17 @@ class Eye(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
 
-class Mushroom(pygame.sprite.Sprite):
+class Boss(pygame.sprite.Sprite):
 
     def __init__(self, pos, groups, collision_sprites, player_weapon_sprites):
         super().__init__(groups)
 
-        path = f'./assets/images/enemy/mushroom/'
+        path = f'./assets/images/enemy/executioner/'
         self.frames = {'idle': [], 'attack': [], 'hit': [], 'dead': [], 'run': []}
 
         for status in self.frames.keys():
             full_path = path + status
-            self.frames[status] = import_frames(full_path, scale=0.5)
+            self.frames[status] = import_frames(full_path, scale=0.8)
 
         self.animation_index = 0
         self.status = 'run'
@@ -165,6 +165,7 @@ class Mushroom(pygame.sprite.Sprite):
 
         self.direction = pygame.math.Vector2()
         self.direction.x = 1
+        self.direction.y = 1
         self.is_flipped = False
         self.speed = 1
         self.tog = True
@@ -195,6 +196,15 @@ class Mushroom(pygame.sprite.Sprite):
                     self.rect.right = sprite.rect.left
                 self.movement_update()
 
+        if self.rect.left < 130 and self.status == 'run':
+            self.is_flipped = False
+            self.change_direction()
+            # self.direction.x = 1
+        if self.rect.right > 470 and self.status == 'run':
+            self.is_flipped = True
+            self.change_direction()
+            # self.direction.x = -1
+
     def vertical_collisions(self):
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -203,6 +213,11 @@ class Mushroom(pygame.sprite.Sprite):
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
                 self.movement_update()
+
+        if self.rect.top < 110 and self.status == 'run':
+            self.direction.y = 1
+        if self.rect.bottom > 200 and self.status == 'run':
+            self.direction.y = -1
 
     def movement_update(self):
 
@@ -273,17 +288,6 @@ class Mushroom(pygame.sprite.Sprite):
             return True
         return False
 
-    def attack(self):
-        pass
-        # if self.target.rect.center[0] < self.rect.center[0]:
-        #     self.direction.x = - 1
-        # else:
-        #     self.direction.x = 1
-        # if self.target.rect.center[1] < self.rect.center[1]:
-        #     self.direction.y = - 1
-        # else:
-        #     self.direction.y = 1
-
     def change_direction(self):
         if self.status == 'idle':
             self.direction.x = 0
@@ -296,14 +300,7 @@ class Mushroom(pygame.sprite.Sprite):
     def update(self):
 
         self.animate()
-        if self.rect.x < 150 and self.status == 'run':
-            self.is_flipped = False
-            self.change_direction()
-            # self.direction.x = 1
-        if self.rect.x > 480 and self.status == 'run':
-            self.is_flipped = True
-            self.change_direction()
-            # self.direction.x = -1
+
 
         if self.tog and self.status == 'run':
             self.rect.x += self.direction.x * self.speed
@@ -318,9 +315,6 @@ class Mushroom(pygame.sprite.Sprite):
                 self.status = 'idle'
                 self.animation_index = 0
                 self.change_direction()
-
-        if self.status == 'attack':
-            self.attack()
 
         self.tog = not self.tog
 

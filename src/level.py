@@ -9,7 +9,7 @@ from tile import Tile
 from player import Player
 from enemy import Enemy
 from traps import Spike
-from enemy_boss import Eye, Mushroom
+from enemy_boss import Eye, Boss
 from collectible import Collectible
 from key import Key
 from door import Door
@@ -283,9 +283,13 @@ class Level:
                                 [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                                 self.collision_sprites, self.weapon_sprite)
             elif self.current_level == 10:
-                self.boss = Mushroom(tuple(TILE_SIZE * x for x in data['boss']),
-                                     [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                                     self.collision_sprites, self.weapon_sprite)
+                self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
+                                 [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                                 self.collision_sprites, self.weapon_sprite)
+            elif self.current_level == 15:
+                self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
+                                 [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                                 self.collision_sprites, self.weapon_sprite)
 
             if self.multiplayer:
                 self.boss.lives *= 2
