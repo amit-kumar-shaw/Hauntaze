@@ -513,13 +513,13 @@ class Level:
                 pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
 
         # TODO: remove in final game. Only for testing and debugging
-        if self.player1_active:
-            pygame.draw.circle(self.level_window, 'green', self.player1.door.rect.center, 3)
-            pygame.draw.circle(self.level_window, 'yellow', self.player1.key.rect.center, 3)
-
-        if self.player2_active:
-            pygame.draw.circle(self.level_window, 'pink', self.player2.door.rect.center, 3)
-            pygame.draw.circle(self.level_window, 'orange', self.player2.key.rect.center, 3)
+        # if self.player1_active:
+        #     pygame.draw.circle(self.level_window, 'green', self.player1.door.rect.center, 3)
+        #     pygame.draw.circle(self.level_window, 'yellow', self.player1.key.rect.center, 3)
+        #
+        # if self.player2_active:
+        #     pygame.draw.circle(self.level_window, 'pink', self.player2.door.rect.center, 3)
+        #     pygame.draw.circle(self.level_window, 'orange', self.player2.key.rect.center, 3)
 
     def game_over(self):
         keys = pygame.key.get_pressed()

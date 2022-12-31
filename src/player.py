@@ -187,20 +187,25 @@ class Player(pygame.sprite.Sprite):
     def collectible_collisions(self):
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
-                self.collectible_sprites.remove(sprite)
-                if sprite.type == 'coin':
+                #self.collectible_sprites.remove(sprite)
+                if sprite.type == 'coin' and sprite.status == 'active':
                     self.score += 1
                     self.ui_update = True
                     self.sounds.play_coin_collection()
-                    sprite.kill()
-                elif sprite.type == 'torch':
+                    sprite.status = 'picked'
+                    sprite.animation_index = 0
+                    # sprite.kill()
+                elif sprite.type == 'torch' and sprite.status == 'active':
                     self.is_big_torch = True
                     self.torch.scale(1)
                     self.big_torch_time = pygame.time.get_ticks()
-                    sprite.kill()
+                    sprite.status = 'picked'
+                    sprite.animation_index = 0
                 elif sprite.type == 'sword' or sprite.type == 'flamethrower':
                     self.weapon_active = True
-                elif sprite.type == 'web1' or sprite.type == 'web2':
+                elif sprite.type == 'web1' or sprite.type == 'web2' and sprite.status == 'active':
+                    sprite.status = 'picked'
+                    sprite.animation_index = 0
                     self.is_slow = True
                     self.web_time = pygame.time.get_ticks()
 
