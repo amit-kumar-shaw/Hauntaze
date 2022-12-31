@@ -9,7 +9,7 @@ from tile import Tile
 from player import Player
 from enemy import Enemy
 from traps import Spike
-from enemy_boss import Eye
+from enemy_boss import Eye, Mushroom
 from collectible import Collectible
 from key import Key
 from door import Door
@@ -19,7 +19,7 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer = False):
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer=False):
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -147,7 +147,8 @@ class Level:
         for cell in coin_cells:
             c = random.choice(list(cell.room))
             self.coins.append(
-                Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='coin'))
+                Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites],
+                            type='coin'))
 
         cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
         c = random.choice(list(cell[0].room))
@@ -196,7 +197,9 @@ class Level:
             self.player1.key = Key(tuple(TILE_SIZE * x for x in data['key1']), self.key1_sprite)
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
             if len(data['weapon1']):
-                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']), [self.collectible_sprites, self.weapon_sprite], self.collision_sprites, type=data['weapon_type'])
+                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']),
+                                             [self.collectible_sprites, self.weapon_sprite], self.collision_sprites,
+                                             type=data['weapon_type'])
 
             torch_cells = data['torch1']
             for _, cell in enumerate(torch_cells):
@@ -216,7 +219,9 @@ class Level:
             self.player2.key = Key(tuple(TILE_SIZE * x for x in data['key2']), self.key2_sprite)
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
             if len(data['weapon2']):
-                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']), [self.collectible_sprites, self.weapon_sprite], self.collision_sprites, type=data['weapon_type'])
+                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']),
+                                             [self.collectible_sprites, self.weapon_sprite], self.collision_sprites,
+                                             type=data['weapon_type'])
 
             torch_cells = data['torch2']
             for _, cell in enumerate(torch_cells):
@@ -224,7 +229,7 @@ class Level:
                             type='torch')
 
         web_cells = data['web1']
-        for _, cell in enumerate(web_cells ):
+        for _, cell in enumerate(web_cells):
             Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                         type='web1')
         web_cells = data['web2']
@@ -248,13 +253,14 @@ class Level:
         spike_cells = data['spikes']
         for _, cell in enumerate(spike_cells):
             Spike(tuple(TILE_SIZE * x for x in cell),
-                      [self.visible_sprites, self.trap_sprites])
+                  [self.visible_sprites, self.trap_sprites])
 
         # draw enemies
         bat_cells = data['bats']
         for _, cell in enumerate(bat_cells):
             self.enemys.append(
-                Enemy(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                Enemy(tuple(TILE_SIZE * x for x in cell),
+                      [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='bat'))
 
         slime_cells = data['slime']
@@ -272,13 +278,21 @@ class Level:
                       self.collision_sprites, self.weapon_sprite, type='skull'))
 
         if self.is_boss_level:
-            self.boss = Eye(tuple(TILE_SIZE * x for x in data['boss']), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites, self.weapon_sprite)
+            if self.current_level == 5:
+                self.boss = Eye(tuple(TILE_SIZE * x for x in data['boss']),
+                                [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                                self.collision_sprites, self.weapon_sprite)
+            elif self.current_level == 10:
+                self.boss = Mushroom(tuple(TILE_SIZE * x for x in data['boss']),
+                                     [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                                     self.collision_sprites, self.weapon_sprite)
+
+            if self.multiplayer:
+                self.boss.lives *= 2
 
     def run(self):
 
         # Activate ghost
-
 
         # run the entire game (level)
         self.active_sprites.update()
@@ -347,7 +361,7 @@ class Level:
             if self.player1_active:
                 self.player1.key.rect = self.player1.key.image.get_rect(midright=self.boss.rect.midtop)
             if self.player2_active:
-                self.player2.key.rect = self.player2.key.image.get_rect(midleft = self.boss.rect.midtop)
+                self.player2.key.rect = self.player2.key.image.get_rect(midleft=self.boss.rect.midtop)
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.key.rect.center) < self.player1.visibility_radius:
@@ -390,8 +404,8 @@ class Level:
             #             self.ghost_active and self.cropped_rect3.contains(sprite)):
             #     sprite.draw(self.level_window)
             if (self.player1_active and self.cropped_rect1.colliderect(sprite)) or (
-                        self.player2_active and self.cropped_rect2.colliderect(sprite)) or (
-                        self.ghost_active and self.cropped_rect3.colliderect(sprite)):
+                    self.player2_active and self.cropped_rect2.colliderect(sprite)) or (
+                    self.ghost_active and self.cropped_rect3.colliderect(sprite)):
                 sprite.draw(self.level_window)
 
         if self.player1_active and self.player1.visibility_radius > 1:
@@ -402,7 +416,7 @@ class Level:
             PLAYER1_SPRITE.draw(self.level_window)
 
             if self.player1.is_slow:
-                rect = self.player1.web.get_rect(midtop = self.player1.rect.midtop)
+                rect = self.player1.web.get_rect(midtop=self.player1.rect.midtop)
                 self.level_window.blit(self.player1.web, rect)
 
         if self.player2_active and self.player2.visibility_radius > 1:
@@ -413,7 +427,7 @@ class Level:
             PLAYER2_SPRITE.draw(self.level_window)
 
             if self.player2.is_slow:
-                rect = self.player2.web.get_rect(midtop = self.player2.rect.midtop)
+                rect = self.player2.web.get_rect(midtop=self.player2.rect.midtop)
                 self.level_window.blit(self.player2.web, rect)
 
         # Ghost update
@@ -421,7 +435,7 @@ class Level:
             self.ghost.update()
             if not self.story_mode:
                 self.level_window.blit(self.ghost.smoke.image, self.ghost.smoke.rect)
-            self.level_window.blit(self.ghost.image,self.ghost.rect)
+            self.level_window.blit(self.ghost.image, self.ghost.rect)
 
         # draw the cover surface to hide the map
         # self.display_surface.blit(self.cover_surf, (0, 0))
