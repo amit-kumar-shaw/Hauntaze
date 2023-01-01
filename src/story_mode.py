@@ -4,6 +4,7 @@ import pygame
 from settings import *
 from level import Level
 from player import Player
+from stones import Stone_UI
 from ui import UI
 
 
@@ -34,6 +35,8 @@ class StoryMode:
         self.ui.current_level = self.current_level
         self.ui.update_level()
 
+        self.stones = Stone_UI()
+
     def run(self):
         if self.status == Status.RUNNING:
             self.level.run()
@@ -56,3 +59,5 @@ class StoryMode:
             self.ui.current_level = self.current_level
             self.ui.update_level()
             self.status = Status.RUNNING
+
+        self.stones.update()
