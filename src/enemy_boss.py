@@ -196,7 +196,10 @@ class Boss(pygame.sprite.Sprite):
         self.old_status = None
         self.old_direction = None
 
-        self.lives = 2
+        if type == 'boss2':
+            self.lives = 7
+        elif type == 'boss3':
+            self.lives = 10
 
         self.timer = 5
         self.movement_update()

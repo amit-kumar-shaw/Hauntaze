@@ -38,6 +38,7 @@ class Player(pygame.sprite.Sprite):
         self.is_slow = False
         self.web_time = 0
         self.web = pygame.image.load('./assets/images/web/web2.png').convert_alpha()
+        self.web = pygame.transform.rotozoom(self.web, 0, 1.1)
         self.score = 0
         self.key_active = True
         self.key_picked = False
