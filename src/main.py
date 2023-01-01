@@ -12,20 +12,27 @@ import os
 
 os.chdir('..')
 
+
+
 # Pygame setup
 pygame.init()
+
+# initialize controllers
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
+if bool(joysticks):
+    for joystick in joysticks:
+        print(joystick.get_name())
+else:
+    print('use keyboard')
+
+
 pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
-flags = pygame.SCALED | pygame.DOUBLEBUF #| pygame.FULLSCREEN
+flags = pygame.SCALED | pygame.DOUBLEBUF | pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
-# start = False
-# level_loaded = False
-# level = Level(player1=True, player2=True)
-# sound = GameSound()
-# sound.playbackgroundmusic()
-# menu = Menu()
-# ui = None
+
 game = Game()
 
 while True:
@@ -42,21 +49,6 @@ while True:
     game.run()
 
     print(clock.get_fps())
-
-    # if start:
-    #     if not level_loaded:
-    #         level = Level(player1=menu.is_player1_ready, player2=menu.is_player2_ready)
-    #         ui = UI(menu.is_player1_ready, menu.is_player2_ready, level)
-    #         level_loaded = True
-    #     level.run()
-    #     ui.update()
-    #     # display fps
-    #     font = pygame.font.Font('./assets/fonts/1.ttf', 10)
-    #     fps_msg = font.render(f'FPS: {float("{:.2f}".format(clock.get_fps()))}', False, 'white')
-    #     msg_rect = fps_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 10))
-    #     screen.blit(fps_msg, msg_rect)
-    # else:
-    #     menu.update()
 
     # drawing logic
     pygame.display.update()

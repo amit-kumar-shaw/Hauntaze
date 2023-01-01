@@ -10,7 +10,7 @@ class Ghost(pygame.sprite.Sprite):
         self.story_mode = story_mode
 
         self.player2 = player2
-
+        self.partner = None
         if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         else:
@@ -84,6 +84,13 @@ class Ghost(pygame.sprite.Sprite):
     def update(self):
         self.input()
         self.animate()
+
+        if self.partner.visibility_radius > GHOST_VISIBILITY:
+            self.visibility_radius = GHOST_VISIBILITY
+        else:
+            self.visibility_radius = self.partner.visibility_radius
+            if self.visibility_radius < 2:
+                self.kill()
 
         self.rect.x += self.direction.x * self.speed
         self.horizontal_border()

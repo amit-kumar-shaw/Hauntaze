@@ -296,7 +296,6 @@ class Level:
 
     def run(self):
 
-        # Activate ghost
 
         # run the entire game (level)
         self.active_sprites.update()
@@ -436,19 +435,13 @@ class Level:
 
         # Ghost update
         if self.ghost_active:
+            if self.ghost.visibility_radius < 2:
+                self.ghost_active = False
             self.ghost.update()
             if not self.story_mode:
                 self.level_window.blit(self.ghost.smoke.image, self.ghost.smoke.rect)
             self.level_window.blit(self.ghost.image, self.ghost.rect)
 
-        # draw the cover surface to hide the map
-        # self.display_surface.blit(self.cover_surf, (0, 0))
-        # if self.player1_active:
-        #     self.display_surface.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
-        # if self.player2_active:
-        #     self.display_surface.blit(self.cover_surf, self.cropped_rect2, self.cropped_rect2)
-        # if self.ghost_active and self.story_mode:
-        #     self.display_surface.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
 
         self.cover_surf.fill(COVER_COLOR)
 
@@ -482,18 +475,22 @@ class Level:
             self.player1_active = False
             if not self.ghost_active and self.multiplayer:
                 self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
+                self.ghost.partner = self.player2
                 self.ghost_active = True
         if self.player2_active and not self.player2.is_alive:
             self.player2_active = False
             if not self.ghost_active and self.multiplayer:
                 self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
+                self.ghost.partner = self.player1
                 self.ghost_active = True
 
         if self.player1_active and self.player1.is_ghost and not self.ghost_active and self.multiplayer:
             self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
+            self.ghost.partner = self.player2
             self.ghost_active = True
         if self.player2_active and self.player2.is_ghost and not self.ghost_active and self.multiplayer:
             self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
+            self.ghost.partner = self.player1
             self.ghost_active = True
 
         if self.is_boss_level:

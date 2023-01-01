@@ -70,18 +70,18 @@ class Player(pygame.sprite.Sprite):
 
         # player keys
         if player2:
-            self.MOVE_LEFT = K_LEFT
-            self.MOVE_RIGHT = K_RIGHT
-            self.MOVE_UP = K_UP
-            self.MOVE_DOWN = K_DOWN
-            self.ATTACK = K_m
+            self.MOVE_LEFT = PLAYER2_MOVE_LEFT
+            self.MOVE_RIGHT = PLAYER2_MOVE_RIGHT
+            self.MOVE_UP = PLAYER2_MOVE_UP
+            self.MOVE_DOWN = PLAYER2_MOVE_DOWN
+            self.ATTACK = PLAYER2_ATTACK
 
         else:
-            self.MOVE_LEFT = K_a
-            self.MOVE_RIGHT = K_d
-            self.MOVE_UP = K_w
-            self.MOVE_DOWN = K_s
-            self.ATTACK = K_z
+            self.MOVE_LEFT = PLAYER1_MOVE_LEFT
+            self.MOVE_RIGHT = PLAYER1_MOVE_RIGHT
+            self.MOVE_UP = PLAYER1_MOVE_UP
+            self.MOVE_DOWN = PLAYER1_MOVE_DOWN
+            self.ATTACK = PLAYER1_ATTACK
 
     def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
@@ -226,6 +226,8 @@ class Player(pygame.sprite.Sprite):
             if not self.level_completed:
                 self.is_alive = False
                 self.torch.kill()
+                if self.weapon_active:
+                    self.weapon.kill()
                 self.kill()
             elif not self.is_ghost:
                 self.is_ghost = True
@@ -245,7 +247,7 @@ class Player(pygame.sprite.Sprite):
 
     def door_collisions(self):
         # if self.rect.colliderect(self.door.rect) and self.key_picked:
-        if pygame.sprite.collide_rect_ratio(0.2)(self, self.door) and self.key_picked:
+        if pygame.sprite.collide_rect_ratio(0.8)(self, self.door) and self.key_picked:
             # self.sounds.play_key_collection()
             self.level_completed = True
 
