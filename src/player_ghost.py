@@ -9,6 +9,8 @@ class Ghost(pygame.sprite.Sprite):
 
         self.story_mode = story_mode
 
+        self.player2 = player2
+
         if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         else:

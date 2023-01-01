@@ -1,13 +1,14 @@
 import pygame
 from utilities import import_frames
 
+
 class Stone(pygame.sprite.Sprite):
     def __init__(self, pos, type):
         super().__init__()
 
         self.type = type
 
-        self.active = True
+        self.active = False
 
         self.frames = import_frames(f"./assets/images/stones/{type}", scale=0.75)
         self.animation_index = 0
@@ -17,13 +18,12 @@ class Stone(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def animate(self):
-
         self.animation_index += 0.1
         if self.animation_index >= len(self.frames): self.animation_index = 0
         self.image = self.frames[int(self.animation_index)]
 
 
-class Stone_UI:
+class StonesUI:
     def __init__(self):
 
         height = 24

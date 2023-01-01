@@ -4,7 +4,7 @@ import pygame
 from settings import *
 from level import Level
 from player import Player
-from stones import Stone_UI
+from stones import StonesUI
 from ui import UI
 
 
@@ -29,13 +29,13 @@ class StoryMode:
         if player2:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
                                   collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
-        self.current_level = 15
+        self.current_level = 6
         self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
 
-        self.stones = Stone_UI()
+        self.stones = StonesUI()
 
     def run(self):
         if self.status == Status.RUNNING:
@@ -59,5 +59,10 @@ class StoryMode:
             self.ui.current_level = self.current_level
             self.ui.update_level()
             self.status = Status.RUNNING
+
+        if self.current_level > 5:
+            self.stones.stones[0].active = True
+        if self.current_level > 10:
+            self.stones.stones[1].active = True
 
         self.stones.update()
