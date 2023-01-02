@@ -36,7 +36,7 @@ class Transition:
 
     def update(self):
         if self.level == 1:
-            self.stone_gen()
+            self.intro()
         elif self.level == 6:
             self.life()
         elif self.level == 11:
@@ -50,12 +50,12 @@ class Transition:
 
     def life(self):
         self.life_index += 0.2
-        if self.life_index >= len(self.life_frames): self.life_index = 225
+        if self.life_index >= len(self.life_frames): self.life_index = 260
         self.screen_surface = self.life_frames[int(self.life_index)]
 
     def death(self):
         self.death_index += 0.2
-        if self.death_index >= len(self.death_frames): self.death_index = 225
+        if self.death_index >= len(self.death_frames): self.death_index = 260
         self.screen_surface = self.death_frames[int(self.death_index)]
 
     def intro_gen(self):
@@ -202,6 +202,15 @@ class Transition:
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
+            self.screen_surface.blit(msg, msg_rect)
+
+        m1 = 'Press the Blue button within 10 seconds to revive yourself.'
+        if self.frame_index > 202:
+            if self.frame_index - 202 < len(m1):
+                m1 = m1[0:self.frame_index - 202]
+            font = pygame.font.Font('./assets/fonts/1.ttf', 12)
+            msg = font.render(m1, False, 'white')
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
 
         if self.frame_index < 300:

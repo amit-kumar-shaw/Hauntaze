@@ -36,6 +36,7 @@ class Player(pygame.sprite.Sprite):
 
         self.wait_revival = False
         self.revival_position = None
+        self.revival_time = 0
 
         self.torch = Torch(pos)
         self.player2 = player2
@@ -247,6 +248,7 @@ class Player(pygame.sprite.Sprite):
             if not self.level_completed:
                 if self.life_stone_available:
                     self.wait_revival = True
+                    self.revival_time = pygame.time.get_ticks()
                 else:
                     self.is_alive = False
                     self.torch.kill()
@@ -324,16 +326,21 @@ class Player(pygame.sprite.Sprite):
             self.move = not self.move
 
         elif self.wait_revival:
-            self.revival_input()
-            if self.life_stone_activated:
-                self.lives = LIVES
+            if pygame.time.get_ticks() - self.revival_time < 10000:
+                self.revival_input()
+                if self.life_stone_activated:
+                    self.lives = LIVES
+                    self.wait_revival = False
+                    self.status = 'idle'
+                    self.rect.topleft = self.revival_position
+                    self.visibility_radius = VISIBILITY_RADIUS
+                    self.life_stone_activated = False
+                    self.life_stone_available = False
+                    self.ui_update = True
+            else:
                 self.wait_revival = False
-                self.status = 'idle'
-                self.rect.topleft = self.revival_position
-                self.visibility_radius = VISIBILITY_RADIUS
                 self.life_stone_activated = False
                 self.life_stone_available = False
-                self.ui_update = True
 
         else:
             if not self.status == 'dead' and self.lives == 0:
