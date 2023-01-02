@@ -325,6 +325,12 @@ class Player(pygame.sprite.Sprite):
             self.trap_collisions()
             self.move = not self.move
 
+            # increase one life on collecting 50 coins
+            if self.score == 50:
+                self.lives += 1
+                self.score = 0
+                self.ui_update = True
+
         elif self.wait_revival:
             if pygame.time.get_ticks() - self.revival_time < 10000:
                 self.revival_input()
