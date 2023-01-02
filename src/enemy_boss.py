@@ -36,7 +36,7 @@ class Eye(pygame.sprite.Sprite):
         self.target = None
         self.attack_end_time = 0
 
-        self.lives = 5
+        self.lives = BOSS1_LIVES
 
         self.timer = 5
         self.movement_update()
@@ -197,9 +197,9 @@ class Boss(pygame.sprite.Sprite):
         self.old_direction = None
 
         if type == 'boss2':
-            self.lives = 7
+            self.lives = BOSS2_LIVES
         elif type == 'boss3':
-            self.lives = 10
+            self.lives = BOSS3_LIVES
 
         self.timer = 5
         self.movement_update()

@@ -131,12 +131,13 @@ class UI:
         font = pygame.font.Font('./assets/fonts/1.ttf', 16)
         if self.level.story_mode:
             level = font.render(f'{self.level.caption}', False, 'white')
+            level_rect = level.get_rect(center=(100, 10))
         else:
             level = font.render(f'LEVEL {self.current_level}', False, 'white')
-        level_rect = level.get_rect(center=(100, 15))
+            level_rect = level.get_rect(center=(100, 15))
         self.info_surf.blit(level, level_rect)
 
-        font = pygame.font.Font('./assets/fonts/4.ttf', 16)
-        msg = font.render('ESC: Pause', False, 'white')
-        msg_rect = msg.get_rect(center=(100, 35))
-        self.info_surf.blit(msg, msg_rect)
+        # font = pygame.font.Font('./assets/fonts/4.ttf', 16)
+        # msg = font.render('ESC: Pause', False, 'white')
+        # msg_rect = msg.get_rect(center=(100, 35))
+        # self.info_surf.blit(msg, msg_rect)

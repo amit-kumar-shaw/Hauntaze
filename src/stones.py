@@ -1,5 +1,6 @@
 import pygame
 from utilities import import_frames
+from settings import *
 
 
 class Stone(pygame.sprite.Sprite):
@@ -28,15 +29,15 @@ class StonesUI:
 
         height = 24
 
-        self.surface = pygame.Surface((64, height))
-        self.rect = self.surface.get_rect(topleft=(576, 0))
+        self.surface = pygame.Surface((68, height))
+        self.rect = self.surface.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT - (height/2)))
 
         y = (height - 18) / 2
 
         self.stones = []
         self.stones.append(Stone((2, y), 'life', 0.75))
-        self.stones.append(Stone((22, y), 'death', 0.75))
-        self.stones.append(Stone((42, y), 'curse', 0.75))
+        self.stones.append(Stone((24, y), 'death', 0.75))
+        self.stones.append(Stone((46, y), 'curse', 0.75))
 
     def update(self):
         for stone in self.stones:

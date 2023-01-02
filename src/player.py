@@ -40,7 +40,7 @@ class Player(pygame.sprite.Sprite):
 
         self.torch = Torch(pos)
         self.player2 = player2
-        self.lives = LIVES
+        self.lives = PLAYER_LIVES
         self.is_alive = True
         self.is_invincible = False
         self.hurt_time = 0
@@ -329,7 +329,7 @@ class Player(pygame.sprite.Sprite):
             if pygame.time.get_ticks() - self.revival_time < 10000:
                 self.revival_input()
                 if self.life_stone_activated:
-                    self.lives = LIVES
+                    self.lives = PLAYER_LIVES
                     self.wait_revival = False
                     self.status = 'idle'
                     self.rect.topleft = self.revival_position
