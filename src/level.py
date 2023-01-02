@@ -439,12 +439,14 @@ class Level:
 
         # Ghost update
         if self.ghost_active:
-            if self.ghost.visibility_radius < 2:
-                self.ghost_active = False
+            # if self.ghost.visibility_radius < 2:
+            #     self.ghost_active = False
             self.ghost.update()
-            if not self.story_mode:
+            if not self.story_mode and self.ghost.visibility_radius > 2:
                 self.level_window.blit(self.ghost.smoke.image, self.ghost.smoke.rect)
-            self.level_window.blit(self.ghost.image, self.ghost.rect)
+
+            if self.ghost.visibility_radius > 2:
+                self.level_window.blit(self.ghost.image, self.ghost.rect)
 
         # Activate Death Stone
         if self.story_mode:
