@@ -57,6 +57,19 @@ class StoryMode:
             if self.player1_active: self.player1.reset()
             if self.player2_active: self.player2.reset()
             self.current_level += 1
+
+            if self.current_level == 6:
+                if self.player1_active:
+                    self.player1.life_stone_available = True
+                if self.player2_active:
+                    self.player2.life_stone_available = True
+
+            if self.current_level == 11:
+                if self.player1_active:
+                    self.player1.death_stone_available = True
+                if self.player2_active:
+                    self.player2.death_stone_available = True
+
             self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
             self.ui.level = self.level
             self.ui.current_level = self.current_level

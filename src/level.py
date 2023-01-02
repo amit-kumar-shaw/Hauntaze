@@ -32,6 +32,8 @@ class Level:
         self.current_level = level
         self.multiplayer = multiplayer
 
+        self.death_stone_activated = False
+
         self.is_boss_level = False
         self.boss = None
 
@@ -442,6 +444,22 @@ class Level:
                 self.level_window.blit(self.ghost.smoke.image, self.ghost.smoke.rect)
             self.level_window.blit(self.ghost.image, self.ghost.rect)
 
+        # Activate Death Stone
+        if self.story_mode:
+            if self.player1_active and self.player1.death_stone_available and self.player1.death_stone_activated:
+                self.kill_all_enemies()
+                self.player1.death_stone_activated = False
+                self.player1.death_stone_available = False
+                if self.player2_active:
+                    self.player2.death_stone_activated = False
+                    self.player2.death_stone_available = False
+            if self.player2_active and self.player2.death_stone_available and self.player2.death_stone_activated:
+                self.kill_all_enemies()
+                self.player2.death_stone_activated = False
+                self.player2.death_stone_available = False
+                if self.player1_active:
+                    self.player1.death_stone_activated = False
+                    self.player1.death_stone_available = False
 
         self.cover_surf.fill(COVER_COLOR)
 
@@ -469,6 +487,13 @@ class Level:
         # tower = pygame.image.load("./assets/images/tower1.png").convert_alpha()
         # self.display_surface.blit(tower, (576, 0))
         # print(self.player1_active, self.player1.is_alive, self.player1.lives)
+
+    def kill_all_enemies(self):
+        self.death_stone_activated = True
+        for sprite in self.enemy_sprites.sprites():
+            if sprite.type == 'bat' or sprite.type == 'slime' or sprite.type == 'skull':
+                sprite.status = 'dead'
+                sprite.animation_index = 0
 
     def check_player_status(self):
         if self.player1_active and not self.player1.is_alive:
@@ -515,17 +540,21 @@ class Level:
 
         # draw enemy indicator
         for enemy in self.enemy_sprites:
-            if (self.player1_active and math.dist(self.player1.torch.rect.center,
-                                                  enemy.rect.center) > self.player1.visibility_radius) and not self.player2_active:
-                pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
-            if (self.player2_active and math.dist(self.player2.torch.rect.center,
-                                                  enemy.rect.center) > self.player2.visibility_radius) and not self.player1_active:
-                pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
-            if (self.player1_active and math.dist(self.player1.torch.rect.center,
-                                                  enemy.rect.center) > self.player1.visibility_radius) and (
-                    self.player2_active and math.dist(self.player2.torch.rect.center,
-                                                      enemy.rect.center) > self.player2.visibility_radius):
-                pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
+            if self.death_stone_activated and enemy.status == 'dead':
+                enemy.draw(self.level_window)
+
+            else:
+                if (self.player1_active and math.dist(self.player1.torch.rect.center,
+                                                      enemy.rect.center) > self.player1.visibility_radius) and not self.player2_active:
+                    pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
+                if (self.player2_active and math.dist(self.player2.torch.rect.center,
+                                                      enemy.rect.center) > self.player2.visibility_radius) and not self.player1_active:
+                    pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
+                if (self.player1_active and math.dist(self.player1.torch.rect.center,
+                                                      enemy.rect.center) > self.player1.visibility_radius) and (
+                        self.player2_active and math.dist(self.player2.torch.rect.center,
+                                                          enemy.rect.center) > self.player2.visibility_radius):
+                    pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
 
         # TODO: remove in final game. Only for testing and debugging
         # if self.player1_active:

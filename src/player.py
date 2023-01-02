@@ -28,6 +28,12 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
+        self.life_stone_available = False
+        self.death_stone_available = True
+
+        self.life_stone_activated = False
+        self.death_stone_activated = False
+
         self.torch = Torch(pos)
         self.player2 = player2
         self.lives = LIVES
@@ -75,6 +81,7 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER2_MOVE_UP
             self.MOVE_DOWN = PLAYER2_MOVE_DOWN
             self.ATTACK = PLAYER2_ATTACK
+            self.DEATH_STONE = K_u
 
         else:
             self.MOVE_LEFT = PLAYER1_MOVE_LEFT
@@ -82,6 +89,7 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER1_MOVE_UP
             self.MOVE_DOWN = PLAYER1_MOVE_DOWN
             self.ATTACK = PLAYER1_ATTACK
+            self.DEATH_STONE = K_e
 
     def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
@@ -116,6 +124,9 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
             self.status = 'attack'
             self.weapon.status = 'attack'
+
+        if keys[self.DEATH_STONE] and self.death_stone_available:
+            self.death_stone_activated = True
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
