@@ -188,6 +188,7 @@ class Level:
         # draw player and keys
         if self.player1_active:
             self.player1.rect.topleft = tuple(TILE_SIZE * x for x in data['player1'])
+            self.player1.revival_position = self.player1.rect.topleft
             self.player1.attach_torch()
             self.player1.collision_sprites = self.collision_sprites
             self.player1.collectible_sprites = self.collectible_sprites
@@ -210,6 +211,7 @@ class Level:
 
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
+            self.player2.revival_position = self.player2.rect.topleft
             self.player2.attach_torch()
             self.player2.collision_sprites = self.collision_sprites
             self.player2.collectible_sprites = self.collectible_sprites
@@ -316,13 +318,13 @@ class Level:
         # draw the map surface
         # self.display_surface.blit(self.map_surf, (0, 0))
         if self.player1_active:
-            if self.player1.visibility_radius != VISIBILITY_RADIUS:
+            if self.player1.visibility_radius != VISIBILITY_RADIUS or self.cropped_rect1.width != self.player1.visibility_radius * 2:
                 self.cropped_surf1 = pygame.Surface(
                     (self.player1.visibility_radius * 2, self.player1.visibility_radius * 2))
             self.cropped_rect1 = self.cropped_surf1.get_rect(center=self.player1.torch.rect.center)
             self.level_window.blit(self.map_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
-            if self.player2.visibility_radius != VISIBILITY_RADIUS:
+            if self.player2.visibility_radius != VISIBILITY_RADIUS or self.cropped_rect2.width != self.player2.visibility_radius * 2:
                 self.cropped_surf2 = pygame.Surface(
                     (self.player2.visibility_radius * 2, self.player2.visibility_radius * 2))
             self.cropped_rect2 = self.cropped_surf2.get_rect(center=self.player2.torch.rect.center)

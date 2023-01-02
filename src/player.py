@@ -28,11 +28,14 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
-        self.life_stone_available = False
-        self.death_stone_available = True
+        self.life_stone_available = True
+        self.death_stone_available = False
 
         self.life_stone_activated = False
         self.death_stone_activated = False
+
+        self.wait_revival = False
+        self.revival_position = None
 
         self.torch = Torch(pos)
         self.player2 = player2
@@ -82,6 +85,7 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_DOWN = PLAYER2_MOVE_DOWN
             self.ATTACK = PLAYER2_ATTACK
             self.DEATH_STONE = K_u
+            self.LIFE_STONE = K_t
 
         else:
             self.MOVE_LEFT = PLAYER1_MOVE_LEFT
@@ -90,6 +94,7 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_DOWN = PLAYER1_MOVE_DOWN
             self.ATTACK = PLAYER1_ATTACK
             self.DEATH_STONE = K_e
+            self.LIFE_STONE = K_q
 
     def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
@@ -127,6 +132,11 @@ class Player(pygame.sprite.Sprite):
 
         if keys[self.DEATH_STONE] and self.death_stone_available:
             self.death_stone_activated = True
+
+    def revival_input(self):
+        keys = pygame.key.get_pressed()
+        if keys[self.LIFE_STONE] and self.life_stone_available:
+            self.life_stone_activated = True
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
@@ -235,11 +245,14 @@ class Player(pygame.sprite.Sprite):
             self.visibility_radius -= 0.5
         else:
             if not self.level_completed:
-                self.is_alive = False
-                self.torch.kill()
-                if self.weapon_active:
-                    self.weapon.kill()
-                self.kill()
+                if self.life_stone_available:
+                    self.wait_revival = True
+                else:
+                    self.is_alive = False
+                    self.torch.kill()
+                    if self.weapon_active:
+                        self.weapon.kill()
+                    self.kill()
             elif not self.is_ghost:
                 self.is_ghost = True
 
@@ -309,6 +322,19 @@ class Player(pygame.sprite.Sprite):
             self.enemy_collisions()
             self.trap_collisions()
             self.move = not self.move
+
+        elif self.wait_revival:
+            self.revival_input()
+            if self.life_stone_activated:
+                self.lives = LIVES
+                self.wait_revival = False
+                self.status = 'idle'
+                self.rect.topleft = self.revival_position
+                self.visibility_radius = VISIBILITY_RADIUS
+                self.life_stone_activated = False
+                self.life_stone_available = False
+                self.ui_update = True
+
         else:
             if not self.status == 'dead' and self.lives == 0:
                 self.status = 'dead'
