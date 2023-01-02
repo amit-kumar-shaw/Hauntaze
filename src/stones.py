@@ -3,14 +3,14 @@ from utilities import import_frames
 
 
 class Stone(pygame.sprite.Sprite):
-    def __init__(self, pos, type):
+    def __init__(self, pos, type, scale):
         super().__init__()
 
         self.type = type
 
         self.active = False
 
-        self.frames = import_frames(f"./assets/images/stones/{type}", scale=0.75)
+        self.frames = import_frames(f"./assets/images/stones/{type}", scale=scale)
         self.animation_index = 0
 
         self.image = pygame.image.load(f"./assets/images/stones/{type}.png").convert()
@@ -34,9 +34,9 @@ class StonesUI:
         y = (height - 18) / 2
 
         self.stones = []
-        self.stones.append(Stone((2, y), 'life'))
-        self.stones.append(Stone((22, y), 'death'))
-        self.stones.append(Stone((42, y), 'curse'))
+        self.stones.append(Stone((2, y), 'life', 0.75))
+        self.stones.append(Stone((22, y), 'death', 0.75))
+        self.stones.append(Stone((42, y), 'curse', 0.75))
 
     def update(self):
         for stone in self.stones:
