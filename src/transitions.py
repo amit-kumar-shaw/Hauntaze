@@ -11,6 +11,7 @@ class Transition:
 
         self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
+        self.tower_surface = pygame.image.load("./assets/images/tower1.png").convert_alpha()
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 

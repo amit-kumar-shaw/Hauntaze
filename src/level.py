@@ -466,8 +466,8 @@ class Level:
         self.level_window.fill('black')
 
         # TODO: Tower - remove after test
-        tower = pygame.image.load("./assets/images/tower1.png").convert_alpha()
-        self.display_surface.blit(tower, (576, 0))
+        # tower = pygame.image.load("./assets/images/tower1.png").convert_alpha()
+        # self.display_surface.blit(tower, (576, 0))
         # print(self.player1_active, self.player1.is_alive, self.player1.lives)
 
     def check_player_status(self):
