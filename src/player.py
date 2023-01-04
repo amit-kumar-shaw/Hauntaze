@@ -44,6 +44,7 @@ class Player(pygame.sprite.Sprite):
         self.is_alive = True
         self.is_invincible = False
         self.hurt_time = 0
+        self.mask_time = 0
         self.move = True
         self.is_slow = False
         self.web_time = 0
@@ -220,6 +221,11 @@ class Player(pygame.sprite.Sprite):
                     sprite.animation_index = 0
                     self.is_slow = True
                     self.web_time = pygame.time.get_ticks()
+                elif sprite.type == 'mask1' or sprite.type == 'mask2' and sprite.status == 'active':
+                    sprite.status = 'picked'
+                    sprite.animation_index = 0
+                    self.is_invincible = True
+                    self.mask_time = pygame.time.get_ticks()
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
@@ -261,7 +267,7 @@ class Player(pygame.sprite.Sprite):
     def invincibility_timer(self):
         if self.is_invincible:
             current_time = pygame.time.get_ticks()
-            if current_time - self.hurt_time >= INVINSIBILITY_DURATION:
+            if (current_time - self.hurt_time >= INVINSIBILITY_DURATION) and (current_time - self.mask_time >= 5000):
                 self.is_invincible = False
 
     def key_collisions(self):

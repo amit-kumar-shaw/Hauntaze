@@ -241,6 +241,15 @@ class Level:
             Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                         type='web2')
 
+        mask_cells = data['mask1']
+        for _, cell in enumerate(mask_cells):
+            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                        type='mask1')
+        mask_cells = data['mask2']
+        for _, cell in enumerate(mask_cells):
+            Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
+                        type='mask2')
+
         if self.player1_active:
             coin_cells = data['coins1']
             for _, cell in enumerate(coin_cells):

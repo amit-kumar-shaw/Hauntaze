@@ -28,6 +28,11 @@ class Collectible(pygame.sprite.Sprite):
             self.frames['picked'] = import_frames(f'./assets/images/web/web2/picked', scale=2)
             self.pos = tuple(2 + x for x in pos)
 
+        elif type == 'mask1' or type == 'mask2':
+            self.frames['active'] = import_frames(f'./assets/images/mask/active', scale=1)
+            self.frames['picked'] = import_frames(f'./assets/images/mask/picked', scale=2)
+            self.pos = tuple(8 + x for x in pos)
+
         self.status = 'active'
 
         self.animation_index = 0
