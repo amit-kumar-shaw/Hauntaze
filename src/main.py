@@ -45,7 +45,7 @@ while True:
         # if keys[pygame.K_RETURN] and (menu.is_player1_ready or menu.is_player2_ready):
         #     start = True
 
-    screen.fill(BG_COLOR, (0, 0, SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
+    # screen.fill(BG_COLOR, (0, 0, SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
     game.run()
 
     print(clock.get_fps())

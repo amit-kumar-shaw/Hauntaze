@@ -51,16 +51,18 @@ class Level:
         self.weapon_sprite = pygame.sprite.Group()
         self.weapon2_sprite = pygame.sprite.GroupSingle()
 
+        self.level_width = SCREEN_WIDTH if not story_mode else 576
+
         # create map surface
-        self.level_window = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
+        self.level_window = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
         # create cover surface for limited visibility
-        self.cover_surf = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA)
+        self.cover_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA)
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 
         # create map surface
-        self.map_surf = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
+        self.map_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
         # create cropped surface
         self.cropped_surf1 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
@@ -599,17 +601,17 @@ class Level:
         # title
         font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 75 + int(self.animation_index))
         title = font.render('Game Over', False, 'yellow')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        title_rect = title.get_rect(center=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
         title = font.render('Game Over', False, 'red')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        title_rect = title.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
         # Restart game message
         font = pygame.font.Font('./assets/fonts/1.ttf', 15)
         resume_msg = font.render('Press ENTER to restart', False, 'white')
-        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
 
     # TODO: Level completed
@@ -624,15 +626,15 @@ class Level:
         # title
         font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.animation_index))
         title = font.render('Level Completed', False, 'red')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        title_rect = title.get_rect(center=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
         title = font.render('Level Completed', False, 'yellow')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        title_rect = title.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
         # Continue game message
         font = pygame.font.Font('./assets/fonts/1.ttf', 15)
         resume_msg = font.render('Press ENTER to continue', False, 'white')
-        msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
+        msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
