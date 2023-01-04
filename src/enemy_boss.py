@@ -157,7 +157,9 @@ class Boss(pygame.sprite.Sprite):
         self.type = type
         path = f'./assets/images/enemy/'
 
-        if type == 'boss2':
+        if type == 'boss1':
+            path += f'eye/'
+        elif type == 'boss2':
             path += f'mushroom/'
         elif type == 'boss3':
             path += f'executioner/'
@@ -196,7 +198,9 @@ class Boss(pygame.sprite.Sprite):
         self.old_status = None
         self.old_direction = None
 
-        if type == 'boss2':
+        if type == 'boss1':
+            self.lives = BOSS1_LIVES
+        elif type == 'boss2':
             self.lives = BOSS2_LIVES
         elif type == 'boss3':
             self.lives = BOSS3_LIVES

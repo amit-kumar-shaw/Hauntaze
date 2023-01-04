@@ -292,9 +292,9 @@ class Level:
 
         if self.is_boss_level:
             if self.current_level == 5:
-                self.boss = Eye(tuple(TILE_SIZE * x for x in data['boss']),
+                self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
                                 [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                                self.collision_sprites, self.weapon_sprite)
+                                self.collision_sprites, self.weapon_sprite, type='boss1')
             elif self.current_level == 10:
                 self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
                                  [self.visible_sprites, self.active_sprites, self.enemy_sprites],
