@@ -7,37 +7,39 @@ from player import *
 from settings import *
 from utilities import import_frames
 
+
 class Enemy(pygame.sprite.Sprite):
 
-    def __init__(self, pos, groups, collision_sprites):
+    def __init__(self, pos, groups, collision_sprites, player_weapon_sprites, type='None'):
         super().__init__(groups)
-        # self.image = pygame.image.load("./assets/images/enemy/tile_0120.png").convert_alpha()
+        if type == 'None':
+            self.type = random.choice(['bat', 'slime', 'skull'])
+        else:
+            self.type = type
 
-        # t1 = pygame.image.load("./assets/images/enemy/bat/1.png").convert_alpha()
-        # t2 = pygame.image.load("./assets/images/enemy/bat/2.png").convert_alpha()
-        # t3 = pygame.image.load("./assets/images/enemy/bat/3.png").convert_alpha()
-        # t4 = pygame.image.load("./assets/images/enemy/bat/4.png").convert_alpha()
-        #
-        # self.frames = [pygame.transform.rotozoom(t1, 0, 0.75),
-        #                pygame.transform.rotozoom(t2, 0, 0.75),
-        #                pygame.transform.rotozoom(t3, 0, 0.75), pygame.transform.rotozoom(t4, 0, 0.75)]
+        path = f'./assets/images/enemy/{self.type}/'
+        self.frames = {'active': [], 'dead': []}
 
-        self.frames = import_frames("./assets/images/enemy/bat", scale=0.75)
+        for status in self.frames.keys():
+            full_path = path + status
+            self.frames[status] = import_frames(full_path, scale=0.75)
+
+        self.status = 'active'
 
         self.animation_index = random.choice([0, 1, 2, 3])
 
-        self.image = self.frames[self.animation_index]
+        self.image = self.frames[self.status][self.animation_index]
 
         self.rect = self.image.get_rect(topleft=pos)
-
+        self.mask = pygame.mask.from_surface(self.image)
         self.direction = pygame.math.Vector2()
         self.speed = 1
         self.tog = True
         self.collision_sprites = collision_sprites
+        self.player_weapon_sprites = player_weapon_sprites
 
         self.timer = 5
         self.movement_update()
-
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
@@ -63,7 +65,6 @@ class Enemy(pygame.sprite.Sprite):
 
         keys = random.choice(Possible_move)
 
-
         if keys == 'Left':
             self.direction.x = -1
             self.direction.y = 0
@@ -79,27 +80,45 @@ class Enemy(pygame.sprite.Sprite):
 
     def animate(self):
 
+        status = self.frames[self.status]
+
         self.animation_index += 0.1
-        if self.animation_index >= len(self.frames): self.animation_index = 0
-        self.image = self.frames[int(self.animation_index)]
+        if self.animation_index >= len(status):
+            self.animation_index = 0
+            if self.status == 'dead':
+                self.kill()
+        self.image = status[int(self.animation_index)]
+        if self.direction.x < 0:
+            self.image = pygame.transform.flip(self.image, True, False)
+
+        self.mask = pygame.mask.from_surface(self.image)
+
+    def weapon_collisions(self):
+        for sprite in self.player_weapon_sprites.sprites():
+            if sprite.rect.colliderect(self.rect) and sprite.status == 'attack':
+                if pygame.sprite.collide_mask(self, sprite):
+                    self.status = 'dead'
+                    self.animation_index = 0
 
     def update(self):
 
-        self.animate()
-        random_time = random.choice(range(10, 15))
-        self.timer += 0.1
-        if self.timer >= random_time:
-            self.timer = 0
-            self.movement_update()
 
-        if self.tog:
-            self.rect.x += self.direction.x * self.speed
-        self.horizontal_collisions()
-        if self.tog:
-            self.rect.y += self.direction.y * self.speed
-        self.vertical_collisions()
-        self.tog = not self.tog
+        self.animate()
+        if self.status == 'active':
+            random_time = random.choice(range(10, 15))
+            self.timer += 0.1
+            if self.timer >= random_time:
+                self.timer = 0
+                self.movement_update()
+
+            if self.tog:
+                self.rect.x += self.direction.x * self.speed
+            self.horizontal_collisions()
+            if self.tog:
+                self.rect.y += self.direction.y * self.speed
+            self.vertical_collisions()
+            self.weapon_collisions()
+            self.tog = not self.tog
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-

@@ -25,6 +25,9 @@ class Door(pygame.sprite.Sprite):
         self.image = pygame.transform.rotozoom(self.closed_frame, 0, 0.5)
         self.rect = self.image.get_rect(topleft = pos)
 
+        self.sound = pygame.mixer.Sound('./assets/Audio/doorOpen_4.mp3')
+        self.sound.set_volume(0.7)
+
     def open(self):
         self.animation_index += 0.08
 
@@ -34,12 +37,11 @@ class Door(pygame.sprite.Sprite):
             self.image = self.open_frame
             return
 
-        if self.animation_index > 6:
+        if self.animation_index > 6 and self.animation_index < 6.1:
             self.play_open_sound()
 
         self.image = self.animation_frames[int(self.animation_index)]
 
     def play_open_sound(self):
-        sound = pygame.mixer.Sound('./assets/Audio/doorOpen_4.mp3')
-        sound.set_volume(0.7)
-        sound.play()
+
+        self.sound.play()

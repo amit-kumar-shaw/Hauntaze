@@ -39,7 +39,7 @@ class Game:
 
             self.menu.update()
             if keys[pygame.K_RETURN] and (self.menu.is_player1_ready or self.menu.is_player2_ready):
-                self.sound.play_confirmation()
+                self.sound.play_insert_coin()
                 self.menu.sound.menu.stop()
                 self.status = Status.RUNNING
                 if self.menu.is_story_mode:
