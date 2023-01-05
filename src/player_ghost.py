@@ -9,6 +9,8 @@ class Ghost(pygame.sprite.Sprite):
 
         self.story_mode = story_mode
 
+        self.player2 = player2
+        self.partner = None
         if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         else:
@@ -17,6 +19,8 @@ class Ghost(pygame.sprite.Sprite):
         self.image = self.frames[self.frame_index]
 
         self.rect = self.image.get_rect(topleft=pos)
+
+        self.is_flipped = False
 
         self.direction = pygame.math.Vector2()
         self.speed = PLAYER_SPEED
@@ -44,8 +48,10 @@ class Ghost(pygame.sprite.Sprite):
 
         if keys[self.MOVE_RIGHT]:
             self.direction.x = 1
+            self.is_flipped = False
         elif keys[self.MOVE_LEFT]:
             self.direction.x = -1
+            self.is_flipped = True
         else:
             self.direction.x = 0
 
@@ -72,12 +78,19 @@ class Ghost(pygame.sprite.Sprite):
         self.frame_index += 0.1
         if self.frame_index >= len(self.frames): self.frame_index = 0
         self.image = self.frames[int(self.frame_index)]
-        if self.direction.x < 0:
+        if self.is_flipped:
             self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self):
         self.input()
         self.animate()
+
+        if self.partner.visibility_radius > GHOST_VISIBILITY:
+            self.visibility_radius = GHOST_VISIBILITY
+        else:
+            self.visibility_radius = self.partner.visibility_radius
+            if self.visibility_radius < 2:
+                self.kill()
 
         self.rect.x += self.direction.x * self.speed
         self.horizontal_border()
@@ -87,7 +100,7 @@ class Ghost(pygame.sprite.Sprite):
         if not self.story_mode:
             self.smoke.animate()
             self.smoke.rect = self.smoke.image.get_rect(center = self.rect.center)
-            pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
+            #pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
 
 
 class Smoke(pygame.sprite.Sprite):
