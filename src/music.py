@@ -48,7 +48,7 @@ class PlayerSound(object):
         # self.enemy_collision.play()
 
     def play_coin_collection(self):
-        sound = pygame.mixer.Sound('./assets/Audio/collect coins2.mp3')
+        sound = pygame.mixer.Sound('./assets/Audio/collect_coin.ogg')
         sound.set_volume(0.7)
         sound.play()
         # self.coin_collection.play()

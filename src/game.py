@@ -23,7 +23,7 @@ class Status(Enum):
 class Game:
 
     def __init__(self):
-        self.status = Status.INTRO
+        self.status = Status.MENU
         self.menu = Menu()
         self.mode = None
         self.pause_animation = 0
@@ -52,7 +52,6 @@ class Game:
 
         # run the game
         elif self.status == Status.RUNNING:
-            self.mode.fps = self.fps
             self.mode.run()
 
             if keys[pygame.K_ESCAPE]:
@@ -83,7 +82,7 @@ class Game:
             self.menu = Menu()
 
     def pause(self):
-        pause_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        pause_surface = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
         pause_surface.fill('black')
 
         self.pause_animation += 0.08
