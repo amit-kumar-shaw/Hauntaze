@@ -35,7 +35,7 @@ class Transition:
         self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
         self.death_index = 0
 
-        self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+        #self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
         self.curse_index = 0
 
         self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
