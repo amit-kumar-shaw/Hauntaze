@@ -3,16 +3,7 @@
 import pygame, sys
 # import postprocessing
 from settings import *
-# from level import Level
-# from ui import UI
-# from music import GameSound
-# from menu import Menu
 from game import Game
-
-import os
-
-os.chdir('..')
-
 
 
 # Pygame setup
