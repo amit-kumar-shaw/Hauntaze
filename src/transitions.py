@@ -256,7 +256,10 @@ class Transition:
                 self.p2_image = status[int(self.p2_frame_index)]
 
     def change_tower(self):
-        pass
+        if self.p1_active:
+            self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
+        if self.p2_active:
+            self.p2_rect = self.p1_image.get_rect(bottomleft=(16, 288))
 
     def draw(self):
 
