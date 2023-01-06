@@ -204,6 +204,7 @@ class Transition:
     def death(self):
         if self.death_frames is None:
             self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
+            self.screen_surface.fill('black')
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -211,13 +212,28 @@ class Transition:
 
         self.death_index += 0.2
         if self.death_index >= len(self.death_frames): self.death_index = 260
-        self.screen_surface = self.death_frames[int(self.death_index)]
+
+        # self.screen_surface = self.death_frames[int(self.death_index)]
+        if self.death_index < 0.5:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (196, 49, 249, 28), (196, 49, 249, 28))
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (255, 223, 131, 14), (255, 223, 131, 14))
+        elif 4 < self.death_index < 39:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (180, 112, 280, 15), (180, 112, 280, 15))
+        elif 44 < self.death_index < 112:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (48, 142, 542, 18), (48, 142, 542, 18))
+        elif 130 < self.death_index < 196:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (46, 262, 548, 19), (46, 262, 548, 19))
+        elif 202 < self.death_index < 261:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (82, 290, 475, 21), (82, 290, 475, 21))
+
+        self.screen_surface.blit(self.death_frames[int(self.death_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
         self.display.blit(self.screen_surface, (0, 0))
 
     def curse(self):
         if self.curse_frames is None:
             self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+            self.screen_surface.fill('black')
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -226,8 +242,20 @@ class Transition:
             sys.exit()
 
         self.curse_index += 0.2
-        if self.curse_index >= len(self.curse_frames): self.curse_index = 0
-        self.screen_surface = self.curse_frames[int(self.curse_index)]
+        if self.curse_index >= len(self.curse_frames): self.curse_index = 135
+
+        # self.screen_surface = self.curse_frames[int(self.curse_index)]
+        if self.curse_index < 0.5:
+            self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (196, 49, 249, 28), (196, 49, 249, 28))
+            self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (244, 222, 152, 17), (244, 222, 152, 17))
+        elif 4 < self.curse_index < 40:
+            self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (170, 111, 299, 16), (170, 111, 299, 16))
+        elif 44 < self.curse_index < 98:
+            self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (107, 142, 424, 19), (107, 142, 424, 19))
+        elif 105 < self.curse_index < 133:
+            self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (182, 262, 279, 20), (182, 262, 279, 20))
+
+        self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
         self.display.blit(self.screen_surface, (0, 0))
 

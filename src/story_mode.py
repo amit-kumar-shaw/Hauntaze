@@ -90,5 +90,7 @@ class StoryMode:
             self.stones.stones[0].active = True
         if self.current_level > 10:
             self.stones.stones[1].active = True
+        if self.current_level > 15:
+            self.stones.stones[2].active = True
 
         self.stones.update()
