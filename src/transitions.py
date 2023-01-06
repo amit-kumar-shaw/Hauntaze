@@ -211,20 +211,20 @@ class Transition:
             self.death_completed = True
 
         self.death_index += 0.2
-        if self.death_index >= len(self.death_frames): self.death_index = 260
+        if self.death_index >= len(self.death_frames): self.death_index = 253
 
         # self.screen_surface = self.death_frames[int(self.death_index)]
         if self.death_index < 0.5:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (196, 49, 249, 28), (196, 49, 249, 28))
-            self.screen_surface.blit(self.death_frames[int(self.death_index)], (255, 223, 131, 14), (255, 223, 131, 14))
-        elif 4 < self.death_index < 39:
-            self.screen_surface.blit(self.death_frames[int(self.death_index)], (180, 112, 280, 15), (180, 112, 280, 15))
-        elif 44 < self.death_index < 112:
-            self.screen_surface.blit(self.death_frames[int(self.death_index)], (48, 142, 542, 18), (48, 142, 542, 18))
-        elif 130 < self.death_index < 196:
-            self.screen_surface.blit(self.death_frames[int(self.death_index)], (46, 262, 548, 19), (46, 262, 548, 19))
-        elif 202 < self.death_index < 261:
-            self.screen_surface.blit(self.death_frames[int(self.death_index)], (82, 290, 475, 21), (82, 290, 475, 21))
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (245, 223, 151, 15), (245, 223, 151, 15))
+        elif 4 < self.death_index < 40:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (170, 111, 298, 16), (170, 111, 298, 16))
+        elif 44 < self.death_index < 114:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (45, 141, 551, 19), (45, 141, 551, 19))
+        elif 120 < self.death_index < 196:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (6, 262, 627, 19), (6, 262, 627, 19))
+        elif 202 < self.death_index < 250:
+            self.screen_surface.blit(self.death_frames[int(self.death_index)], (123, 292, 392, 15), (123, 292, 392, 15))
 
         self.screen_surface.blit(self.death_frames[int(self.death_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
@@ -572,6 +572,15 @@ class Transition:
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
+            self.screen_surface.blit(msg, msg_rect)
+
+        m1 = 'Press the Yellow button to activate Death Stone.'
+        if self.frame_index > 202:
+            if self.frame_index - 202 < len(m1):
+                m1 = m1[0:self.frame_index - 202]
+            font = pygame.font.Font('./assets/fonts/1.ttf', 12)
+            msg = font.render(m1, False, 'white')
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
 
         if self.frame_index < 300:

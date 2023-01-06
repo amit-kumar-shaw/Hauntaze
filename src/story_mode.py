@@ -36,7 +36,6 @@ class StoryMode:
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
-        self.current_level = 16
         self.stones = StonesUI()
         self.transition = Transition(self.player1_active, self.player2_active)
 
