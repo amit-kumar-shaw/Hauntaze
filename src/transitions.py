@@ -174,14 +174,29 @@ class Transition:
     def life(self):
         if self.life_frames is None:
             self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
+            self.screen_surface.fill('black')
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.life_completed = True
 
         self.life_index += 0.2
-        if self.life_index >= len(self.life_frames): self.life_index = 260
-        self.screen_surface = self.life_frames[int(self.life_index)]
+        if self.life_index >= len(self.life_frames): self.life_index = 265
+
+        # self.screen_surface = self.life_frames[int(self.life_index)]
+        if self.life_index < 0.5:
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (196, 49, 249, 28), (196, 49, 249, 28))
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (255, 223, 131, 14), (255, 223, 131, 14))
+        elif 4 < self.life_index < 39:
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (180, 112, 280, 15), (180, 112, 280, 15))
+        elif 44 < self.life_index < 112:
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (48, 142, 542, 18), (48, 142, 542, 18))
+        elif 130 < self.life_index < 196:
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (46, 262, 548, 19), (46, 262, 548, 19))
+        elif 202 < self.life_index < 261:
+            self.screen_surface.blit(self.life_frames[int(self.life_index)], (82, 290, 475, 21), (82, 290, 475, 21))
+
+        self.screen_surface.blit(self.life_frames[int(self.life_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
         self.display.blit(self.screen_surface, (0, 0))
 
