@@ -26,16 +26,16 @@ class Transition:
         self.level = 1
         self.frame_index = 1
 
-        self.intro_frames = import_frames(f"./assets/images/transitions/intro", scale=1)
+        self.intro_frames = None
         self.intro_index = 0
 
-        self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
+        self.life_frames = None
         self.life_index = 0
 
-        self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
+        self.death_frames = None
         self.death_index = 0
 
-        self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+        self.curse_frames = None
         self.curse_index = 0
 
         self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
@@ -136,17 +136,45 @@ class Transition:
         # self.draw()
 
     def intro(self):
+        if self.intro_frames is None:
+            self.intro_frames = import_frames(f"./assets/images/transitions/intro", scale=1)
+            self.screen_surface.fill('black')
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.intro_completed = True
 
         self.intro_index += 0.2
         if self.intro_index >= len(self.intro_frames): self.intro_index = 225
-        self.screen_surface = self.intro_frames[int(self.intro_index)]
+
+        # self.screen_surface = self.intro_frames[int(self.intro_index)]
+        if self.intro_index < 0.5:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (160, 50, 320, 20), (160, 50, 320, 20))
+        elif 4 < self.intro_index < 75:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (84, 112, 475, 16), (84, 112, 475, 16))
+        elif 80 < self.intro_index < 117:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (198, 144, 246, 13), (198, 144, 246, 13))
+        elif 131 < self.intro_index < 131.5:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (101, 222, 116, 14), (101, 222, 116, 14))
+        elif 145 < self.intro_index < 145.5:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (253, 222, 133, 16), (253, 222, 133, 16))
+        elif 160 < self.intro_index < 160.5:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (413, 222, 134, 15), (413, 222, 134, 15))
+        elif 175 < self.intro_index < 222:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (161, 263, 319, 16), (161, 263, 319, 16))
+        if 131 < self.intro_index:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (139, 180, 44, 40), (139, 180, 44, 40))
+        if 145 < self.intro_index:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (299, 181, 42, 39), (299, 181, 42, 39))
+        if 160 < self.intro_index:
+            self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (458, 182, 44, 39), (458, 182, 44, 39))
 
         self.display.blit(self.screen_surface, (0, 0))
 
     def life(self):
+        if self.life_frames is None:
+            self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.life_completed = True
@@ -158,6 +186,9 @@ class Transition:
         self.display.blit(self.screen_surface, (0, 0))
 
     def death(self):
+        if self.death_frames is None:
+            self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.death_completed = True
@@ -169,6 +200,9 @@ class Transition:
         self.display.blit(self.screen_surface, (0, 0))
 
     def curse(self):
+        if self.curse_frames is None:
+            self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
             self.curse_completed = True
