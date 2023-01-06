@@ -170,6 +170,8 @@ class Transition:
         if 160 < self.intro_index:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (458, 182, 44, 39), (458, 182, 44, 39))
 
+        if self.intro_completed:
+            self.screen_surface.fill('black')
         self.display.blit(self.screen_surface, (0, 0))
 
     def life(self):
@@ -199,6 +201,9 @@ class Transition:
 
         self.screen_surface.blit(self.life_frames[int(self.life_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
+        if self.life_completed:
+            self.screen_surface.fill('black')
+
         self.display.blit(self.screen_surface, (0, 0))
 
     def death(self):
@@ -227,6 +232,9 @@ class Transition:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (123, 292, 392, 15), (123, 292, 392, 15))
 
         self.screen_surface.blit(self.death_frames[int(self.death_index)], (300, 181, 40, 39), (300, 181, 40, 39))
+
+        if self.death_completed:
+            self.screen_surface.fill('black')
 
         self.display.blit(self.screen_surface, (0, 0))
 
