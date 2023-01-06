@@ -38,7 +38,7 @@ class StoryMode:
         self.ui.update_level()
 
         self.stones = StonesUI()
-        self.transition = Transition(self.multiplayer)
+        self.transition = Transition(self.player1_active, self.player2_active)
 
     def run(self):
         if self.status == Status.RUNNING:

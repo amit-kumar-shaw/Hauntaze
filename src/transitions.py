@@ -7,13 +7,13 @@ from utilities import import_frames
 
 
 class Transition:
-    def __init__(self, multiplayer):
+    def __init__(self, p1, p2):
 
         self.display = pygame.display.get_surface()
 
-        self.multiplayer = multiplayer
+        # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
-        self.tower_surface = pygame.image.load("./assets/images/tower1.png").convert_alpha()
+        # self.tower_surface = pygame.image.load("./assets/images/tower1.png").convert_alpha()
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -40,6 +40,63 @@ class Transition:
 
         self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
         self.tower_index = 0
+
+        self.p1_active = p1
+        self.p2_active = p2
+        self.path_index = 0
+        if self.p1_active:
+            path = f'./assets/images/player/p1/'
+            self.p1_frames = {'idle': [], 'walk': []}
+
+            for status in self.p1_frames.keys():
+                full_path = path + status
+                self.p1_frames[status] = import_frames(full_path, scale=0.8)
+
+            self.p1_frame_index = 0
+            self.p1_image = self.p1_frames['idle'][0]
+            self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
+            self.p1_direction = pygame.math.Vector2()
+            self.p1_flipped = False
+            self.p1_direction_changed = False
+            self.p1_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                            (1, 0), (1, 0), (1, 0), (1, 0),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0),
+                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)]
+
+        if self.p2_active:
+            path = f'./assets/images/player/p2/'
+            self.p2_frames = {'idle': [], 'walk': []}
+
+            for status in self.p2_frames.keys():
+                full_path = path + status
+                self.p2_frames[status] = import_frames(full_path, scale=0.8)
+            self.p2_index = 0
+            self.p2_frame_index = 0
+            self.p2_image = self.p2_frames['idle'][self.p2_index]
+            self.p2_rect = self.p2_image.get_rect(bottomleft=(16, 288))
+            self.p2_direction = pygame.math.Vector2()
+            self.p2_flipped = False
+            self.p2_direction_changed = False
+            self.p2_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                            (1, 0),
+                            (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                            (0, 1),
+                            (0, 1), (0, 1), (0, 1), (0, 1),
+                            (-1, 0), (-1, 0),
+                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)]
 
         self.stones = []
         self.stones.append(Stone((160, SCREEN_HEIGHT / 2), 'life', 1.5))
@@ -125,13 +182,81 @@ class Transition:
         self.display.blit(self.screen_surface, (0, 0))
 
     def tower(self):
-        self.tower_index += 0.2
-        if self.tower_index >= len(self.tower1_frames):
+
+        if self.path_index >= 80:
             self.completed = True
             self.tower_index = 0
-        self.tower_surface = self.tower1_frames[int(self.tower_index)]
+            self.path_index = 0
+            if self.p1_active:
+                self.p1_direction_changed = False
+                self.p1_image = self.p1_frames['idle'][0]
+            if self.p2_active:
+                self.p2_direction_changed = False
+                self.p2_image = self.p2_frames['idle'][0]
+        else:
+            self.move_players()
+
+        if self.p1_active and self.p1_flipped:
+            self.p1_image = pygame.transform.flip(self.p1_image, True, False)
+        if self.p2_active and self.p2_flipped:
+            self.p2_image = pygame.transform.flip(self.p2_image, True, False)
+        self.tower_surface.blit(self.tower1_frames[0], (0, 0))
+        if self.p2_active:
+            self.tower_surface.blit(self.p2_image, self.p2_rect)
+        if self.p1_active:
+            self.tower_surface.blit(self.p1_image, self.p1_rect)
 
         self.display.blit(self.tower_surface, self.tower_rect)
+        self.path_index += 1
+
+    def move_players(self):
+        x = (self.level - 1) % 5 #if self.level % 5 != 0 else 5
+        if x == 0:
+            self.change_tower()
+        else:
+            if x % 2 == 0:
+                if self.p1_active:
+                    self.p1_direction.x = -1
+                if self.p2_active:
+                    self.p2_direction.x = -1
+            else:
+                if self.p1_active:
+                    self.p1_direction.x = 1
+                if self.p2_active:
+                    self.p2_direction.x = 1
+
+            if self.p1_active:
+                if self.path_index > 16 and not self.p1_direction_changed:
+                    self.p1_flipped = not self.p1_flipped
+                    self.p1_direction_changed = True
+
+                self.p1_rect.x += self.p1_direction.x * self.p1_path[int(self.path_index)][0]
+                self.p1_rect.y -= self.p1_path[int(self.path_index)][1]
+
+                status = self.p1_frames['walk']
+                self.p1_frame_index += 0.2
+                if self.p1_frame_index >= len(status):
+                    self.p1_frame_index = 0
+
+                self.p1_image = status[int(self.p1_frame_index)]
+
+            if self.p2_active:
+                if self.path_index > 24 and not self.p2_direction_changed:
+                    self.p2_flipped = not self.p2_flipped
+                    self.p2_direction_changed = True
+
+                self.p2_rect.x += self.p2_direction.x * self.p2_path[int(self.path_index)][0]
+                self.p2_rect.y -= self.p2_path[int(self.path_index)][1]
+
+                status = self.p2_frames['walk']
+                self.p2_frame_index += 0.2
+                if self.p2_frame_index >= len(status):
+                    self.p2_frame_index = 0
+
+                self.p2_image = status[int(self.p2_frame_index)]
+
+    def change_tower(self):
+        pass
 
     def draw(self):
 
@@ -147,26 +272,26 @@ class Transition:
         self.screen_surface.fill('black')
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Welcome to Hauntaze!', False, 'white')
-        msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 60))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
         self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'The search of forbidden treasure has cursed you to turn into a ghost.'
 
         if self.frame_index > 5:
             if self.frame_index - 5 < len(m1):
-                m1 = m1[0:self.frame_index-5]
+                m1 = m1[0:self.frame_index - 5]
             font = pygame.font.Font('./assets/fonts/1.ttf', 10)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 120))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 120))
             self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'To lift the curse you need to collect:'
         if self.frame_index > 80:
             if self.frame_index - 80 < len(m1):
-                m1 = m1[0:self.frame_index-80]
+                m1 = m1[0:self.frame_index - 80]
             font = pygame.font.Font('./assets/fonts/1.ttf', 10)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 150))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 150))
             self.screen_surface.blit(msg, msg_rect)
 
         if self.frame_index > 130:
@@ -196,7 +321,7 @@ class Transition:
         m1 = 'Defeat the stone defenders and lift your curse.'
         if self.frame_index > 175:
             if self.frame_index - 175 < len(m1):
-                m1 = m1[0:self.frame_index-175]
+                m1 = m1[0:self.frame_index - 175]
             font = pygame.font.Font('./assets/fonts/1.ttf', 10)
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
@@ -204,9 +329,11 @@ class Transition:
 
         if self.frame_index < 300:
             if self.frame_index < 10:
-                pygame.image.save(self.screen_surface, f'./assets/images/transitions/intro/intro_00{self.frame_index}.png')
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/intro/intro_00{self.frame_index}.png')
             elif self.frame_index < 100:
-                pygame.image.save(self.screen_surface, f'./assets/images/transitions/intro/intro_0{self.frame_index}.png')
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/intro/intro_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
                                   f'./assets/images/transitions/intro/intro_{self.frame_index}.png')
@@ -223,30 +350,29 @@ class Transition:
         self.screen_surface.fill('black')
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
-        msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 60))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
         self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'You have collected The Life Stone.'
 
         if self.frame_index > 5:
             if self.frame_index - 5 < len(m1):
-                m1 = m1[0:self.frame_index-5]
+                m1 = m1[0:self.frame_index - 5]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 120))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 120))
             self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'The Life Stone gives you the power to revive yourself once you die.'
         if self.frame_index > 45:
             if self.frame_index - 45 < len(m1):
-                m1 = m1[0:self.frame_index-45]
+                m1 = m1[0:self.frame_index - 45]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 150))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 150))
             self.screen_surface.blit(msg, msg_rect)
 
         if self.frame_index > 0:
-
             self.stones[0].rect = self.stones[0].image.get_rect(center=(320, 200))
             self.screen_surface.blit(self.stones[0].image, self.stones[0].rect)
             font = pygame.font.Font('./assets/fonts/1.ttf', 14)
@@ -273,7 +399,7 @@ class Transition:
         m1 = 'Remember, you can revive yourself only once during the whole game.'
         if self.frame_index > 130:
             if self.frame_index - 130 < len(m1):
-                m1 = m1[0:self.frame_index-130]
+                m1 = m1[0:self.frame_index - 130]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
@@ -290,7 +416,8 @@ class Transition:
 
         if self.frame_index < 300:
             if self.frame_index < 10:
-                pygame.image.save(self.screen_surface, f'./assets/images/transitions/life/life_00{self.frame_index}.png')
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/life/life_00{self.frame_index}.png')
             elif self.frame_index < 100:
                 pygame.image.save(self.screen_surface, f'./assets/images/transitions/life/life_0{self.frame_index}.png')
             else:
@@ -310,26 +437,26 @@ class Transition:
         self.screen_surface.fill('black')
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
-        msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 60))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
         self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'You have collected The Death Stone.'
 
         if self.frame_index > 5:
             if self.frame_index - 5 < len(m1):
-                m1 = m1[0:self.frame_index-5]
+                m1 = m1[0:self.frame_index - 5]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 120))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 120))
             self.screen_surface.blit(msg, msg_rect)
 
         m1 = 'The Death Stone gives you the power to kill all your enemies at once.'
         if self.frame_index > 45:
             if self.frame_index - 45 < len(m1):
-                m1 = m1[0:self.frame_index-45]
+                m1 = m1[0:self.frame_index - 45]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
-            msg_rect = msg.get_rect(center=(SCREEN_WIDTH/2, 150))
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 150))
             self.screen_surface.blit(msg, msg_rect)
 
         # if self.frame_index > 0:
@@ -360,7 +487,7 @@ class Transition:
         m1 = 'Remember, the Death Stone can be activated only once during the whole game.'
         if self.frame_index > 120:
             if self.frame_index - 120 < len(m1):
-                m1 = m1[0:self.frame_index-120]
+                m1 = m1[0:self.frame_index - 120]
             font = pygame.font.Font('./assets/fonts/1.ttf', 12)
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
@@ -368,9 +495,11 @@ class Transition:
 
         if self.frame_index < 300:
             if self.frame_index < 10:
-                pygame.image.save(self.screen_surface, f'./assets/images/transitions/death/death_00{self.frame_index}.png')
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/death/death_00{self.frame_index}.png')
             elif self.frame_index < 100:
-                pygame.image.save(self.screen_surface, f'./assets/images/transitions/death/death_0{self.frame_index}.png')
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/death/death_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
                                   f'./assets/images/transitions/death/death_{self.frame_index}.png')
