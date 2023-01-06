@@ -13,9 +13,10 @@ class Transition:
 
         # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
-        # self.tower_surface = pygame.image.load("./assets/images/tower1.png").convert_alpha()
+
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.castle = pygame.image.load("./assets/images/transitions/castle.png").convert_alpha()
 
         self.intro_completed = False
         self.life_completed = False
@@ -555,3 +556,84 @@ class Transition:
             else:
                 pygame.image.save(self.screen_surface,
                                   f'./assets/images/transitions/death/death_{self.frame_index}.png')
+
+    def stone3_gen(self):
+        self.frame_index += 1
+
+        self.stones[0].active = True
+        self.stones[1].active = True
+        self.stones[2].active = True
+        self.stones[0].animate()
+        self.stones[1].animate()
+        self.stones[2].animate()
+        # for stone in self.stones:
+        #     stone.animate()
+        self.screen_surface.fill('black')
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, 'white')
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
+        self.screen_surface.blit(msg, msg_rect)
+
+        m1 = 'You have collected The Curse Stone.'
+
+        if self.frame_index > 5:
+            if self.frame_index - 5 < len(m1):
+                m1 = m1[0:self.frame_index - 5]
+            font = pygame.font.Font('./assets/fonts/1.ttf', 12)
+            msg = font.render(m1, False, 'white')
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 120))
+            self.screen_surface.blit(msg, msg_rect)
+
+        m1 = 'Your curse is lifted and forbidden treasure is yours.'
+        if self.frame_index > 45:
+            if self.frame_index - 45 < len(m1):
+                m1 = m1[0:self.frame_index - 45]
+            font = pygame.font.Font('./assets/fonts/1.ttf', 12)
+            msg = font.render(m1, False, 'white')
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 150))
+            self.screen_surface.blit(msg, msg_rect)
+
+        # if self.frame_index > 0:
+        #
+        #     self.stones[0].rect = self.stones[0].image.get_rect(center=(320, 200))
+        #     self.screen_surface.blit(self.stones[0].image, self.stones[0].rect)
+        #     font = pygame.font.Font('./assets/fonts/1.ttf', 14)
+        #     msg = font.render('The Life Stone', False, 'white')
+        #     msg_rect = msg.get_rect(center=(320, 230))
+        #     self.screen_surface.blit(msg, msg_rect)
+
+        if self.frame_index > 0:
+            self.stones[2].rect = self.stones[2].image.get_rect(center=(320, 200))
+            self.screen_surface.blit(self.stones[2].image, self.stones[2].rect)
+            font = pygame.font.Font('./assets/fonts/1.ttf', 14)
+            msg = font.render('The Curse Stone', False, 'white')
+            msg_rect = msg.get_rect(center=(320, 230))
+            self.screen_surface.blit(msg, msg_rect)
+
+        # if self.frame_index > 0:
+        #     self.stones[2].rect = self.stones[2].image.get_rect(center=(480, 200))
+        #     self.screen_surface.blit(self.stones[2].image, self.stones[2].rect)
+        #     font = pygame.font.Font('./assets/fonts/1.ttf', 14)
+        #     msg = font.render('The Curse Stone', False, 'white')
+        #     msg_rect = msg.get_rect(center=(480, 230))
+        #     self.screen_surface.blit(msg, msg_rect)
+
+        m1 = 'You have completed Hauntaze.'
+        if self.frame_index > 105:
+            if self.frame_index - 105 < len(m1):
+                m1 = m1[0:self.frame_index - 105]
+            font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+            msg = font.render(m1, False, 'white')
+            msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
+            self.screen_surface.blit(msg, msg_rect)
+
+        if self.frame_index < 150:
+            if self.frame_index < 10:
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/curse/curse_00{self.frame_index}.png')
+            elif self.frame_index < 100:
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/curse/curse_0{self.frame_index}.png')
+            else:
+                pygame.image.save(self.screen_surface,
+                                  f'./assets/images/transitions/curse/curse_{self.frame_index}.png')
