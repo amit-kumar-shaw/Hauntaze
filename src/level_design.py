@@ -678,3 +678,18 @@ STORY_DATA = [
                 '####################################']
     }
 ]
+
+SURVIVAL_DATA = [
+    {
+        'level': 50,
+        'coins': 15,
+        'bats': 5,
+        'slime': 5,
+        'skull': 5,
+        'torch': 4,
+        'mask': 8,
+        'web': 16,
+        'spikes': 12,
+        'weapon_type': 'flamethrower',
+    }
+]

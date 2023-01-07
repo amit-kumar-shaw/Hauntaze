@@ -91,7 +91,193 @@ class Level:
         if story_mode:
             self.story_setup()
         else:
-            self.survival_setup()
+            self.survival_setup1()
+
+    def survival_setup1(self):
+
+        from level_design import SURVIVAL_DATA
+        data = SURVIVAL_DATA[self.current_level - 1]
+
+        coins = data['coins'] if not self.multiplayer else data['coins'] * 2
+        need_coins = False
+        personal_items = 3 if not self.multiplayer else 6
+        need_personal_item = False
+        personal_cells = []
+        bats = data['bats']
+        slime = data['slime']
+        skull = data['skull']
+        enemies = bats + slime + skull
+        need_enemy = False
+        enemy_type = None
+        torch = data['torch']
+        need_torch = False
+        mask = data['mask']
+        need_mask = False
+        web = data['web']
+        need_web = False
+        web1 = False
+        spikes = data['spikes']
+        need_spikes = False
+
+        level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
+
+        for col_index in range(ROWS * CELL_SIZE):
+            for row_index in range(COLUMNS * CELL_SIZE):
+                y = col_index * TILE_HEIGHT
+                x = row_index * TILE_WIDTH
+                if level_map[(row_index, col_index)] == '.':
+                    Tile((x, y), [self.visible_sprites], wall=False)
+                if level_map[(row_index, col_index)] == '#':
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
+                if level_map[(row_index, col_index)] == 'A':
+                    p1 = (x, y)
+                    Tile((x, y), [self.visible_sprites], wall=False)
+                if level_map[(row_index, col_index)] == 'B':
+                    p2 = (x, y)
+                    Tile((x, y), [self.visible_sprites], wall=False)
+
+        self.visible_sprites.draw(self.map_surf)
+        other_cells = random.sample(other_cells, 30)
+
+        personal_index = None
+        coin_index = None
+        enemy_index = None
+        torch_index = None
+        mask_index = None
+        web_index = None
+        spike_index = None
+
+        for index, cell in enumerate(other_cells):
+            items = 0
+            if index % (30 / personal_items) == 0:
+                need_personal_item = True
+                personal_index = items
+                items += 1
+            if index % (30 / coins) == 0:
+                need_coins = True
+                coin_index = items
+                items += 1
+            if index % (30 / enemies) == 0:
+                need_enemy = True
+                enemy_index = items
+                items += 1
+                if bats != 0:
+                    enemy_type = 'bat'
+                    bats -= 1
+                elif slime != 0:
+                    enemy_type = 'slime'
+                    slime -= 1
+                elif skull != 0:
+                    enemy_type = 'skull'
+                    skull -= 1
+            if index % (30 / torch) == 0:
+                need_torch = True
+                torch_index = items
+                items += 1
+            if index % (30 / mask) == 0:
+                need_mask = True
+                mask_index = items
+                items += 1
+            if index % (30 /web) == 0:
+                need_web = True
+                web_index = items
+                items += 1
+                web1 = not web1
+            if index % (30 / spikes) == 0:
+                need_spikes = True
+                spike_index = items
+                items += 1
+
+            cells = random.sample(list(cell.room), items)
+            # for cell in cells:
+            if need_personal_item:
+                need_personal_item = False
+                personal_cells.append(cells[personal_index])
+            if need_coins:
+                need_coins = False
+                self.coins.append(
+                    Collectible(tuple(TILE_SIZE * x for x in cells[coin_index]), [self.visible_sprites, self.collectible_sprites],
+                                type='coin'))
+            if need_enemy:
+                need_enemy = False
+                self.enemys.append(
+                    Enemy(tuple(TILE_SIZE * x for x in cells[enemy_index]),
+                          [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                          self.collision_sprites, self.weapon_sprite, type=enemy_type))
+            if need_torch:
+                need_torch = False
+                Collectible(tuple(TILE_SIZE * x for x in cells[torch_index]), [self.visible_sprites, self.collectible_sprites],
+                            type='torch')
+            if need_mask:
+                need_mask = False
+                Collectible(tuple(TILE_SIZE * x for x in cells[mask_index]), [self.visible_sprites, self.collectible_sprites],
+                            type='mask2')
+            if need_web:
+                need_web = False
+                Collectible(tuple(TILE_SIZE * x for x in cells[web_index]), [self.visible_sprites, self.collectible_sprites],
+                            type='web1' if web1 else 'web2')
+            if need_spikes:
+                need_spikes = False
+                Spike(tuple(TILE_SIZE * x for x in cells[spike_index]),
+                      [self.visible_sprites, self.trap_sprites])
+
+
+        # key_door_cells = random.sample(other_cells, 4)
+
+        # draw player and keys
+        if self.player1_active:
+            self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
+            self.player1.attach_torch()
+            self.player1.collision_sprites = self.collision_sprites
+            self.player1.collectible_sprites = self.collectible_sprites
+            self.player1.enemy_sprites = self.enemy_sprites
+            self.player1.trap_sprites = self.trap_sprites
+
+            # c = random.choice(list(key_door_cells[0].room))
+            self.player1.key = Key(tuple(TILE_SIZE * x for x in personal_cells[0]), self.key1_sprite)
+            # c = random.choice(list(key_door_cells[1].room))
+            self.player1.door = Door(tuple(TILE_SIZE * x for x in personal_cells[1]), self.door1_sprite)
+            if data['weapon_type'] is not None:
+                self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[2]),
+                                         [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
+                                         type=data['weapon_type'])
+
+        if self.player2_active:
+            self.player2.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[1])
+            self.player2.attach_torch()
+            self.player2.collision_sprites = self.collision_sprites
+            self.player2.collectible_sprites = self.collectible_sprites
+            self.player2.enemy_sprites = self.enemy_sprites
+            self.player2.trap_sprites = self.trap_sprites
+
+            # c = random.choice(list(key_door_cells[2].room))
+            self.player2.key = Key(tuple(TILE_SIZE * x for x in personal_cells[3]), self.key2_sprite)
+            # c = random.choice(list(key_door_cells[3].room))
+            self.player2.door = Door(tuple(TILE_SIZE * x for x in personal_cells[4]), self.door2_sprite)
+            if data['weapon_type'] is not None:
+                self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[5]),
+                                         [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
+                                         type=data['weapon_type'])
+            # self.player2.door = door
+
+        # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
+        # for cell in coin_cells:
+        #     c = random.choice(list(cell.room))
+        #     self.coins.append(
+        #         Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites],
+        #                     type='coin'))
+        #
+        # cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
+        # c = random.choice(list(cell[0].room))
+        # Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
+        #
+        # # draw enemies
+        # enemy_cells = random.sample(other_cells, 5)
+        # for enemy in enemy_cells:
+        #     e = random.choice(list(enemy.room))
+        #     self.enemys.append(
+        #         Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+        #               self.collision_sprites, self.weapon_sprite))
 
     def survival_setup(self):
 
