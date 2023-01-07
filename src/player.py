@@ -214,8 +214,8 @@ class Player(pygame.sprite.Sprite):
                     self.big_torch_time = pygame.time.get_ticks()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
-                elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
-                    self.weapon_active = True
+                # elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
+                #     self.weapon_active = True
                 elif sprite.type == 'web1' or sprite.type == 'web2' and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
@@ -269,6 +269,11 @@ class Player(pygame.sprite.Sprite):
             current_time = pygame.time.get_ticks()
             if (current_time - self.hurt_time >= INVINSIBILITY_DURATION) and (current_time - self.mask_time >= 5000):
                 self.is_invincible = False
+
+    def weapon_collisions(self):
+        if self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
+            self.sounds.play_key_collection()
+            self.weapon_active = True
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
@@ -327,6 +332,7 @@ class Player(pygame.sprite.Sprite):
             if self.is_big_torch:
                 self.torch_update()
             self.door_collisions()
+            self.weapon_collisions()
             self.enemy_collisions()
             self.trap_collisions()
             self.move = not self.move

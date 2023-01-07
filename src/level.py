@@ -49,6 +49,7 @@ class Level:
         self.door1_sprite = pygame.sprite.GroupSingle()
         self.door2_sprite = pygame.sprite.GroupSingle()
         self.weapon_sprite = pygame.sprite.Group()
+        self.weapon1_sprite = pygame.sprite.GroupSingle()
         self.weapon2_sprite = pygame.sprite.GroupSingle()
 
         self.level_width = SCREEN_WIDTH if not story_mode else 576
@@ -203,7 +204,7 @@ class Level:
             self.player1.door = Door(tuple(TILE_SIZE * x for x in data['door1']), self.door1_sprite)
             if len(data['weapon1']):
                 self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon1']),
-                                             [self.collectible_sprites, self.weapon_sprite], self.collision_sprites,
+                                             [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
                                              type=data['weapon_type'])
 
             torch_cells = data['torch1']
@@ -226,7 +227,7 @@ class Level:
             self.player2.door = Door(tuple(TILE_SIZE * x for x in data['door2']), self.door2_sprite)
             if len(data['weapon2']):
                 self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in data['weapon2']),
-                                             [self.collectible_sprites, self.weapon_sprite], self.collision_sprites,
+                                             [self.weapon_sprite, self.weapon2_sprite], self.collision_sprites,
                                              type=data['weapon_type'])
 
             torch_cells = data['torch2']
@@ -403,6 +404,16 @@ class Level:
                                              self.player2.door.rect.center) < self.player2.visibility_radius:
             # self.player2.door.update()
             self.door2_sprite.draw(self.level_window)
+
+        if self.player1_active and math.dist(self.player1.torch.rect.center,
+                                             self.player1.weapon.rect.center) < self.player1.visibility_radius:
+            # self.player1.door.update()
+            self.weapon1_sprite.draw(self.level_window)
+
+        if self.player2_active and math.dist(self.player2.torch.rect.center,
+                                             self.player2.weapon.rect.center) < self.player2.visibility_radius:
+            # self.player2.door.update()
+            self.weapon2_sprite.draw(self.level_window)
 
         # open door if key collected
         if (self.player1_active and self.player1.key_picked) and not self.player1.door.isOpen:
