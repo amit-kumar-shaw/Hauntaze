@@ -149,15 +149,15 @@ class Level:
 
         for index, cell in enumerate(other_cells):
             items = 0
-            if index % (30 / personal_items) == 0:
+            if personal_items != 0 and index % int(30 / personal_items) == 0:
                 need_personal_item = True
                 personal_index = items
                 items += 1
-            if index % (30 / coins) == 0:
+            if coins!=0 and index % int(30 / coins) == 0:
                 need_coins = True
                 coin_index = items
                 items += 1
-            if index % (30 / enemies) == 0:
+            if enemies !=0 and index % int(30 / enemies) == 0:
                 need_enemy = True
                 enemy_index = items
                 items += 1
@@ -170,20 +170,20 @@ class Level:
                 elif skull != 0:
                     enemy_type = 'skull'
                     skull -= 1
-            if index % (30 / torch) == 0:
+            if torch != 0 and index % int(30 / torch) == 0:
                 need_torch = True
                 torch_index = items
                 items += 1
-            if index % (30 / mask) == 0:
+            if mask != 0 and index % int(30 / mask) == 0:
                 need_mask = True
                 mask_index = items
                 items += 1
-            if index % (30 /web) == 0:
+            if web != 0 and index % int(30 / web) == 0:
                 need_web = True
                 web_index = items
                 items += 1
                 web1 = not web1
-            if index % (30 / spikes) == 0:
+            if spikes !=0 and index % int(30 / spikes) == 0:
                 need_spikes = True
                 spike_index = items
                 items += 1
@@ -591,12 +591,12 @@ class Level:
             # self.player2.door.update()
             self.door2_sprite.draw(self.level_window)
 
-        if self.player1_active and math.dist(self.player1.torch.rect.center,
+        if self.player1_active and self.player1.weapon is not None and math.dist(self.player1.torch.rect.center,
                                              self.player1.weapon.rect.center) < self.player1.visibility_radius:
             # self.player1.door.update()
             self.weapon1_sprite.draw(self.level_window)
 
-        if self.player2_active and math.dist(self.player2.torch.rect.center,
+        if self.player2_active and self.player2.weapon is not None and math.dist(self.player2.torch.rect.center,
                                              self.player2.weapon.rect.center) < self.player2.visibility_radius:
             # self.player2.door.update()
             self.weapon2_sprite.draw(self.level_window)

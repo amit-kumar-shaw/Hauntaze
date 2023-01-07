@@ -271,7 +271,7 @@ class Player(pygame.sprite.Sprite):
                 self.is_invincible = False
 
     def weapon_collisions(self):
-        if self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
+        if self.weapon is not None and self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
             self.sounds.play_key_collection()
             self.weapon_active = True
 
