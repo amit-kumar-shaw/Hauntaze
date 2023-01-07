@@ -15,7 +15,7 @@ class Weapon(pygame.sprite.Sprite):
 
         for status in self.frames.keys():
             full_path = path + status
-            self.frames[status] = import_frames(full_path, scale=0.75)
+            self.frames[status] = import_frames(full_path, scale=0.7)
         # self.frames = import_frames(f"./assets/images/weapon/{type}", scale=0.75)
         self.animation_index = 0
 

@@ -229,7 +229,7 @@ class Player(pygame.sprite.Sprite):
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
-            if sprite.rect.colliderect(self.rect) and not self.is_invincible:
+            if sprite.rect.colliderect(self.rect) and not self.is_invincible and sprite.status != 'dead':
                 if pygame.sprite.collide_mask(self, sprite):
                     self.is_invincible = True
                     self.sounds.play_enemy_collision()
@@ -314,7 +314,7 @@ class Player(pygame.sprite.Sprite):
             self.torch.rect = self.torch.image.get_rect(center=(self.rect.x, self.rect.y + 2))
             if self.weapon_active:
                 if self.weapon.status == 'idle':
-                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y))
+                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 8, self.rect.y + 3))
                     self.weapon.animate()
                 else:
                     if self.is_flipped:
