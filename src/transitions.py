@@ -39,7 +39,7 @@ class Transition:
         self.curse_frames = None
         self.curse_index = 0
 
-        self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
+        self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower", scale=1)
         self.tower_index = 0
 
         self.multiplayer = False
