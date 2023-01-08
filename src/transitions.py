@@ -13,7 +13,7 @@ class Transition:
 
         self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
-        self.tower_surface = pygame.image.load("./assets/images/tower1.png").convert_alpha()
+        self.tower_surface = pygame.image.load("./assets/images/tower.png").convert_alpha()
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -38,7 +38,7 @@ class Transition:
         #self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
         self.curse_index = 0
 
-        self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
+        self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower", scale=1)
         self.tower_index = 0
 
         self.stones = []
