@@ -42,6 +42,18 @@ class Transition:
         self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower1", scale=1)
         self.tower_index = 0
 
+        self.multiplayer = False
+        if p1 and p2:
+            self.multiplayer = True
+            path = f'./assets/images/transitions/torch/'
+            self.ghost_frames = {'idle': [], 'walk': []}
+
+            for status in self.ghost_frames.keys():
+                full_path = path + status
+                self.ghost_frames[status] = import_frames(full_path, scale=0.8)
+
+        self.ghost_active = False
+
         self.p1_active = p1
         self.p2_active = p2
         self.path_index = 0
@@ -115,6 +127,8 @@ class Transition:
         #     self.death()
         # else:
         #     self.tower()
+        if self.multiplayer and not self.ghost_active and not (self.p1_active and self.p2_active):
+            self.activate_ghost()
 
         if self.level <= 5:
             if not self.intro_completed:
@@ -135,6 +149,15 @@ class Transition:
             self.curse()
         #
         # self.draw()
+
+    def activate_ghost(self):
+        if not self.p1_active:
+            self.p1_frames = self.ghost_frames
+            self.p1_active = True
+        elif not self.p2_active:
+            self.p2_frames = self.ghost_frames
+            self.p2_active = True
+        self.ghost_active = True
 
     def intro(self):
         if self.intro_frames is None:

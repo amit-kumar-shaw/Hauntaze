@@ -31,7 +31,7 @@ class StoryMode:
         if player2:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
                                   collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
-        self.current_level = 5
+        self.current_level = 3
         self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
@@ -50,6 +50,9 @@ class StoryMode:
                     self.player2.ui_update = False
             if self.level.completed:
                 self.status = Status.COMPLETED
+                if self.transition.multiplayer and not self.transition.ghost_active:
+                    self.transition.p1_active = self.level.player1_active
+                    self.transition.p2_active = self.level.player2_active
         elif self.status == Status.COMPLETED:
             # keys = pygame.key.get_pressed()
             # if keys[pygame.K_RETURN]:
