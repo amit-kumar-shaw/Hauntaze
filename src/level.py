@@ -126,15 +126,15 @@ class Level:
                 y = col_index * TILE_HEIGHT
                 x = row_index * TILE_WIDTH
                 if level_map[(row_index, col_index)] == '.':
-                    Tile((x, y), [self.visible_sprites], wall=False)
+                    Tile((x, y), [self.visible_sprites], self.current_level, wall=False)
                 if level_map[(row_index, col_index)] == '#':
-                    Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], self.current_level, wall=True)
                 if level_map[(row_index, col_index)] == 'A':
                     p1 = (x, y)
-                    Tile((x, y), [self.visible_sprites], wall=False)
+                    Tile((x, y), [self.visible_sprites], self.current_level, wall=False)
                 if level_map[(row_index, col_index)] == 'B':
                     p2 = (x, y)
-                    Tile((x, y), [self.visible_sprites], wall=False)
+                    Tile((x, y), [self.visible_sprites], self.current_level, wall=False)
 
         self.visible_sprites.draw(self.map_surf)
         other_cells = random.sample(other_cells, 30)
@@ -368,9 +368,9 @@ class Level:
                 x = col_index * 16
                 y = row_index * 16
                 if col == '#':
-                    Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], self.current_level, wall=True, storymode=True)
                 else:
-                    Tile((x, y), [self.visible_sprites], wall=False)
+                    Tile((x, y), [self.visible_sprites], self.current_level, wall=False, storymode=True)
 
         self.visible_sprites.draw(self.map_surf)
 
