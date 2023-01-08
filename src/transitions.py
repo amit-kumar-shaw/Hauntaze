@@ -72,7 +72,7 @@ class Transition:
             self.p1_flipped = False
             self.p1_direction_changed = False
             self.p1_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
-                            (1, 0), (1, 0), (1, 0), (1, 0),
+                            (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
                             (0, 1), (0, 1), (0, 1), (0, 1),
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
@@ -97,7 +97,7 @@ class Transition:
             self.p2_flipped = False
             self.p2_direction_changed = False
             self.p2_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
-                            (1, 0),
+                            (1, 0), (1, 0), (1, 0),
                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
                             (0, 1),
@@ -292,7 +292,7 @@ class Transition:
 
     def tower(self):
 
-        if self.path_index >= 80:
+        if self.path_index >= 82:
             self.completed = True
             self.tower_index = 0
             self.path_index = 0
@@ -335,7 +335,7 @@ class Transition:
                     self.p2_direction.x = 1
 
             if self.p1_active:
-                if self.path_index > 16 and not self.p1_direction_changed:
+                if self.path_index > 18 and not self.p1_direction_changed:
                     self.p1_flipped = not self.p1_flipped
                     self.p1_direction_changed = True
 
@@ -350,7 +350,7 @@ class Transition:
                 self.p1_image = status[int(self.p1_frame_index)]
 
             if self.p2_active:
-                if self.path_index > 24 and not self.p2_direction_changed:
+                if self.path_index > 26 and not self.p2_direction_changed:
                     self.p2_flipped = not self.p2_flipped
                     self.p2_direction_changed = True
 
