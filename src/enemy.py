@@ -100,3 +100,6 @@ class Enemy(pygame.sprite.Sprite):
         self.vertical_collisions()
         self.tog = not self.tog
 
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+
