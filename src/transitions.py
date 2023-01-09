@@ -4,12 +4,14 @@ import pygame
 from settings import *
 from stones import Stone
 from utilities import import_frames
+from music import TransitionSound
 
 
 class Transition:
     def __init__(self, p1, p2):
 
         self.display = pygame.display.get_surface()
+        self.sound = TransitionSound()
 
         # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
@@ -341,6 +343,9 @@ class Transition:
 
                 self.p1_rect.x += self.p1_direction.x * self.p1_path[int(self.path_index)][0]
                 self.p1_rect.y -= self.p1_path[int(self.path_index)][1]
+                # self.sound.player_move.stop()
+                if self.path_index % 6 == 0:
+                    self.sound.player_move.play()
 
                 status = self.p1_frames['walk']
                 self.p1_frame_index += 0.2
@@ -356,6 +361,8 @@ class Transition:
 
                 self.p2_rect.x += self.p2_direction.x * self.p2_path[int(self.path_index)][0]
                 self.p2_rect.y -= self.p2_path[int(self.path_index)][1]
+                if self.path_index % 6 == 0:
+                    self.sound.player_move.play()
 
                 status = self.p2_frames['walk']
                 self.p2_frame_index += 0.2

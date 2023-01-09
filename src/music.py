@@ -73,6 +73,8 @@ class TransitionSound(object):
 
     def __init__(self):
         pygame.mixer.init()
+        self.player_move = pygame.mixer.Sound('./assets/Audio/footstep08.ogg')
+        self.player_move.set_volume(0.7)
 
 class MenuSound(object):
 
