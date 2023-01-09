@@ -2,7 +2,7 @@ import random
 
 import pygame
 from settings import *
-from music import GameSound
+from music import MenuSound
 
 
 class Menu():
@@ -28,7 +28,7 @@ class Menu():
         self.start_surf = self.plain_text('Insert Coin to start', 16)
         self.start_rect = self.start_surf.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 20))
 
-        self.sound = GameSound()
+        self.sound = MenuSound()
         self.sound.menu.play(loops=-1)
 
         self.story_frames = self.create_frames('Story Mode >')
@@ -55,25 +55,25 @@ class Menu():
         # insert coin for player 1
         if keys[pygame.K_1] and not self.is_player1_ready:
             self.is_player1_ready = True
-            self.sound.play_confirmation()
+            self.sound.confirm.play()
 
         # insert coin for player 2
         if keys[pygame.K_2] and not self.is_player2_ready:
             self.is_player2_ready = True
-            self.sound.play_confirmation()
+            self.sound.confirm.play()
 
         # toggle game modes
         if keys[pygame.K_DOWN] and self.is_story_mode:
             self.is_story_mode = False
             self.mode_transition = True
             self.transition_index = -1
-            self.sound.play_mode_select()
+            self.sound.confirm.play()
 
         if keys[pygame.K_UP] and not self.is_story_mode:
             self.is_story_mode = True
             self.mode_transition = True
             self.transition_index = -1
-            self.sound.play_mode_select()
+            self.sound.confirm.play()
 
     def game_mode(self):
 
@@ -188,14 +188,14 @@ class Menu():
         keys = pygame.key.get_pressed()
         if keys[pygame.K_DOWN]:
             if not self.horizontal_transition and self.player_selected:
-                self.sound.play_mode_select()
+                self.sound.select.play()
                 self.player_selected = False
                 self.vertical_transition = True
                 self.vertical_index = -1
 
         if keys[pygame.K_UP]:
             if not self.horizontal_transition and not self.player_selected:
-                self.sound.play_mode_select()
+                self.sound.select.play()
                 self.player_selected = True
                 self.vertical_transition = True
                 self.vertical_index = -1
@@ -203,12 +203,12 @@ class Menu():
         if keys[pygame.K_LEFT]:
             if not self.vertical_transition:
                 if self.player_selected and self.multiplayer:
-                    self.sound.play_mode_select()
+                    self.sound.select.play()
                     self.multiplayer = False
                     self.horizontal_transition = True
                     self.horizontal_index = -1
                 elif not self.player_selected and not self.story:
-                    self.sound.play_mode_select()
+                    self.sound.select.play()
                     self.story = True
                     self.horizontal_transition = True
                     self.horizontal_index = -1
@@ -216,12 +216,12 @@ class Menu():
         if keys[pygame.K_RIGHT]:
             if not self.vertical_transition:
                 if self.player_selected and not self.multiplayer:
-                    self.sound.play_mode_select()
+                    self.sound.select.play()
                     self.multiplayer = True
                     self.horizontal_transition = True
                     self.horizontal_index = -1
                 elif not self.player_selected and self.story:
-                    self.sound.play_mode_select()
+                    self.sound.select.play()
                     self.story = False
                     self.horizontal_transition = True
                     self.horizontal_index = -1
