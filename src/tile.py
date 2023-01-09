@@ -13,10 +13,10 @@ class Tile(pygame.sprite.Sprite):
         wall4 = pygame.image.load("./assets/images/tiles/tile_4.png").convert_alpha()
         wall5 = pygame.image.load("./assets/images/tiles/tile_5.png").convert_alpha()
         wall6 = pygame.image.load("./assets/images/tiles/tile_6.png").convert_alpha()
-        floor1 = pygame.image.load("./assets/images/tiles/sand_1.png").convert_alpha()
-        floor2 = pygame.image.load("./assets/images/tiles/sand_2.png").convert_alpha()
-        floor3 = pygame.image.load("./assets/images/tiles/sand_3.png").convert_alpha()
-        floor4 = pygame.image.load("./assets/images/tiles/sand_4.png").convert_alpha()
+        floor1 = pygame.image.load("./assets/images/tiles/floor_1.png").convert_alpha()
+        floor2 = pygame.image.load("./assets/images/tiles/floor_2.png").convert_alpha()
+        floor3 = pygame.image.load("./assets/images/tiles/floor_3.png").convert_alpha()
+        floor4 = pygame.image.load("./assets/images/tiles/floor_4.png").convert_alpha()
 
         if wall:
             self.image = choice([wall1, wall2, wall3, wall4, wall5, wall6])
