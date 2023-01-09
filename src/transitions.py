@@ -31,6 +31,7 @@ class Transition:
 
         self.intro_frames = None
         self.intro_index = 0
+        self.intro_sound_index = 6
 
         self.life_frames = None
         self.life_index = 0
@@ -176,18 +177,40 @@ class Transition:
         # self.screen_surface = self.intro_frames[int(self.intro_index)]
         if self.intro_index < 0.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (160, 50, 320, 20), (160, 50, 320, 20))
-        elif 4 < self.intro_index < 75:
+        elif 4 < self.intro_index < 74:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (84, 112, 475, 16), (84, 112, 475, 16))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.typing.play()
+                self.intro_sound_index += 2
+                if self.intro_sound_index == 74:
+                    self.intro_sound_index = 80
         elif 80 < self.intro_index < 117:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (198, 144, 246, 13), (198, 144, 246, 13))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.typing.play()
+                self.intro_sound_index += 2
+                if self.intro_sound_index == 116:
+                    self.intro_sound_index = 131
         elif 131 < self.intro_index < 131.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (101, 222, 116, 14), (101, 222, 116, 14))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.appear.play()
+                self.intro_sound_index = 145
         elif 145 < self.intro_index < 145.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (253, 222, 133, 16), (253, 222, 133, 16))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.appear.play()
+                self.intro_sound_index = 160
         elif 160 < self.intro_index < 160.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (413, 222, 134, 15), (413, 222, 134, 15))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.appear.play()
+                self.intro_sound_index = 176
         elif 175 < self.intro_index < 222:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (161, 263, 319, 16), (161, 263, 319, 16))
+            if int(self.intro_index) % self.intro_sound_index == 0:
+                self.sound.typing.play()
+                self.intro_sound_index += 2
         if 131 < self.intro_index:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (139, 180, 44, 40), (139, 180, 44, 40))
         if 145 < self.intro_index:

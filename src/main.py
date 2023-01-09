@@ -40,7 +40,7 @@ while True:
     # screen.fill(BG_COLOR, (0, 0, SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
     game.run()
 
-    print(clock.get_fps())
+    # print(clock.get_fps())
 
     # drawing logic
     pygame.display.update()
