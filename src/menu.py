@@ -6,8 +6,9 @@ from music import MenuSound
 
 
 class Menu():
-    def __init__(self, ):
+    def __init__(self, joystick =None):
         self.screen = pygame.display.get_surface()
+        self.joystick = joystick
         self.is_story_mode = True
         self.multiplayer = False
         self.is_player1_ready = False
@@ -186,21 +187,22 @@ class Menu():
 
     def input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_DOWN]:
+
+        if keys[pygame.K_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -0.9):
             if not self.horizontal_transition and self.player_selected:
                 self.sound.select.play()
                 self.player_selected = False
                 self.vertical_transition = True
                 self.vertical_index = -1
 
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > 0.9):
             if not self.horizontal_transition and not self.player_selected:
                 self.sound.select.play()
                 self.player_selected = True
                 self.vertical_transition = True
                 self.vertical_index = -1
 
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -0.9):
             if not self.vertical_transition:
                 if self.player_selected and self.multiplayer:
                     self.sound.select.play()
@@ -213,7 +215,7 @@ class Menu():
                     self.horizontal_transition = True
                     self.horizontal_index = -1
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > 0.9):
             if not self.vertical_transition:
                 if self.player_selected and not self.multiplayer:
                     self.sound.select.play()

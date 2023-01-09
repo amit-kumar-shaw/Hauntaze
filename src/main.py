@@ -11,12 +11,10 @@ pygame.init()
 
 # initialize controllers
 pygame.joystick.init()
+
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-if bool(joysticks):
-    for joystick in joysticks:
-        print(joystick.get_name())
-else:
-    print('use keyboard')
+if not bool(joysticks):
+    joysticks = None
 
 
 pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
@@ -25,7 +23,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
 
-game = Game()
+game = Game(joysticks)
 
 while True:
     # event loop
