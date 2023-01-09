@@ -12,6 +12,7 @@ class Transition:
 
         self.display = pygame.display.get_surface()
         self.sound = TransitionSound()
+        self.sound_index = 0
 
         # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
@@ -31,7 +32,6 @@ class Transition:
 
         self.intro_frames = None
         self.intro_index = 0
-        self.intro_sound_index = 6
 
         self.life_frames = None
         self.life_index = 0
@@ -166,6 +166,7 @@ class Transition:
         if self.intro_frames is None:
             self.intro_frames = import_frames(f"./assets/images/transitions/intro", scale=1)
             self.screen_surface.fill('black')
+            self.sound_index = 4
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -179,38 +180,38 @@ class Transition:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (160, 50, 320, 20), (160, 50, 320, 20))
         elif 4 < self.intro_index < 74:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (84, 112, 475, 16), (84, 112, 475, 16))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.typing.play()
-                self.intro_sound_index += 2
-                if self.intro_sound_index == 74:
-                    self.intro_sound_index = 80
+                self.sound_index += 2
+                if self.sound_index == 74:
+                    self.sound_index = 80
         elif 80 < self.intro_index < 117:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (198, 144, 246, 13), (198, 144, 246, 13))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.typing.play()
-                self.intro_sound_index += 2
-                if self.intro_sound_index == 116:
-                    self.intro_sound_index = 131
+                self.sound_index += 2
+                if self.sound_index == 116:
+                    self.sound_index = 131
         elif 131 < self.intro_index < 131.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (101, 222, 116, 14), (101, 222, 116, 14))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.appear.play()
-                self.intro_sound_index = 145
+                self.sound_index = 145
         elif 145 < self.intro_index < 145.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (253, 222, 133, 16), (253, 222, 133, 16))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.appear.play()
-                self.intro_sound_index = 160
+                self.sound_index = 160
         elif 160 < self.intro_index < 160.5:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (413, 222, 134, 15), (413, 222, 134, 15))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.appear.play()
-                self.intro_sound_index = 176
+                self.sound_index = 176
         elif 175 < self.intro_index < 222:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (161, 263, 319, 16), (161, 263, 319, 16))
-            if int(self.intro_index) % self.intro_sound_index == 0:
+            if int(self.intro_index) % self.sound_index == 0:
                 self.sound.typing.play()
-                self.intro_sound_index += 2
+                self.sound_index += 2
         if 131 < self.intro_index:
             self.screen_surface.blit(self.intro_frames[int(self.intro_index)], (139, 180, 44, 40), (139, 180, 44, 40))
         if 145 < self.intro_index:
@@ -226,6 +227,7 @@ class Transition:
         if self.life_frames is None:
             self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
             self.screen_surface.fill('black')
+            self.sound_index = 4
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -240,12 +242,30 @@ class Transition:
             self.screen_surface.blit(self.life_frames[int(self.life_index)], (255, 223, 131, 14), (255, 223, 131, 14))
         elif 4 < self.life_index < 39:
             self.screen_surface.blit(self.life_frames[int(self.life_index)], (180, 112, 280, 15), (180, 112, 280, 15))
+            if int(self.life_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 38:
+                    self.sound_index = 44
         elif 44 < self.life_index < 112:
             self.screen_surface.blit(self.life_frames[int(self.life_index)], (48, 142, 542, 18), (48, 142, 542, 18))
+            if int(self.life_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 112:
+                    self.sound_index = 130
         elif 130 < self.life_index < 196:
             self.screen_surface.blit(self.life_frames[int(self.life_index)], (46, 262, 548, 19), (46, 262, 548, 19))
+            if int(self.life_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 196:
+                    self.sound_index = 202
         elif 202 < self.life_index < 261:
             self.screen_surface.blit(self.life_frames[int(self.life_index)], (82, 290, 475, 21), (82, 290, 475, 21))
+            if int(self.life_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
 
         self.screen_surface.blit(self.life_frames[int(self.life_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
@@ -258,6 +278,7 @@ class Transition:
         if self.death_frames is None:
             self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
             self.screen_surface.fill('black')
+            self.sound_index = 4
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -272,12 +293,30 @@ class Transition:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (245, 223, 151, 15), (245, 223, 151, 15))
         elif 4 < self.death_index < 40:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (170, 111, 298, 16), (170, 111, 298, 16))
+            if int(self.death_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 40:
+                    self.sound_index = 44
         elif 44 < self.death_index < 114:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (45, 141, 551, 19), (45, 141, 551, 19))
+            if int(self.death_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 114:
+                    self.sound_index = 120
         elif 120 < self.death_index < 196:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (6, 262, 627, 19), (6, 262, 627, 19))
+            if int(self.death_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 196:
+                    self.sound_index = 202
         elif 202 < self.death_index < 250:
             self.screen_surface.blit(self.death_frames[int(self.death_index)], (123, 292, 392, 15), (123, 292, 392, 15))
+            if int(self.death_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
 
         self.screen_surface.blit(self.death_frames[int(self.death_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
@@ -290,6 +329,7 @@ class Transition:
         if self.curse_frames is None:
             self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
             self.screen_surface.fill('black')
+            self.sound_index = 4
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN]:
@@ -306,10 +346,23 @@ class Transition:
             self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (244, 222, 152, 17), (244, 222, 152, 17))
         elif 4 < self.curse_index < 40:
             self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (170, 111, 299, 16), (170, 111, 299, 16))
+            if int(self.curse_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 40:
+                    self.sound_index = 44
         elif 44 < self.curse_index < 98:
             self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (107, 142, 424, 19), (107, 142, 424, 19))
+            if int(self.curse_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
+                if self.sound_index == 98:
+                    self.sound_index = 106
         elif 105 < self.curse_index < 133:
             self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (182, 262, 279, 20), (182, 262, 279, 20))
+            if int(self.curse_index) % self.sound_index == 0:
+                self.sound.typing.play()
+                self.sound_index += 2
 
         self.screen_surface.blit(self.curse_frames[int(self.curse_index)], (300, 181, 40, 39), (300, 181, 40, 39))
 
