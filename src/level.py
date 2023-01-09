@@ -19,7 +19,10 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer=False):
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer=False, joystick_1=None, joystick_2=None):
+
+        self.joystick_1 = joystick_1
+        self.joystick_2 = joystick_2
 
         # level setup
         self.display_surface = pygame.display.get_surface()
@@ -721,22 +724,22 @@ class Level:
         if self.player1_active and not self.player1.is_alive:
             self.player1_active = False
             if not self.ghost_active and self.multiplayer:
-                self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
+                self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False, joystick=self.joystick_1)
                 self.ghost.partner = self.player2
                 self.ghost_active = True
         if self.player2_active and not self.player2.is_alive:
             self.player2_active = False
             if not self.ghost_active and self.multiplayer:
-                self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
+                self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True, joystick=self.joystick_2)
                 self.ghost.partner = self.player1
                 self.ghost_active = True
 
         if self.player1_active and self.player1.is_ghost and not self.ghost_active and self.multiplayer:
-            self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False)
+            self.ghost = Ghost(self.player1.rect.topleft, self.story_mode, player2=False, joystick=self.joystick_1)
             self.ghost.partner = self.player2
             self.ghost_active = True
         if self.player2_active and self.player2.is_ghost and not self.ghost_active and self.multiplayer:
-            self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True)
+            self.ghost = Ghost(self.player2.rect.topleft, self.story_mode, player2=True, joystick=self.joystick_2)
             self.ghost.partner = self.player1
             self.ghost_active = True
 
@@ -789,7 +792,7 @@ class Level:
 
     def game_over(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.failed = True
         self.animation_index += 0.08
 
@@ -814,7 +817,7 @@ class Level:
     # TODO: Level completed
     def level_completed(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.completed = True
         self.animation_index += 0.08
 

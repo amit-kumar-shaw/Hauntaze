@@ -8,7 +8,10 @@ from music import TransitionSound
 
 
 class Transition:
-    def __init__(self, p1, p2):
+    def __init__(self, p1, p2, joystick_1=None, joystick_2=None):
+
+        self.joystick_1 = joystick_1
+        self.joystick_2 = joystick_2
 
         self.display = pygame.display.get_surface()
         self.sound = TransitionSound()
@@ -122,14 +125,6 @@ class Transition:
             stone.active = False
 
     def update(self):
-        # if self.level == 1:
-        #     self.intro()
-        # elif self.level == 6:
-        #     self.life()
-        # elif self.level == 11:
-        #     self.death()
-        # else:
-        #     self.tower()
         if self.multiplayer and not self.ghost_active and not (self.p1_active and self.p2_active):
             self.activate_ghost()
 
@@ -169,7 +164,7 @@ class Transition:
             self.sound_index = 4
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.intro_completed = True
 
         self.intro_index += 0.2
@@ -230,7 +225,7 @@ class Transition:
             self.sound_index = 4
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.life_completed = True
 
         self.life_index += 0.2
@@ -281,7 +276,7 @@ class Transition:
             self.sound_index = 4
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.death_completed = True
 
         self.death_index += 0.2
@@ -332,7 +327,7 @@ class Transition:
             self.sound_index = 4
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN]:
+        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.curse_completed = True
             pygame.quit()
             sys.exit()

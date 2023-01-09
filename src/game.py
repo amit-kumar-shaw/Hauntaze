@@ -49,9 +49,9 @@ class Game:
                 self.menu.sound.menu.stop()
                 self.status = Status.RUNNING
                 if self.menu.is_story_mode:
-                    self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
+                    self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready, joysticks=self.joysticks)
                 else:
-                    self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready)
+                    self.mode = SurvivalMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready, joysticks=self.joysticks)
 
         # show game intro
         elif self.status == Status.INTRO:

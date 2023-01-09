@@ -10,8 +10,10 @@ from utilities import import_frames
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, player2=False):
+    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, joystick=None, player2=False):
         super().__init__(groups)
+
+        self.joystick = joystick
 
         if player2:
             self.import_assets(2, 0.7)
@@ -109,35 +111,35 @@ class Player(pygame.sprite.Sprite):
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[self.MOVE_RIGHT]:
+        if keys[self.MOVE_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
             self.direction.x = 1
             self.is_flipped = False
-        elif keys[self.MOVE_LEFT]:
+        elif keys[self.MOVE_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
             self.direction.x = -1
             self.is_flipped = True
         else:
             self.direction.x = 0
 
-        if keys[self.MOVE_UP]:
+        if keys[self.MOVE_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             self.direction.y = -1
-        elif keys[self.MOVE_DOWN]:
+        elif keys[self.MOVE_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
             self.direction.y = 1
         else:
             self.direction.y = 0
 
-        if keys[
-            self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
+        if (keys[
+            self.ATTACK] or (self.joystick is not None and self.joystick.get_button(BLACK_BUTTON))) and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
             self.weapon.status = 'attack'
 
-        if keys[self.DEATH_STONE] and self.death_stone_available:
+        if (keys[self.DEATH_STONE] or (self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and self.death_stone_available:
             self.death_stone_activated = True
 
     def revival_input(self):
         keys = pygame.key.get_pressed()
-        if keys[self.LIFE_STONE] and self.life_stone_available:
+        if (keys[self.LIFE_STONE] or (self.joystick is not None and self.joystick.get_button(BLUE_BUTTON))) and self.life_stone_available:
             self.life_stone_activated = True
 
     def horizontal_collisions(self):
