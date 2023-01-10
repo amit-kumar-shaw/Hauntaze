@@ -46,6 +46,7 @@ class Transition:
         self.curse_index = 0
 
         self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower", scale=1)
+        # self.tower1_frames = pygame.image.load(f"./assets/images/transitions/tower/tower_1.png").convert_alpha()
         self.tower_index = 0
 
         self.multiplayer = False

@@ -188,14 +188,14 @@ class Menu():
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
+        if keys[pygame.K_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             if not self.horizontal_transition and self.player_selected:
                 self.sound.select.play()
                 self.player_selected = False
                 self.vertical_transition = True
                 self.vertical_index = -1
 
-        if keys[pygame.K_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
+        if keys[pygame.K_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
             if not self.horizontal_transition and not self.player_selected:
                 self.sound.select.play()
                 self.player_selected = True
