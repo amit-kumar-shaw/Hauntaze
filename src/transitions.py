@@ -1,4 +1,5 @@
 import sys
+import time
 
 import pygame
 from settings import *
@@ -30,6 +31,12 @@ class Transition:
         self.curse_completed = False
         self.completed = False
 
+        self.reached_tower1 = False
+        self.reached_tower2 = False
+        self.reached_tower3 = False
+        self.stall_completed = False
+        self.player_position_initialized = False
+
         self.level = 1
         self.frame_index = 1
 
@@ -45,7 +52,8 @@ class Transition:
         self.curse_frames = None
         self.curse_index = 0
 
-        self.tower1_frames = import_frames(f"./assets/images/transitions/tower/tower", scale=1)
+        self.all_towers = pygame.image.load(f"./assets/images/transitions/tower/all_towers.png").convert_alpha()
+        self.tower_frames = import_frames(f"./assets/images/transitions/tower/tower", scale=1)
         # self.tower1_frames = pygame.image.load(f"./assets/images/transitions/tower/tower_1.png").convert_alpha()
         self.tower_index = 0
 
@@ -78,7 +86,7 @@ class Transition:
             self.p1_direction = pygame.math.Vector2()
             self.p1_flipped = False
             self.p1_direction_changed = False
-            self.p1_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+            self.p1_path = [[(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
                             (0, 1), (0, 1), (0, 1), (0, 1),
@@ -87,7 +95,70 @@ class Transition:
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
                             (0, 1), (0, 1), (0, 1), (0, 1),
                             (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0),
-                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)]
+                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)],
+                            [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0)
+                             ],
+                            [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0)
+                             ],
+                            []
+                            ]
 
         if self.p2_active:
             path = f'./assets/images/player/p2/'
@@ -103,7 +174,7 @@ class Transition:
             self.p2_direction = pygame.math.Vector2()
             self.p2_flipped = False
             self.p2_direction_changed = False
-            self.p2_path = [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+            self.p2_path = [[(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (1, 0), (1, 0), (1, 0),
                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
@@ -116,7 +187,71 @@ class Transition:
                             (0, 1),
                             (0, 1), (0, 1), (0, 1), (0, 1),
                             (-1, 0), (-1, 0),
-                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)]
+                            (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0), (-1, 0)],
+                            [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0)
+                             ],
+                            [(1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (0, 1), (0, 1), (0, 1), (0, 1), (0, 1),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0), (1, 0),
+                             (1, 0), (1, 0), (1, 0)
+                             ],
+                            []
+                            ]
 
         self.stones = []
         self.stones.append(Stone((160, SCREEN_HEIGHT / 2), 'life', 1.5))
@@ -366,31 +501,64 @@ class Transition:
 
     def tower(self):
 
-        if self.path_index >= 82:
-            self.completed = True
-            self.tower_index = 0
-            self.path_index = 0
-            if self.p1_active:
-                self.p1_direction_changed = False
-                self.p1_image = self.p1_frames['idle'][0]
-            if self.p2_active:
-                self.p2_direction_changed = False
-                self.p2_image = self.p2_frames['idle'][0]
+        if self.level == 1:
+            if self.reached_tower1:
+                self.change_tower()
+            else:
+                if not self.player_position_initialized:
+                    if self.p1_active:
+                        self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
+                    if self.p2_active:
+                        self.p2_rect = self.p1_image.get_rect(bottomleft=(16, 288))
+                    self.player_position_initialized = True
+                self.go_to_tower(1)
+        elif self.level == 6:
+            if self.reached_tower2:
+                self.change_tower()
+            else:
+                if not self.player_position_initialized:
+                    if self.p1_active:
+                        self.p1_rect = self.p1_image.get_rect(bottomleft=(160, 96))
+                    if self.p2_active:
+                        self.p2_rect = self.p1_image.get_rect(bottomleft=(152, 96))
+                    self.player_position_initialized = True
+                self.go_to_tower(2)
+        elif self.level == 11:
+            if self.reached_tower3:
+                self.change_tower()
+            else:
+                if not self.player_position_initialized:
+                    if self.p1_active:
+                        self.p1_rect = self.p1_image.get_rect(bottomleft=(346, 96))
+                    if self.p2_active:
+                        self.p2_rect = self.p1_image.get_rect(bottomleft=(338, 96))
+                    self.player_position_initialized = True
+                self.go_to_tower(3)
         else:
-            self.move_players()
+            if self.path_index >= len(self.p1_path[0]):
+                self.completed = True
+                self.path_index = 0
+                if self.p1_active:
+                    self.p1_direction_changed = False
+                    self.p1_image = self.p1_frames['idle'][0]
+                if self.p2_active:
+                    self.p2_direction_changed = False
+                    self.p2_image = self.p2_frames['idle'][0]
+            else:
+                self.move_players()
 
-        if self.p1_active and self.p1_flipped:
-            self.p1_image = pygame.transform.flip(self.p1_image, True, False)
-        if self.p2_active and self.p2_flipped:
-            self.p2_image = pygame.transform.flip(self.p2_image, True, False)
-        self.tower_surface.blit(self.tower1_frames[0], (0, 0))
-        if self.p2_active:
-            self.tower_surface.blit(self.p2_image, self.p2_rect)
-        if self.p1_active:
-            self.tower_surface.blit(self.p1_image, self.p1_rect)
+            if self.p1_active and self.p1_flipped:
+                self.p1_image = pygame.transform.flip(self.p1_image, True, False)
+            if self.p2_active and self.p2_flipped:
+                self.p2_image = pygame.transform.flip(self.p2_image, True, False)
+            self.tower_surface.blit(self.tower_frames[int((self.level-1)/5)], (0, 0))
+            if self.p2_active:
+                self.tower_surface.blit(self.p2_image, self.p2_rect)
+            if self.p1_active:
+                self.tower_surface.blit(self.p1_image, self.p1_rect)
 
-        self.display.blit(self.tower_surface, self.tower_rect)
-        self.path_index += 1
+            self.display.blit(self.tower_surface, self.tower_rect)
+            self.path_index += 1
 
     def move_players(self):
         x = (self.level - 1) % 5 #if self.level % 5 != 0 else 5
@@ -413,8 +581,8 @@ class Transition:
                     self.p1_flipped = not self.p1_flipped
                     self.p1_direction_changed = True
 
-                self.p1_rect.x += self.p1_direction.x * self.p1_path[int(self.path_index)][0]
-                self.p1_rect.y -= self.p1_path[int(self.path_index)][1]
+                self.p1_rect.x += self.p1_direction.x * self.p1_path[0][int(self.path_index)][0]
+                self.p1_rect.y -= self.p1_path[0][int(self.path_index)][1]
                 # self.sound.player_move.stop()
                 if self.path_index % 6 == 0:
                     self.sound.player_move.play()
@@ -431,8 +599,8 @@ class Transition:
                     self.p2_flipped = not self.p2_flipped
                     self.p2_direction_changed = True
 
-                self.p2_rect.x += self.p2_direction.x * self.p2_path[int(self.path_index)][0]
-                self.p2_rect.y -= self.p2_path[int(self.path_index)][1]
+                self.p2_rect.x += self.p2_direction.x * self.p2_path[0][int(self.path_index)][0]
+                self.p2_rect.y -= self.p2_path[0][int(self.path_index)][1]
                 if self.path_index % 6 == 0:
                     self.sound.player_move.play()
 
@@ -443,11 +611,85 @@ class Transition:
 
                 self.p2_image = status[int(self.p2_frame_index)]
 
-    def change_tower(self):
+    def go_to_tower(self, tower):
+        if tower == 3:
+            tower = 2
+        self.screen_surface.blit(self.all_towers, (0, 0))
         if self.p1_active:
-            self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
+            # if self.path_index > 18 and not self.p1_direction_changed:
+            #     self.p1_flipped = not self.p1_flipped
+            #     self.p1_direction_changed = True
+            self.p1_rect.x += self.p1_path[tower][int(self.path_index)][0]
+            self.p1_rect.y += self.p1_path[tower][int(self.path_index)][1]
+            if self.path_index % 6 == 0:
+                self.sound.player_move.play()
+
+            status = self.p1_frames['walk']
+            self.p1_frame_index += 0.2
+            if self.p1_frame_index >= len(status):
+                self.p1_frame_index = 0
+
+            self.p1_image = status[int(self.p1_frame_index)]
+
+            self.screen_surface.blit(self.p1_image, self.p1_rect)
+
         if self.p2_active:
-            self.p2_rect = self.p1_image.get_rect(bottomleft=(16, 288))
+            # if self.path_index > 26 and not self.p2_direction_changed:
+            #     self.p2_flipped = not self.p2_flipped
+            #     self.p2_direction_changed = True
+
+            self.p2_rect.x += self.p2_path[tower][int(self.path_index)][0]
+            self.p2_rect.y += self.p2_path[tower][int(self.path_index)][1]
+            if self.path_index % 6 == 0:
+                self.sound.player_move.play()
+
+            status = self.p2_frames['walk']
+            self.p2_frame_index += 0.2
+            if self.p2_frame_index >= len(status):
+                self.p2_frame_index = 0
+
+            self.p2_image = status[int(self.p2_frame_index)]
+
+            self.screen_surface.blit(self.p2_image, self.p2_rect)
+
+        self.display.blit(self.screen_surface, (0, 0))
+
+        self.path_index +=1
+        if self.path_index >= len(self.p1_path[tower]):
+            self.path_index = 0
+            if self.level == 1:
+                self.reached_tower1 = True
+            elif self.level == 6:
+                self.reached_tower2 = True
+            elif self.level == 11:
+                self.reached_tower3 = True
+
+    def stall(self):
+        if self.path_index > 60:
+            self.path_index = 0
+            self.stall_completed = True
+        self.path_index += 1
+
+    def change_tower(self):
+        if self.stall_completed:
+            self.tower_surface.blit(self.tower_frames[int((self.level - 1) / 5)], (0, 0))
+            if self.p1_active:
+                self.p1_image = self.p1_frames['idle'][0]
+                self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
+                self.tower_surface.blit(self.p1_image, self.p1_rect)
+            if self.p2_active:
+                self.p2_image = self.p2_frames['idle'][0]
+                self.p2_rect = self.p1_image.get_rect(bottomleft=(16, 288))
+                self.tower_surface.blit(self.p2_image, self.p2_rect)
+
+            self.display.blit(self.tower_surface, self.tower_rect)
+
+            self.completed = True
+            self.stall_completed = False
+            self.player_position_initialized = False
+        else:
+            self.stall()
+
 
     def draw(self):
 

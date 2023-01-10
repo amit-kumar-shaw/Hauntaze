@@ -14,11 +14,6 @@ class Status(Enum):
 
 class SurvivalMode:
     def __init__(self, player1=False, player2=False, joysticks=None):
-        # self.status = None
-        # self.player1_active = player1
-        # self.player2_active = player2
-        # self.level = Level(player1, player2)
-        # self.ui = UI(player1, player2, self.level)
 
         self.joysticks = joysticks
         self.joystick_1 = None
