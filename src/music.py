@@ -44,6 +44,10 @@ class PlayerSound(object):
         self.coin_collection.set_volume(0.7)
         self.key_collection = pygame.mixer.Sound('./assets/Audio/enemy_collision.mp3')
         self.key_collection.set_volume(0.7)
+        self.sword = pygame.mixer.Sound('./assets/Audio/player/sword.ogg')
+        self.sword.set_volume(0.7)
+        self.flamethrower = pygame.mixer.Sound('./assets/Audio/player/flamethrower.ogg')
+        self.flamethrower.set_volume(0.7)
 
     def play_enemy_collision(self):
         sound = pygame.mixer.Sound('./assets/Audio/enemy_collision.mp3')
@@ -67,6 +71,8 @@ class EnemySound(object):
 
     def __init__(self):
         pygame.mixer.init()
+        self.poof = pygame.mixer.Sound('./assets/Audio/enemy/poof.ogg')
+        self.poof.set_volume(0.7)
 
 
 class TransitionSound(object):

@@ -61,7 +61,7 @@ class Level:
         self.level_window = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
         # create cover surface for limited visibility
-        self.cover_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA)
+        self.cover_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA).convert_alpha()
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 

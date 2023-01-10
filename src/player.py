@@ -133,6 +133,10 @@ class Player(pygame.sprite.Sprite):
             self.frame_index = 0
             self.status = 'attack'
             self.weapon.status = 'attack'
+            if self.weapon.type == 'sword':
+                self.sounds.sword.play()
+            elif self.weapon.type == 'flamethrower':
+                self.sounds.flamethrower.play()
 
         if (keys[self.DEATH_STONE] or (self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and self.death_stone_available:
             self.death_stone_activated = True

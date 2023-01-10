@@ -13,8 +13,12 @@ pygame.init()
 pygame.joystick.init()
 
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
+print(joysticks)
 if not bool(joysticks):
+    print('joystick not detected')
     joysticks = None
+else:
+    print('joystick detected')
 
 
 pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
