@@ -1,0 +1,17 @@
+{
+    "start": "python src/main.py",
+    "name": "Hauntaze",
+    "version": "1.0.0",
+    "year": "2023",
+    "coverArt": "",
+    "image": "",
+    "isMultiplayer": true,
+    "description": "",
+    "install": "",
+    "preinstall": "",
+    "groupMembers": [
+        "Amit Kumar Shaw",
+        "Hongtao Ye",
+        "Mona Amirsoleimani"
+    ]
+}

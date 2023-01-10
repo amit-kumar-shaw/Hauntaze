@@ -4,8 +4,10 @@ from pygame.locals import *
 
 
 class Ghost(pygame.sprite.Sprite):
-    def __init__(self, pos, story_mode, player2=False):
+    def __init__(self, pos, story_mode, player2=False, joystick=None):
         super().__init__()
+
+        self.joystick = joystick
 
         self.story_mode = story_mode
 
@@ -46,18 +48,18 @@ class Ghost(pygame.sprite.Sprite):
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[self.MOVE_RIGHT]:
+        if keys[self.MOVE_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
             self.direction.x = 1
             self.is_flipped = False
-        elif keys[self.MOVE_LEFT]:
+        elif keys[self.MOVE_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
             self.direction.x = -1
             self.is_flipped = True
         else:
             self.direction.x = 0
 
-        if keys[self.MOVE_UP]:
+        if keys[self.MOVE_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
             self.direction.y = -1
-        elif keys[self.MOVE_DOWN]:
+        elif keys[self.MOVE_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             self.direction.y = 1
         else:
             self.direction.y = 0

@@ -2,11 +2,13 @@ import random
 
 import pygame
 from settings import *
-from music import GameSound
+from music import MenuSound
+
 
 class Menu():
-    def __init__(self, ):
+    def __init__(self, joystick =None):
         self.screen = pygame.display.get_surface()
+        self.joystick = joystick
         self.is_story_mode = True
         self.multiplayer = False
         self.is_player1_ready = False
@@ -24,11 +26,29 @@ class Menu():
         self.mode1_frames = self.mode_frames('Story Mode')
         self.mode2_frames = self.mode_frames('Survival Mode')
         self.coin_frames = self.coin_text()
-        self.start_surf = self.plain_text('Insert Coin to start', 22)
+        self.start_surf = self.plain_text('Insert Coin to start', 16)
         self.start_rect = self.start_surf.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 20))
 
-        self.sound = GameSound()
+        self.sound = MenuSound()
         self.sound.menu.play(loops=-1)
+
+        self.story_frames = self.create_frames('Story Mode >')
+        self.survival_frames = self.create_frames('< Survival Mode')
+        self.single_frames = self.create_frames('Single Player >')
+        self.multi_frames = self.create_frames('< Multiplayer')
+        self.vertical_transition = False
+        self.horizontal_transition = False
+        self.player_selected = True
+        self.story = True
+        self.horizontal_index = 5
+        self.vertical_index = 5
+
+        size = 16
+        self.info_msg = []
+        self.info_msg.append(self.text('Journey to lift the curse of the forbidden treasure', size))
+        self.info_msg.append(self.text('Play together to lift the curse of the forbidden treasure', size))
+        self.info_msg.append(self.text('How many levels can you survive?', size))
+        self.info_msg.append(self.text('Compete against each other and clear maximum levels', size))
 
     def check_input(self):
         keys = pygame.key.get_pressed()
@@ -36,25 +56,25 @@ class Menu():
         # insert coin for player 1
         if keys[pygame.K_1] and not self.is_player1_ready:
             self.is_player1_ready = True
-            self.sound.play_confirmation()
+            self.sound.confirm.play()
 
         # insert coin for player 2
         if keys[pygame.K_2] and not self.is_player2_ready:
             self.is_player2_ready = True
-            self.sound.play_confirmation()
+            self.sound.confirm.play()
 
         # toggle game modes
         if keys[pygame.K_DOWN] and self.is_story_mode:
             self.is_story_mode = False
             self.mode_transition = True
             self.transition_index = -1
-            self.sound.play_mode_select()
+            self.sound.confirm.play()
 
         if keys[pygame.K_UP] and not self.is_story_mode:
             self.is_story_mode = True
             self.mode_transition = True
             self.transition_index = -1
-            self.sound.play_mode_select()
+            self.sound.confirm.play()
 
     def game_mode(self):
 
@@ -78,34 +98,36 @@ class Menu():
 
     def update(self):
 
-        self.check_input()
+
 
         self.screen.blit(self.background, (0, 0))
 
+        # self.check_input()
+        # # title animation
+        # self.animation_index += 0.08  # * self.animation_direction
+        # if self.animation_index >= 2: self.animation_index = 0
+        #
+        # self.screen.blit(self.player1_surf, self.player1_rect)
+        #
+        # self.screen.blit(self.player2_surf, self.player2_rect)
+        #
+        # # player 1 insert coin
+        # frame = self.coin_frames[int(self.animation_index)] if not self.is_player1_ready else self.coin_frames[2]
+        # frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT - 200))
+        # self.screen.blit(frame, frame_rect)
+        #
+        # # player 2 insert coin
+        # frame = self.coin_frames[int(self.animation_index)] if not self.is_player2_ready else self.coin_frames[2]
+        # frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT - 200))
+        # self.screen.blit(frame, frame_rect)
+        #
+        # if self.is_player1_ready or self.is_player2_ready:
+        #     self.screen.blit(self.start_surf, self.start_rect)
+        #
+        # self.game_mode()
 
-        # title animation
-        self.animation_index += 0.08# * self.animation_direction
-        if self.animation_index >= 2: self.animation_index = 0
-
-        self.screen.blit(self.player1_surf, self.player1_rect)
-
-        self.screen.blit(self.player2_surf, self.player2_rect)
-
-        # player 1 insert coin
-        frame = self.coin_frames[int(self.animation_index)] if not self.is_player1_ready else self.coin_frames[2]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT - 200))
-        self.screen.blit(frame, frame_rect)
-
-        # player 2 insert coin
-        frame = self.coin_frames[int(self.animation_index)] if not self.is_player2_ready else self.coin_frames[2]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.75, SCREEN_HEIGHT - 200))
-        self.screen.blit(frame, frame_rect)
-
-        if self.is_player1_ready or self.is_player2_ready:
-            # self.screen.blit(start_msg, msg_rect)
-            self.screen.blit(self.start_surf, self.start_rect)
-
-        self.game_mode()
+        self.update_menu()
+        self.screen.blit(self.start_surf, self.start_rect)
 
     def mode_frames(self, text_msg):
         frames = []
@@ -162,3 +184,134 @@ class Menu():
             frames.append(text_surf)
 
         return frames
+
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
+            if not self.horizontal_transition and self.player_selected:
+                self.sound.select.play()
+                self.player_selected = False
+                self.vertical_transition = True
+                self.vertical_index = -1
+
+        if keys[pygame.K_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
+            if not self.horizontal_transition and not self.player_selected:
+                self.sound.select.play()
+                self.player_selected = True
+                self.vertical_transition = True
+                self.vertical_index = -1
+
+        if keys[pygame.K_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
+            if not self.vertical_transition:
+                if self.player_selected and self.multiplayer:
+                    self.sound.select.play()
+                    self.multiplayer = False
+                    self.horizontal_transition = True
+                    self.horizontal_index = -1
+                elif not self.player_selected and not self.story:
+                    self.sound.select.play()
+                    self.story = True
+                    self.horizontal_transition = True
+                    self.horizontal_index = -1
+
+        if keys[pygame.K_RIGHT] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
+            if not self.vertical_transition:
+                if self.player_selected and not self.multiplayer:
+                    self.sound.select.play()
+                    self.multiplayer = True
+                    self.horizontal_transition = True
+                    self.horizontal_index = -1
+                elif not self.player_selected and self.story:
+                    self.sound.select.play()
+                    self.story = False
+                    self.horizontal_transition = True
+                    self.horizontal_index = -1
+
+    def update_menu(self):
+
+        self.is_player1_ready = True
+        self.is_story_mode = self.story
+
+        self.input()
+        if self.vertical_transition:
+            self.vertical_index += 1
+            if self.vertical_index == 5:
+                self.vertical_transition = False
+
+        if self.horizontal_transition:
+            self.horizontal_index += 1
+            if self.horizontal_index == 5:
+                self.horizontal_transition = False
+
+        h_alt_index = 5 - self.horizontal_index
+        v_alt_index = 5 - self.vertical_index
+
+        player_frame = self.multi_frames if self.multiplayer else self.single_frames
+
+        # if self.player_selected:
+        index = self.vertical_index if self.player_selected else v_alt_index
+        frame = player_frame[index]
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 120))
+        self.screen.blit(frame, frame_rect)
+
+        mode_frame = self.story_frames if self.story else self.survival_frames
+        # Mode Option
+        index = v_alt_index if self.player_selected else self.vertical_index
+        frame = mode_frame[index]
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 90))
+        self.screen.blit(frame, frame_rect)
+
+        info = 0
+        if self.multiplayer:
+            self.is_player2_ready = True
+            if self.story:
+                info = 1
+            else:
+                info = 3
+        else:
+            self.is_player2_ready = False
+            if self.story:
+                info = 0
+            else:
+                info = 2
+        frame = self.info_msg[info]
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 70))
+        self.screen.blit(frame, frame_rect)
+
+    def create_frames(self, text_msg):
+        frames = []
+        selected_color = ['red', 'white']
+        deselected_color = ['black', 'grey']
+
+        for i in range(6):
+            text_surf = pygame.Surface((300, 50), pygame.SRCALPHA)
+            text_surf.fill((0, 0, 0, 0))
+            font = pygame.font.Font('./assets/fonts/1.ttf', 17 + i)
+            color = selected_color if i > 0 else deselected_color
+
+            text = font.render(text_msg, False, color[0])
+            rect = text.get_rect(center=(150, 25))
+            text_surf.blit(text, rect)
+            text = font.render(text_msg, False, color[1])
+            rect = text.get_rect(center=(150 - 1, 25 - 2))
+            text_surf.blit(text, rect)
+            frames.append(text_surf)
+
+        return frames
+
+    def text(self, text_msg, size):
+
+        width = 500
+        text_surf = pygame.Surface((width, 50), pygame.SRCALPHA)
+        text_surf.fill((0, 0, 0, 0))
+
+        font = pygame.font.Font('./assets/fonts/4.ttf', size)
+        text = font.render(text_msg, False, 'black')
+        text_rect = text.get_rect(center=(width / 2, 25))
+        text_surf.blit(text, text_rect)
+        text = font.render(text_msg, False, 'white')
+        text_rect = text.get_rect(center=((width / 2) - 1, 25 - 1))
+        text_surf.blit(text, text_rect)
+
+        return text_surf
