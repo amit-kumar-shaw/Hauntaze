@@ -799,17 +799,17 @@ class Level:
         if self.animation_index >= 2: self.animation_index = 0
 
         # title
-        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 75 + int(self.animation_index))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
         title = font.render('Game Over', False, 'yellow')
-        title_rect = title.get_rect(center=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
         title = font.render('Game Over', False, 'red')
-        title_rect = title.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT // 2))
+        title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
         # Restart game message
-        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        font = pygame.font.Font('./assets/fonts/4.ttf', 24)
         resume_msg = font.render('Press ENTER to restart', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
@@ -824,17 +824,17 @@ class Level:
         if self.animation_index >= 2: self.animation_index = 0
 
         # title
-        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.animation_index))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
         title = font.render('Level Completed', False, 'red')
-        title_rect = title.get_rect(center=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
         title = font.render('Level Completed', False, 'yellow')
-        title_rect = title.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT // 2))
+        title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
         # Continue game message
-        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        font = pygame.font.Font('./assets/fonts/4.ttf', 24)
         resume_msg = font.render('Press ENTER to continue', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)

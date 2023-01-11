@@ -215,7 +215,7 @@ class Menu():
                     self.horizontal_transition = True
                     self.horizontal_index = -1
 
-        if keys[pygame.K_RIGHT] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
+        if keys[pygame.K_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
             if not self.vertical_transition:
                 if self.player_selected and not self.multiplayer:
                     self.sound.select.play()
