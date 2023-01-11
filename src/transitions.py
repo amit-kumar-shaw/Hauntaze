@@ -562,6 +562,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
                     if self.p2_active:
@@ -573,6 +574,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(160, 96))
                     if self.p2_active:
@@ -584,6 +586,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(346, 96))
                     if self.p2_active:
@@ -708,7 +711,7 @@ class Transition:
 
             self.screen_surface.blit(self.p2_image, self.p2_rect)
 
-        self.display.blit(self.screen_surface, (0, 0))
+        self.display.blit(self.screen_surface, (self.p1_rect.x - 16, self.p1_rect.y - 16, 32, 48), (self.p1_rect.x - 16, self.p1_rect.y - 16, 32, 48))
 
         self.path_index +=1
         if self.path_index >= len(self.p1_path[tower]):
