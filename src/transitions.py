@@ -673,7 +673,7 @@ class Transition:
     def go_to_tower(self, tower):
         if tower == 3:
             tower = 2
-        self.screen_surface.blit(self.all_towers, (0, 0))
+        self.screen_surface.blit(self.all_towers, (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50), (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50))
         if self.p1_active:
             # if self.path_index > 18 and not self.p1_direction_changed:
             #     self.p1_flipped = not self.p1_flipped
