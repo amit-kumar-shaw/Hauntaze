@@ -17,6 +17,7 @@ class Transition:
         self.display = pygame.display.get_surface()
         self.sound = TransitionSound()
         self.sound_index = 0
+        self.load_index = 2
 
         # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
@@ -295,10 +296,21 @@ class Transition:
 
     def intro(self):
         if self.intro_frames is None:
-            self.intro_frames = import_frames(f"./assets/images/transitions/intro2", scale=1)
+            # self.intro_frames = import_frames(f"./assets/images/transitions/intro2", scale=1)
             # self.screen_surface.fill('black')
             self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.intro_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_0{self.load_index}.png").convert())
+            else:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
