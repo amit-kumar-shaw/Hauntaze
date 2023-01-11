@@ -369,9 +369,24 @@ class Transition:
 
     def life(self):
         if self.life_frames is None:
-            self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
-            self.screen_surface.fill('black')
+            # self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
+            # self.screen_surface.fill('black')
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.life_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_0{self.load_index}.png").convert())
+            else:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -420,9 +435,23 @@ class Transition:
 
     def death(self):
         if self.death_frames is None:
-            self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
-            self.screen_surface.fill('black')
+            # self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.death_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_0{self.load_index}.png").convert())
+            else:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -471,9 +500,23 @@ class Transition:
 
     def curse(self):
         if self.curse_frames is None:
-            self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
-            self.screen_surface.fill('black')
+            # self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.curse_frames = []
+
+        if self.load_index <= 149:
+            if self.load_index < 10:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_0{self.load_index}.png").convert())
+            else:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
