@@ -97,17 +97,18 @@ class Game:
         if self.pause_animation >= 2: self.pause_animation = 0
 
         # Pause message
-        font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.pause_animation))
+        # font = pygame.font.Font('./assets/fonts/BleedingPixels.ttf', 60 + int(self.pause_animation))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.pause_animation))
         title = font.render('Game Paused', False, 'red')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
+        title_rect = title.get_rect(midbottom=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         pause_surface.blit(title, title_rect)
 
         title = font.render('Game Paused', False, 'yellow')
-        title_rect = title.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+        title_rect = title.get_rect(midbottom=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
         pause_surface.blit(title, title_rect)
 
         # Resume game message
-        font = pygame.font.Font('./assets/fonts/1.ttf', 15)
+        font = pygame.font.Font('./assets/fonts/4.ttf', 24)
         resume_msg = font.render('Press ENTER to resume', False, 'white')
         msg_rect = resume_msg.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 100))
         pause_surface.blit(resume_msg, msg_rect)
