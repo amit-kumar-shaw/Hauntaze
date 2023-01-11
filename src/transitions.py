@@ -789,6 +789,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -855,6 +860,8 @@ class Transition:
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
 
+        self.display.blit(self.screen_surface, (0, 0))
+
         if self.frame_index < 300:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
@@ -876,6 +883,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -942,17 +954,17 @@ class Transition:
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
-
+        self.display.blit(self.screen_surface, (0, 0))
         if self.frame_index < 300:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_00{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_00{self.frame_index}.png')
             elif self.frame_index < 100:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_0{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_{self.frame_index}.png')
 
     def stone3_gen(self):
         self.frame_index += 1
@@ -966,6 +978,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -1024,13 +1041,15 @@ class Transition:
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
             self.screen_surface.blit(msg, msg_rect)
 
+        self.display.blit(self.screen_surface, (0, 0))
+
         if self.frame_index < 150:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_00{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_00{self.frame_index}.png')
             elif self.frame_index < 100:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_0{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_{self.frame_index}.png')
