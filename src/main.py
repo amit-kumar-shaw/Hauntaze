@@ -13,7 +13,6 @@ pygame.init()
 pygame.joystick.init()
 
 joysticks = [pygame.joystick.Joystick(i) for i in range(pygame.joystick.get_count())]
-print(joysticks)
 if not bool(joysticks):
     print('joystick not detected')
     joysticks = None
@@ -22,7 +21,7 @@ else:
 
 
 pygame.event.set_allowed([pygame.QUIT, pygame.KEYDOWN, pygame.KEYUP])
-flags = pygame.SCALED | pygame.DOUBLEBUF | pygame.FULLSCREEN
+flags = pygame.SCALED | pygame.DOUBLEBUF #| pygame.FULLSCREEN
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), flags)
 pygame.display.set_caption('Hauntaze')
 clock = pygame.time.Clock()
@@ -42,7 +41,7 @@ while True:
     # screen.fill(BG_COLOR, (0, 0, SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))
     game.run()
 
-    # print(clock.get_fps())
+    print(clock.get_fps())
 
     # drawing logic
     pygame.display.update()
