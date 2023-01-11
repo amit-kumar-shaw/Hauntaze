@@ -766,6 +766,8 @@ class Transition:
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
             self.screen_surface.blit(msg, msg_rect)
 
+        self.display.blit(self.screen_surface, (0, 0))
+
         if self.frame_index < 300:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,

@@ -3,10 +3,10 @@
     "name": "Hauntaze",
     "version": "1.0.0",
     "year": "2023",
-    "coverArt": "",
-    "image": "",
+    "coverArt": "assets/images/cover_art.png",
+    "image": "assets/images/image.png",
     "isMultiplayer": true,
-    "description": "",
+    "description": "Hauntaze is game to show your skills to find your way across multiple mazes in an old castle while collecting magical stones to lift the curse of the forbidden treasure.",
     "install": "",
     "preinstall": "",
     "groupMembers": [
