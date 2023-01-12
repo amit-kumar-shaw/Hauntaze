@@ -8,7 +8,7 @@ from settings import *
 from menu import Menu
 from story_mode import StoryMode
 from survival_mode import SurvivalMode
-from music import GameSound
+from sounds import GameSound
 
 
 
@@ -34,7 +34,7 @@ class Game:
         self.joystick = joysticks[0] if joysticks is not None else None
 
         self.menu = Menu(self.joystick)
-
+        self.sound.play_background(self.sound.menu)
         self.page = 1
 
     def run(self):
@@ -45,8 +45,9 @@ class Game:
             self.menu.update()
 
             if (keys[pygame.K_RETURN] or (self.joystick is not None and self.joystick.get_button(START_BUTTON))) and (self.menu.is_player1_ready or self.menu.is_player2_ready):
-                self.sound.play_insert_coin()
-                self.menu.sound.menu.stop()
+                self.menu.sound.insert_coin.play()
+                self.sound.stop_background()
+                # self.menu.sound.menu.stop()
                 self.status = Status.RUNNING
                 if self.menu.is_story_mode:
                     self.mode = StoryMode(player1=self.menu.is_player1_ready, player2=self.menu.is_player2_ready, joysticks=self.joysticks)

@@ -2,7 +2,7 @@ import random
 
 import pygame
 from settings import *
-from music import MenuSound
+from sounds import MenuSound
 
 
 class Menu():
@@ -30,7 +30,7 @@ class Menu():
         self.start_rect = self.start_surf.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 20))
 
         self.sound = MenuSound()
-        self.sound.menu.play(loops=-1)
+        # self.sound.menu.play(loops=-1)
 
         self.story_frames = self.create_frames('Story Mode >')
         self.survival_frames = self.create_frames('< Survival Mode')

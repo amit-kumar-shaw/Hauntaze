@@ -25,7 +25,7 @@ class Door(pygame.sprite.Sprite):
         self.image = pygame.transform.rotozoom(self.closed_frame, 0, 0.5)
         self.rect = self.image.get_rect(topleft = pos)
 
-        self.sound = pygame.mixer.Sound('./assets/Audio/doorOpen_4.mp3')
+        self.sound = pygame.mixer.Sound('./assets/Audio/player/door_open.ogg')
         self.sound.set_volume(0.7)
 
     def open(self):

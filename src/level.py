@@ -14,7 +14,7 @@ from collectible import Collectible
 from key import Key
 from door import Door
 from weapon import Weapon
-from music import GameSound
+from sounds import GameSound
 from player_ghost import Ghost
 
 
@@ -89,7 +89,8 @@ class Level:
         self.ghost = None
 
         self.sound = GameSound()
-        self.sound.playbackgroundmusic()
+        self.background_music_on = False
+        self.background_music = None
 
         if story_mode:
             self.story_setup()
@@ -261,6 +262,13 @@ class Level:
                 self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[5]),
                                          [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
                                          type=data['weapon_type'])
+
+        if self.current_level <= 15:
+            self.background_music = self.sound.background1
+        elif 15 < self.current_level <= 35:
+            self.background_music = self.sound.background2
+        elif 35 < self.current_level <= 50:
+            self.background_music = self.sound.background3
             # self.player2.door = door
 
         # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
@@ -356,9 +364,17 @@ class Level:
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite))
 
+
     def story_setup(self):
         from level_design import STORY_DATA
         data = STORY_DATA[self.current_level - 1]
+
+        if self.current_level <= 5:
+            self.background_music = self.sound.background1
+        elif 5 < self.current_level <= 10:
+            self.background_music = self.sound.background2
+        elif 10 < self.current_level <= 15:
+            self.background_music = self.sound.background3
 
         if self.current_level % 5 == 0:
             self.is_boss_level = True
@@ -501,6 +517,9 @@ class Level:
 
     def run(self):
 
+        if not self.background_music_on:
+            self.sound.play_background(self.background_music)
+            self.background_music_on = True
 
         # run the entire game (level)
         self.active_sprites.update()
@@ -791,6 +810,10 @@ class Level:
         #     pygame.draw.circle(self.level_window, 'orange', self.player2.key.rect.center, 3)
 
     def game_over(self):
+        if self.background_music_on:
+            self.sound.stop_background()
+            self.background_music_on = False
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.failed = True
@@ -816,6 +839,11 @@ class Level:
 
     # TODO: Level completed
     def level_completed(self):
+
+        if self.background_music_on:
+            self.sound.stop_background()
+            self.background_music_on = False
+
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.completed = True

@@ -5,7 +5,7 @@ import pygame
 from settings import *
 from stones import Stone
 from utilities import import_frames
-from music import TransitionSound
+from sounds import TransitionSound
 
 
 class Transition:
