@@ -85,7 +85,7 @@ class EnemySound(object):
     def __init__(self):
         pygame.mixer.init()
         self.poof = pygame.mixer.Sound('./assets/Audio/enemy/poof.ogg')
-        self.poof.set_volume(0.7)
+        self.poof.set_volume(1)
         self.boss1_die = pygame.mixer.Sound('./assets/Audio/enemy/boss1_die.ogg')
         self.boss1_die.set_volume(0.7)
         self.boss2_die = pygame.mixer.Sound('./assets/Audio/enemy/boss2_die.ogg')
@@ -99,7 +99,7 @@ class EnemySound(object):
         self.boss3_attack = pygame.mixer.Sound('./assets/Audio/enemy/slash.ogg')
         self.boss3_attack.set_volume(0.7)
         self.hit = pygame.mixer.Sound('./assets/Audio/enemy/hit.ogg')
-        self.hit.set_volume(0.7)
+        self.hit.set_volume(0.4)
 
 
 class TransitionSound(object):

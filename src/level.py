@@ -9,7 +9,7 @@ from tile import Tile
 from player import Player
 from enemy import Enemy
 from traps import Spike
-from enemy_boss import Eye, Boss
+from enemy_boss import Boss
 from collectible import Collectible
 from key import Key
 from door import Door
