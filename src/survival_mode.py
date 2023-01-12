@@ -13,12 +13,14 @@ class Status(Enum):
 
 
 class SurvivalMode:
-    def __init__(self, player1=False, player2=False):
-        # self.status = None
-        # self.player1_active = player1
-        # self.player2_active = player2
-        # self.level = Level(player1, player2)
-        # self.ui = UI(player1, player2, self.level)
+    def __init__(self, player1=False, player2=False, joysticks=None):
+
+        self.joysticks = joysticks
+        self.joystick_1 = None
+        self.joystick_2 = None
+        if joysticks is not None:
+            self.joystick_1 = joysticks[0] if len(joysticks) > 0 else None
+            self.joystick_2 = joysticks[1] if len(joysticks) > 1 else None
 
         self.status = Status.RUNNING
         self.player1_active = player1
@@ -30,12 +32,14 @@ class SurvivalMode:
             self.multiplayer = True
         if player1:
             self.player1 = Player((0, 0), PLAYER1_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None)
-        if player2:
-            self.player2 = Player((0, 0), PLAYER2_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
+                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None,
+                                  joystick=self.joystick_1)
+            if player2:
+                self.player2 = Player((0, 0), PLAYER2_SPRITE,
+                                      collision_sprites=None, collectible_sprites=None, enemy_sprites=None,
+                                      joystick=self.joystick_2, player2=True)
         self.current_level = 1
-        self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
+        self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
@@ -57,5 +61,5 @@ class SurvivalMode:
             self.current_level += 1
             self.ui.current_level = self.current_level
             self.ui.update_level()
-            self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
+            self.level = Level(False, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
             self.status = Status.RUNNING

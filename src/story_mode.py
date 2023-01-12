@@ -16,7 +16,15 @@ class Status(Enum):
 
 
 class StoryMode:
-    def __init__(self, player1=False, player2=False):
+    def __init__(self, player1=False, player2=False, joysticks=None):
+
+        self.joysticks = joysticks
+        self.joystick_1 = None
+        self.joystick_2 = None
+        if joysticks is not None:
+            self.joystick_1 = joysticks[0] if len(joysticks) > 0 else None
+            self.joystick_2 = joysticks[1] if len(joysticks) > 1 else None
+
         self.status = Status.TRANSITION
         self.player1_active = player1
         self.player2_active = player2
@@ -27,18 +35,17 @@ class StoryMode:
             self.multiplayer = True
         if player1:
             self.player1 = Player((0, 0), PLAYER1_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None)
+                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, joystick=self.joystick_1)
         if player2:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, player2=True)
-        self.current_level = 1
-        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
+                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, joystick=self.joystick_2, player2=True)
+        self.current_level = 11
+        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
-
         self.stones = StonesUI()
-        self.transition = Transition(self.multiplayer)
+        self.transition = Transition(self.player1_active, self.player2_active, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
 
     def run(self):
         if self.status == Status.RUNNING:
@@ -51,6 +58,9 @@ class StoryMode:
                     self.player2.ui_update = False
             if self.level.completed:
                 self.status = Status.COMPLETED
+                if self.transition.multiplayer and not self.transition.ghost_active:
+                    self.transition.p1_active = self.level.player1_active
+                    self.transition.p2_active = self.level.player2_active
         elif self.status == Status.COMPLETED:
             # keys = pygame.key.get_pressed()
             # if keys[pygame.K_RETURN]:
@@ -71,7 +81,7 @@ class StoryMode:
                 if self.player2_active:
                     self.player2.death_stone_available = True
 
-            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer)
+            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
             self.ui.level = self.level
             self.ui.current_level = self.current_level
             self.ui.update_level()
@@ -79,9 +89,6 @@ class StoryMode:
         elif self.status == Status.TRANSITION:
             self.transition.level = self.current_level
             self.transition.update()
-            # keys = pygame.key.get_pressed()
-            # if keys[pygame.K_RETURN] or self.transition.completed:
-            #     self.status = Status.RUNNING
 
             if self.transition.completed:
                 self.status = Status.RUNNING
@@ -90,5 +97,7 @@ class StoryMode:
             self.stones.stones[0].active = True
         if self.current_level > 10:
             self.stones.stones[1].active = True
+        if self.current_level > 15:
+            self.stones.stones[2].active = True
 
         self.stones.update()

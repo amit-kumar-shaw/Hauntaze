@@ -6,6 +6,7 @@ from pygame.locals import *
 from player import *
 from settings import *
 from utilities import import_frames
+from music import EnemySound
 
 
 class Enemy(pygame.sprite.Sprite):
@@ -37,6 +38,7 @@ class Enemy(pygame.sprite.Sprite):
         self.tog = True
         self.collision_sprites = collision_sprites
         self.player_weapon_sprites = player_weapon_sprites
+        self.sound = EnemySound()
 
         self.timer = 5
         self.movement_update()
@@ -97,6 +99,7 @@ class Enemy(pygame.sprite.Sprite):
         for sprite in self.player_weapon_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and sprite.status == 'attack':
                 if pygame.sprite.collide_mask(self, sprite):
+                    self.sound.poof.play()
                     self.status = 'dead'
                     self.animation_index = 0
 

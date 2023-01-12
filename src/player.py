@@ -10,8 +10,10 @@ from utilities import import_frames
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, player2=False):
+    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, joystick=None, player2=False):
         super().__init__(groups)
+
+        self.joystick = joystick
 
         if player2:
             self.import_assets(2, 0.7)
@@ -109,35 +111,39 @@ class Player(pygame.sprite.Sprite):
     def input(self):
         keys = pygame.key.get_pressed()
 
-        if keys[self.MOVE_RIGHT]:
+        if keys[self.MOVE_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
             self.direction.x = 1
             self.is_flipped = False
-        elif keys[self.MOVE_LEFT]:
+        elif keys[self.MOVE_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
             self.direction.x = -1
             self.is_flipped = True
         else:
             self.direction.x = 0
 
-        if keys[self.MOVE_UP]:
+        if keys[self.MOVE_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
             self.direction.y = -1
-        elif keys[self.MOVE_DOWN]:
+        elif keys[self.MOVE_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             self.direction.y = 1
         else:
             self.direction.y = 0
 
-        if keys[
-            self.ATTACK] and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
+        if (keys[
+            self.ATTACK] or (self.joystick is not None and self.joystick.get_button(BLACK_BUTTON))) and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
             self.weapon.status = 'attack'
+            if self.weapon.type == 'sword':
+                self.sounds.sword.play()
+            elif self.weapon.type == 'flamethrower':
+                self.sounds.flamethrower.play()
 
-        if keys[self.DEATH_STONE] and self.death_stone_available:
+        if (keys[self.DEATH_STONE] or (self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and self.death_stone_available:
             self.death_stone_activated = True
 
     def revival_input(self):
         keys = pygame.key.get_pressed()
-        if keys[self.LIFE_STONE] and self.life_stone_available:
+        if (keys[self.LIFE_STONE] or (self.joystick is not None and self.joystick.get_button(BLUE_BUTTON))) and self.life_stone_available:
             self.life_stone_activated = True
 
     def horizontal_collisions(self):
@@ -214,8 +220,8 @@ class Player(pygame.sprite.Sprite):
                     self.big_torch_time = pygame.time.get_ticks()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
-                elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
-                    self.weapon_active = True
+                # elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
+                #     self.weapon_active = True
                 elif sprite.type == 'web1' or sprite.type == 'web2' and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
@@ -229,7 +235,7 @@ class Player(pygame.sprite.Sprite):
 
     def enemy_collisions(self):
         for sprite in self.enemy_sprites.sprites():
-            if sprite.rect.colliderect(self.rect) and not self.is_invincible:
+            if sprite.rect.colliderect(self.rect) and not self.is_invincible and sprite.status != 'dead':
                 if pygame.sprite.collide_mask(self, sprite):
                     self.is_invincible = True
                     self.sounds.play_enemy_collision()
@@ -269,6 +275,11 @@ class Player(pygame.sprite.Sprite):
             current_time = pygame.time.get_ticks()
             if (current_time - self.hurt_time >= INVINSIBILITY_DURATION) and (current_time - self.mask_time >= 5000):
                 self.is_invincible = False
+
+    def weapon_collisions(self):
+        if self.weapon is not None and self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
+            self.sounds.play_key_collection()
+            self.weapon_active = True
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
@@ -314,7 +325,7 @@ class Player(pygame.sprite.Sprite):
             self.torch.rect = self.torch.image.get_rect(center=(self.rect.x, self.rect.y + 2))
             if self.weapon_active:
                 if self.weapon.status == 'idle':
-                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 6, self.rect.y))
+                    self.weapon.rect = self.weapon.image.get_rect(center=(self.rect.x + 8, self.rect.y + 3))
                     self.weapon.animate()
                 else:
                     if self.is_flipped:
@@ -327,6 +338,7 @@ class Player(pygame.sprite.Sprite):
             if self.is_big_torch:
                 self.torch_update()
             self.door_collisions()
+            self.weapon_collisions()
             self.enemy_collisions()
             self.trap_collisions()
             self.move = not self.move
