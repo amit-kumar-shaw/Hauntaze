@@ -88,6 +88,7 @@ class Game:
         elif self.status == Status.OVER:
             self.status = Status.MENU
             self.menu = Menu()
+            self.sound.play_background(self.sound.menu)
 
     def pause(self):
         pause_surface = pygame.Surface((SCREEN_WIDTH, (ROWS * CELL_SIZE * TILE_HEIGHT)))

@@ -45,10 +45,10 @@ class Menu():
 
         size = 16
         self.info_msg = []
-        self.info_msg.append(self.text('Journey to lift the curse of the forbidden treasure', size))
-        self.info_msg.append(self.text('Play together to lift the curse of the forbidden treasure', size))
+        self.info_msg.append(self.text('Lift the curse of the forbidden treasure!', size))
+        self.info_msg.append(self.text('Lift the curse of the forbidden treasure together!', size))
         self.info_msg.append(self.text('How many levels can you survive?', size))
-        self.info_msg.append(self.text('Compete against each other and clear maximum levels', size))
+        self.info_msg.append(self.text('The last survivor wins the game!', size))
 
     def check_input(self):
         keys = pygame.key.get_pressed()

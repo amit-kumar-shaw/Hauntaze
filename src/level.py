@@ -800,15 +800,6 @@ class Level:
                                                           enemy.rect.center) > self.player2.visibility_radius):
                     pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
 
-        # TODO: remove in final game. Only for testing and debugging
-        # if self.player1_active:
-        #     pygame.draw.circle(self.level_window, 'green', self.player1.door.rect.center, 3)
-        #     pygame.draw.circle(self.level_window, 'yellow', self.player1.key.rect.center, 3)
-        #
-        # if self.player2_active:
-        #     pygame.draw.circle(self.level_window, 'pink', self.player2.door.rect.center, 3)
-        #     pygame.draw.circle(self.level_window, 'orange', self.player2.key.rect.center, 3)
-
     def game_over(self):
         if self.background_music_on:
             self.sound.stop_background()
@@ -819,15 +810,20 @@ class Level:
             self.failed = True
         self.animation_index += 0.08
 
-        if self.animation_index >= 2: self.animation_index = 0
+        if self.animation_index >= 2:
+            self.animation_index = 0
+
+        msg = 'Game Over'
+        if not self.story_mode and self.multiplayer:
+            msg = 'Player 1 Wins' if self.ghost.player2 else 'Player 2 Wins'
 
         # title
         font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
-        title = font.render('Game Over', False, 'yellow')
+        title = font.render(msg, False, 'yellow')
         title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
-        title = font.render('Game Over', False, 'red')
+        title = font.render(msg, False, 'red')
         title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
@@ -837,7 +833,6 @@ class Level:
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
 
-    # TODO: Level completed
     def level_completed(self):
 
         if self.background_music_on:
