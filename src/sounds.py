@@ -75,7 +75,7 @@ class PlayerSound(object):
         self.trap = pygame.mixer.Sound('./assets/Audio/player/trap.ogg')
         self.trap.set_volume(0.7)
         self.special_item = pygame.mixer.Sound('./assets/Audio/player/special.ogg')
-        self.special_item.set_volume(0.7)
+        self.special_item.set_volume(1)
         self.life_up = pygame.mixer.Sound('./assets/Audio/player/life_up.ogg')
         self.life_up.set_volume(0.7)
 
