@@ -377,8 +377,6 @@ class Player(pygame.sprite.Sprite):
             if not self.status == 'dead' and self.lives == 0:
                 self.status = 'dead'
                 self.frame_index = 0
-                if self.weapon_active:
-                    self.weapon.kill()
             if self.status == 'dead':
                 self.animate()
             if self.frame_index >= len(self.frames[self.status]) - 1 and self.status == 'dead':
