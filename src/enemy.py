@@ -6,7 +6,7 @@ from pygame.locals import *
 from player import *
 from settings import *
 from utilities import import_frames
-from music import EnemySound
+from sounds import EnemySound
 
 
 class Enemy(pygame.sprite.Sprite):

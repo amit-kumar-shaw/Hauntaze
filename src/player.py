@@ -5,7 +5,7 @@ import pygame
 from pygame.locals import *
 from settings import *
 from torch import Torch
-from music import PlayerSound
+from sounds import PlayerSound
 from utilities import import_frames
 
 
@@ -145,6 +145,7 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if (keys[self.LIFE_STONE] or (self.joystick is not None and self.joystick.get_button(BLUE_BUTTON))) and self.life_stone_available:
             self.life_stone_activated = True
+            self.sounds.revive.play()
 
     def horizontal_collisions(self):
         for sprite in self.collision_sprites.sprites():
@@ -210,7 +211,7 @@ class Player(pygame.sprite.Sprite):
                 if sprite.type == 'coin' and sprite.status == 'active':
                     self.score += 1
                     self.ui_update = True
-                    self.sounds.play_coin_collection()
+                    self.sounds.coin_collection.play()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
                     # sprite.kill()
@@ -218,18 +219,21 @@ class Player(pygame.sprite.Sprite):
                     self.is_big_torch = True
                     self.torch.scale(1)
                     self.big_torch_time = pygame.time.get_ticks()
+                    self.sounds.special_item.play()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
                 # elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
                 #     self.weapon_active = True
-                elif sprite.type == 'web1' or sprite.type == 'web2' and sprite.status == 'active':
+                elif (sprite.type == 'web1' or sprite.type == 'web2') and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
+                    self.sounds.trap.play()
                     self.is_slow = True
                     self.web_time = pygame.time.get_ticks()
                 elif sprite.type == 'mask1' or sprite.type == 'mask2' and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
+                    self.sounds.special_item.play()
                     self.is_invincible = True
                     self.mask_time = pygame.time.get_ticks()
 
@@ -238,7 +242,7 @@ class Player(pygame.sprite.Sprite):
             if sprite.rect.colliderect(self.rect) and not self.is_invincible and sprite.status != 'dead':
                 if pygame.sprite.collide_mask(self, sprite):
                     self.is_invincible = True
-                    self.sounds.play_enemy_collision()
+                    self.sounds.enemy_collision.play()
                     self.lives -= 1
                     self.ui_update = True
                     self.hurt_time = pygame.time.get_ticks()
@@ -248,7 +252,7 @@ class Player(pygame.sprite.Sprite):
             if sprite.rect.colliderect(self.rect) and not self.is_invincible and not sprite.state == 'off':
                 if pygame.sprite.collide_mask(self, sprite):
                     self.is_invincible = True
-                    self.sounds.play_enemy_collision()
+                    self.sounds.enemy_collision.play()
                     self.lives -= 1
                     self.ui_update = True
                     self.hurt_time = pygame.time.get_ticks()
@@ -263,10 +267,12 @@ class Player(pygame.sprite.Sprite):
                     self.revival_time = pygame.time.get_ticks()
                 else:
                     self.is_alive = False
+                    self.sounds.die.play()
                     self.torch.kill()
                     if self.weapon_active:
                         self.weapon.kill()
                     self.kill()
+
             elif not self.is_ghost:
                 self.is_ghost = True
 
@@ -278,12 +284,12 @@ class Player(pygame.sprite.Sprite):
 
     def weapon_collisions(self):
         if self.weapon is not None and self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
-            self.sounds.play_key_collection()
+            self.sounds.special_item.play()
             self.weapon_active = True
 
     def key_collisions(self):
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
-            self.sounds.play_key_collection()
+            self.sounds.key_collection.play()
             self.key_picked = True
             self.ui_update = True
             self.key.kill()
@@ -291,7 +297,7 @@ class Player(pygame.sprite.Sprite):
     def door_collisions(self):
         # if self.rect.colliderect(self.door.rect) and self.key_picked:
         if pygame.sprite.collide_rect_ratio(0.8)(self, self.door) and self.key_picked:
-            # self.sounds.play_key_collection()
+            self.sounds.level_up.play()
             self.level_completed = True
 
     def attach_torch(self):
@@ -346,6 +352,7 @@ class Player(pygame.sprite.Sprite):
             # increase one life on collecting 50 coins
             if self.score == 50:
                 self.lives += 1
+                self.sounds.life_up.play()
                 self.score = 0
                 self.ui_update = True
 

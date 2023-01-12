@@ -5,7 +5,7 @@ import pygame
 from settings import *
 from stones import Stone
 from utilities import import_frames
-from music import TransitionSound
+from sounds import TransitionSound
 
 
 class Transition:
@@ -17,6 +17,7 @@ class Transition:
         self.display = pygame.display.get_surface()
         self.sound = TransitionSound()
         self.sound_index = 0
+        self.load_index = 2
 
         # self.multiplayer = multiplayer
         self.tower_surface = pygame.Surface((64, 320))
@@ -295,10 +296,21 @@ class Transition:
 
     def intro(self):
         if self.intro_frames is None:
-            self.intro_frames = import_frames(f"./assets/images/transitions/intro2", scale=1)
+            # self.intro_frames = import_frames(f"./assets/images/transitions/intro2", scale=1)
             # self.screen_surface.fill('black')
             self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.intro_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_0{self.load_index}.png").convert())
+            else:
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -357,9 +369,24 @@ class Transition:
 
     def life(self):
         if self.life_frames is None:
-            self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
-            self.screen_surface.fill('black')
+            # self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
+            # self.screen_surface.fill('black')
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.life_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_0{self.load_index}.png").convert())
+            else:
+                self.life_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/life/life_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -408,9 +435,23 @@ class Transition:
 
     def death(self):
         if self.death_frames is None:
-            self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
-            self.screen_surface.fill('black')
+            # self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.death_frames = []
+
+        if self.load_index <= 299:
+            if self.load_index < 10:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_0{self.load_index}.png").convert())
+            else:
+                self.death_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/death2/death_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -459,9 +500,23 @@ class Transition:
 
     def curse(self):
         if self.curse_frames is None:
-            self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
-            self.screen_surface.fill('black')
+            # self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
+            self.screen_surface.blit(self.castle, (0, 0))
             self.sound_index = 4
+            self.load_index = 2
+            self.curse_frames = []
+
+        if self.load_index <= 149:
+            if self.load_index < 10:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_00{self.load_index}.png").convert())
+            elif self.load_index < 100:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_0{self.load_index}.png").convert())
+            else:
+                self.curse_frames.append(
+                    pygame.image.load(f"./assets/images/transitions/curse2/curse_{self.load_index}.png").convert())
+            self.load_index += 1
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
@@ -507,6 +562,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(24, 288))
                     if self.p2_active:
@@ -518,6 +574,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(160, 96))
                     if self.p2_active:
@@ -529,6 +586,7 @@ class Transition:
                 self.change_tower()
             else:
                 if not self.player_position_initialized:
+                    self.display.blit(self.all_towers, (0, 0))
                     if self.p1_active:
                         self.p1_rect = self.p1_image.get_rect(bottomleft=(346, 96))
                     if self.p2_active:
@@ -615,7 +673,7 @@ class Transition:
     def go_to_tower(self, tower):
         if tower == 3:
             tower = 2
-        self.screen_surface.blit(self.all_towers, (0, 0))
+        self.screen_surface.blit(self.all_towers, (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50), (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50))
         if self.p1_active:
             # if self.path_index > 18 and not self.p1_direction_changed:
             #     self.p1_flipped = not self.p1_flipped
@@ -653,7 +711,7 @@ class Transition:
 
             self.screen_surface.blit(self.p2_image, self.p2_rect)
 
-        self.display.blit(self.screen_surface, (0, 0))
+        self.display.blit(self.screen_surface, (self.p1_rect.x - 16, self.p1_rect.y - 16, 32, 48), (self.p1_rect.x - 16, self.p1_rect.y - 16, 32, 48))
 
         self.path_index +=1
         if self.path_index >= len(self.p1_path[tower]):
@@ -789,6 +847,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -855,6 +918,8 @@ class Transition:
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
 
+        self.display.blit(self.screen_surface, (0, 0))
+
         if self.frame_index < 300:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
@@ -876,6 +941,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -942,17 +1012,17 @@ class Transition:
             msg = font.render(m1, False, 'white')
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 300))
             self.screen_surface.blit(msg, msg_rect)
-
+        self.display.blit(self.screen_surface, (0, 0))
         if self.frame_index < 300:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_00{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_00{self.frame_index}.png')
             elif self.frame_index < 100:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_0{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/death/death_{self.frame_index}.png')
+                                  f'./assets/images/transitions/death2/death_{self.frame_index}.png')
 
     def stone3_gen(self):
         self.frame_index += 1
@@ -966,6 +1036,11 @@ class Transition:
         # for stone in self.stones:
         #     stone.animate()
         self.screen_surface.fill('black')
+        self.screen_surface.blit(self.castle, (0, 0))
+        font = pygame.font.Font('./assets/fonts/1.ttf', 24)
+        msg = font.render('Congratulations!', False, (3, 135, 25))
+        msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2 + 1, 60 + 1))
+        self.screen_surface.blit(msg, msg_rect)
         font = pygame.font.Font('./assets/fonts/1.ttf', 24)
         msg = font.render('Congratulations!', False, 'white')
         msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 60))
@@ -1024,13 +1099,15 @@ class Transition:
             msg_rect = msg.get_rect(center=(SCREEN_WIDTH / 2, 270))
             self.screen_surface.blit(msg, msg_rect)
 
+        self.display.blit(self.screen_surface, (0, 0))
+
         if self.frame_index < 150:
             if self.frame_index < 10:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_00{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_00{self.frame_index}.png')
             elif self.frame_index < 100:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_0{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_0{self.frame_index}.png')
             else:
                 pygame.image.save(self.screen_surface,
-                                  f'./assets/images/transitions/curse/curse_{self.frame_index}.png')
+                                  f'./assets/images/transitions/curse2/curse_{self.frame_index}.png')

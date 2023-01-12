@@ -19,7 +19,7 @@ class Stone(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def animate(self):
-        self.animation_index += 0.5
+        self.animation_index += 0.1
         if self.animation_index >= len(self.frames): self.animation_index = 0
         self.image = self.frames[int(self.animation_index)]
 
