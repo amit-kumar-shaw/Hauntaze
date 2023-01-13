@@ -37,7 +37,7 @@ while True:
 
     game.run()
 
-    # print(clock.get_fps())
+    print(clock.get_fps())
 
     # drawing logic
     pygame.display.update()
