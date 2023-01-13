@@ -22,6 +22,9 @@ class Menu():
 
         self.background = pygame.image.load(f'./assets/images/background/castle.png').convert()
         self.title_frames = import_frames('./assets/images/background/title', 1)
+        self.p1_frames = import_frames('./assets/images/menu/p1', 1)
+        self.p2_frames = import_frames('./assets/images/menu/p2', 1)
+        self.mode_identifier = import_frames('./assets/images/menu/mode', 1)
         self.player1_surf = self.plain_text('Player 1', 20)
         self.player1_rect = self.player1_surf.get_rect(center=(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT - 220))
         self.player2_surf = self.plain_text('Player 2', 20)
@@ -46,12 +49,34 @@ class Menu():
         self.horizontal_index = 5
         self.vertical_index = 5
 
-        size = 16
+        size = 10
         self.info_msg = []
         self.info_msg.append(self.text('Lift the curse of the forbidden treasure!', size))
         self.info_msg.append(self.text('Lift the curse of the forbidden treasure together!', size))
         self.info_msg.append(self.text('How many levels can you survive?', size))
         self.info_msg.append(self.text('The last survivor wins the game!', size))
+
+        self.credits_button = pygame.image.load(f'./assets/images/menu/credits.png').convert_alpha()
+
+        self.credits_frames = import_frames('./assets/images/menu/credits', 1)
+        self.credits_transition_index = 0
+        self.credits_active = False
+        self.credits_transition = 0
+
+        # pygame.image.save(self.text('Credits', 16), './assets/images/menu/credits1.png')
+        # pygame.image.save(self.text('Back', 16), './assets/images/menu/credits2.png')
+        # pygame.image.save(self.credits_text('Hauntaze is developed for FabArcade as part of the', 12), './assets/images/menu/1.png')
+        # pygame.image.save(
+        #     self.credits_text('Media Computing Project at RWTH Aachen University.', 12),
+        #     './assets/images/menu/2.png')
+        # pygame.image.save(self.credits_text('Students :', 12), './assets/images/menu/3.png')
+        # pygame.image.save(self.credits_text('Amit Kumar Shaw', 12), './assets/images/menu/4.png')
+        # pygame.image.save(self.credits_text('Hongtao Ye', 12), './assets/images/menu/5.png')
+        # pygame.image.save(self.credits_text('Mona Amirsoleimani', 12), './assets/images/menu/6.png')
+        # pygame.image.save(self.credits_text('Instructors :', 12), './assets/images/menu/7.png')
+        # pygame.image.save(self.credits_text('Prof. Dr. Jan Borchers', 12), './assets/images/menu/8.png')
+        # pygame.image.save(self.credits_text('Adrian Wagner', 12), './assets/images/menu/9.png')
+        # pygame.image.save(self.credits_text('Anke Brocker', 12), './assets/images/menu/10.png')
 
     def check_input(self):
         keys = pygame.key.get_pressed()
@@ -132,8 +157,10 @@ class Menu():
         #     self.screen.blit(self.start_surf, self.start_rect)
         #
         # self.game_mode()
-
-        self.update_menu()
+        if self.credits_active or self.credits_transition !=0:
+            self.show_credits()
+        else:
+            self.update_menu()
         # self.screen.blit(self.start_surf, self.start_rect)
 
     def mode_frames(self, text_msg):
@@ -239,6 +266,12 @@ class Menu():
                     self.horizontal_transition = True
                     self.horizontal_index = -1
 
+        if (keys[PLAYER1_DEATH] or (self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and not self.credits_active:
+            self.credits_active = True
+            self.credits_transition = 1
+
+
+
     def update_menu(self):
 
         self.is_story_mode = self.story
@@ -262,14 +295,14 @@ class Menu():
         # if self.player_selected:
         index = self.vertical_index if self.player_selected else v_alt_index
         frame = player_frame[index]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 120))
+        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 120))
         self.screen.blit(frame, frame_rect)
 
         mode_frame = self.story_frames if self.story else self.survival_frames
         # Mode Option
         index = v_alt_index if self.player_selected else self.vertical_index
         frame = mode_frame[index]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 90))
+        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 90))
         self.screen.blit(frame, frame_rect)
 
         info = 0
@@ -285,14 +318,59 @@ class Menu():
                 info = 0
             else:
                 info = 2
-        frame = self.info_msg[info]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 70))
 
-        self.screen.blit(frame, frame_rect)
+        # frame = self.info_msg[info]
+        # frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 82))
+        # self.screen.blit(frame, frame_rect)
+
+
+
+
+        frame_rect = self.credits_button.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 60))
+        self.screen.blit(self.credits_button, frame_rect)
 
         frame = self.coin_frames[int(self.animation_index)] if not self.coin_inserted else self.coin_frames[2]
-        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 25))
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 60))
         self.screen.blit(frame, frame_rect)
+
+        if self.multiplayer:
+            frame = self.p1_frames[int(self.animation_index)]
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT - 120))
+            self.screen.blit(frame, frame_rect)
+
+            frame = self.p2_frames[int(self.animation_index)]
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT - 120))
+            self.screen.blit(frame, frame_rect)
+
+            frame = self.mode_identifier[0] if self.story else self.mode_identifier[1]
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 110))
+            self.screen.blit(frame, frame_rect)
+        else:
+            frame = self.p1_frames[int(self.animation_index)]
+            frame = pygame.transform.flip(frame, True, False)
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 120))
+            self.screen.blit(frame, frame_rect)
+
+    def show_credits(self):
+        keys = pygame.key.get_pressed()
+        if (keys[PAUSE] or (self.joystick is not None and self.joystick.get_button(RED_BUTTON))) and self.credits_active:
+            self.credits_active = False
+            self.credits_transition = -1
+
+        if self.credits_transition_index >= len(self.credits_frames):
+            self.credits_transition = 0
+            self.credits_transition_index = len(self.credits_frames) -1
+        elif self.credits_transition_index < 0:
+            self.credits_transition = 0
+            self.credits_transition_index = 0
+
+        frame = self.credits_frames[int(self.credits_transition_index)]
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 130))
+        self.screen.blit(frame, frame_rect)
+
+        self.credits_transition_index += self.credits_transition
+
+
 
     def create_frames(self, text_msg):
         frames = []
@@ -306,10 +384,10 @@ class Menu():
             color = selected_color if i > 0 else deselected_color
 
             text = font.render(text_msg, False, color[0])
-            rect = text.get_rect(center=(150, 25))
+            rect = text.get_rect(midleft=(1, 25))
             text_surf.blit(text, rect)
             text = font.render(text_msg, False, color[1])
-            rect = text.get_rect(center=(150 - 1, 25 - 2))
+            rect = text.get_rect(midleft=(1 - 1, 25 - 2))
             text_surf.blit(text, rect)
             frames.append(text_surf)
 
@@ -321,12 +399,31 @@ class Menu():
         text_surf = pygame.Surface((width, 50), pygame.SRCALPHA)
         text_surf.fill((0, 0, 0, 0))
 
-        font = pygame.font.Font('./assets/fonts/4.ttf', size)
-        text = font.render(text_msg, False, 'black')
-        text_rect = text.get_rect(center=(width / 2, 25))
+        font = pygame.font.Font('./assets/fonts/1.ttf', size)
+        text = font.render(text_msg, False, 'red')
+        # text_rect = text.get_rect(midleft=(width / 2, 25))
+        text_rect = text.get_rect(midleft=(1, 25))
         text_surf.blit(text, text_rect)
         text = font.render(text_msg, False, 'white')
-        text_rect = text.get_rect(center=((width / 2) - 1, 25 - 1))
+        # text_rect = text.get_rect(midleft=((width / 2) - 1, 25 - 1))
+        text_rect = text.get_rect(midleft=(1 - 1, 25 - 1))
+        text_surf.blit(text, text_rect)
+
+        return text_surf
+
+    def credits_text(self, text_msg, size):
+
+        width = 448
+        text_surf = pygame.Surface((width, 16), pygame.SRCALPHA)
+        text_surf.fill((0, 0, 0, 0))
+
+        font = pygame.font.Font('./assets/fonts/1.ttf', size)
+        text = font.render(text_msg, False, 'black')
+        text_rect = text.get_rect(midleft=(1, 8))
+        text_surf.blit(text, text_rect)
+
+        text = font.render(text_msg, False, 'white')
+        text_rect = text.get_rect(midleft=(1 - 1, 8 - 1))
         text_surf.blit(text, text_rect)
 
         return text_surf
