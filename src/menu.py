@@ -3,6 +3,7 @@ import random
 import pygame
 from settings import *
 from sounds import MenuSound
+from utilities import import_frames
 
 
 class Menu():
@@ -18,7 +19,8 @@ class Menu():
         self.mode_transition = False
         self.transition_index = 10
 
-        self.background = pygame.image.load(f'./assets/images/background/8.png').convert()
+        self.background = pygame.image.load(f'./assets/images/background/castle.png').convert()
+        self.title_frames = import_frames('./assets/images/background/title', 1)
         self.player1_surf = self.plain_text('Player 1', 20)
         self.player1_rect = self.player1_surf.get_rect(center=(SCREEN_WIDTH * 0.25, SCREEN_HEIGHT - 220))
         self.player2_surf = self.plain_text('Player 2', 20)
@@ -103,10 +105,14 @@ class Menu():
         self.screen.blit(self.background, (0, 0))
 
         # self.check_input()
-        # # title animation
-        # self.animation_index += 0.08  # * self.animation_direction
-        # if self.animation_index >= 2: self.animation_index = 0
-        #
+        # title animation
+        self.animation_index += 0.08  # * self.animation_direction
+        if self.animation_index >= 2: self.animation_index = 0
+
+        rect = self.title_frames[int(self.animation_index)].get_rect(center=(SCREEN_WIDTH/2, 70))
+
+        self.screen.blit(self.title_frames[int(self.animation_index)], rect)
+
         # self.screen.blit(self.player1_surf, self.player1_rect)
         #
         # self.screen.blit(self.player2_surf, self.player2_rect)
