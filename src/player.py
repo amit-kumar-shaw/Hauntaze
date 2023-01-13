@@ -40,6 +40,10 @@ class Player(pygame.sprite.Sprite):
         self.revival_position = None
         self.revival_time = 0
 
+        self.time_frames = import_frames('./assets/images/player/numbers', 1)
+        self.timer = self.time_frames[10]
+        self.timer_rect = self.timer.get_rect(center=self.rect.center)
+
         self.torch = Torch(pos)
         self.player2 = player2
         self.lives = PLAYER_LIVES
@@ -88,8 +92,8 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER2_MOVE_UP
             self.MOVE_DOWN = PLAYER2_MOVE_DOWN
             self.ATTACK = PLAYER2_ATTACK
-            self.DEATH_STONE = K_u
-            self.LIFE_STONE = K_t
+            self.DEATH_STONE = PLAYER2_DEATH
+            self.LIFE_STONE = PLAYER2_LIFE
 
         else:
             self.MOVE_LEFT = PLAYER1_MOVE_LEFT
@@ -97,8 +101,8 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER1_MOVE_UP
             self.MOVE_DOWN = PLAYER1_MOVE_DOWN
             self.ATTACK = PLAYER1_ATTACK
-            self.DEATH_STONE = K_e
-            self.LIFE_STONE = K_q
+            self.DEATH_STONE = PLAYER1_DEATH
+            self.LIFE_STONE = PLAYER1_LIFE
 
     def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
@@ -357,8 +361,10 @@ class Player(pygame.sprite.Sprite):
                 self.ui_update = True
 
         elif self.wait_revival:
-            if pygame.time.get_ticks() - self.revival_time < 10000:
+            if pygame.time.get_ticks() - self.revival_time < 11000:
                 self.revival_input()
+                self.timer = self.time_frames[10 - int((pygame.time.get_ticks() - self.revival_time)/1000)]
+                self.timer_rect = self.timer.get_rect(center=self.torch.rect.center)
                 if self.life_stone_activated:
                     self.lives = PLAYER_LIVES
                     self.wait_revival = False

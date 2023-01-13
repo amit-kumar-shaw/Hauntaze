@@ -31,6 +31,17 @@ Hauntaze is game to show your skills to find your way across multiple mazes in a
 
 ## Game Controls
 
-
+| Action                                 | Player 1 Keyboard | Player 2 Keyboard | FabArcade button | XBox Controller |
+|----------------------------------------|:-----------------:|:-----------------:|:----------------:|:---------------:|
+| Up                                     |         w         |         i         |   Joystick Up    |   Joystick Up   |
+| Down                                   |         s         |         k         |  Joystick Down   |  Joystick Down  |
+| Left                                   |         a         |         j         |  Joystick Left   |  Joystick Left  |
+| Right                                  |         d         |         l         |  Joystick Right  | Joystick Right  |
+| Attack                                 |         q         |         u         |      Black       |        A        |
+| Start/Confirm/Skip                     |       Enter       |       Enter       |      Start       |       LB        |
+| Coin                                   |       Space       |       Space       |       Coin       |       RB        |
+| Pause                                  |        Esc        |        Esc        |       Red        |        B        |
+| Activate Life Stone (only Story Mode)  |         e         |         o         |       Blue       |        X        |
+| Activate Death Stone (only Story Mode) |         r         |         p         |      Yellow      |        Y        |
 
 ## Resources

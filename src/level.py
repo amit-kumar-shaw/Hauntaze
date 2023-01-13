@@ -667,6 +667,11 @@ class Level:
                 rect = self.player2.web.get_rect(midtop=self.player2.rect.midtop)
                 self.level_window.blit(self.player2.web, rect)
 
+        if self.player1_active and self.player1.wait_revival:
+            self.level_window.blit(self.player1.timer, self.player1.timer_rect)
+        if self.player2_active and self.player2.wait_revival:
+            self.level_window.blit(self.player2.timer, self.player2.timer_rect)
+
         # Ghost update
         if self.ghost_active:
             # if self.ghost.visibility_radius < 2:
@@ -806,7 +811,7 @@ class Level:
             self.background_music_on = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.failed = True
         self.animation_index += 0.08
 
@@ -829,7 +834,7 @@ class Level:
 
         # Restart game message
         font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press ENTER to restart', False, 'white')
+        resume_msg = font.render('Press Start to restart', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
 
@@ -840,7 +845,7 @@ class Level:
             self.background_music_on = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.completed = True
         self.animation_index += 0.08
 
@@ -858,6 +863,6 @@ class Level:
 
         # Continue game message
         font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press ENTER to continue', False, 'white')
+        resume_msg = font.render('Press Start to continue', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
