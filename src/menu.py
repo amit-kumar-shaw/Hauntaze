@@ -56,6 +56,9 @@ class Menu():
         self.info_msg.append(self.text('How many levels can you survive?', size))
         self.info_msg.append(self.text('The last survivor wins the game!', size))
 
+        self.credits = pygame.image.load(f'./assets/images/menu/credits.png').convert_alpha()
+        # pygame.image.save(self.text('Credits', 12), './assets/images/menu/credits.png')
+
     def check_input(self):
         keys = pygame.key.get_pressed()
 
@@ -185,10 +188,10 @@ class Menu():
             msg = 'Insert Coin' if i < 2 else 'Ready to play'
             font = pygame.font.Font('./assets/fonts/1.ttf', 15 + i)
             text = font.render(msg, False, 'orange')
-            text_rect = text.get_rect(midleft=(1, 25))
+            text_rect = text.get_rect(center=(100, 25))
             text_surf.blit(text, text_rect)
             text = font.render(msg, False, 'yellow')
-            text_rect = text.get_rect(midleft=(1 - 1, 25 - 1))
+            text_rect = text.get_rect(center=(100 - 1, 25 - 1))
             text_surf.blit(text, text_rect)
 
             frames.append(text_surf)
@@ -265,14 +268,14 @@ class Menu():
         # if self.player_selected:
         index = self.vertical_index if self.player_selected else v_alt_index
         frame = player_frame[index]
-        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 140))
+        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 120))
         self.screen.blit(frame, frame_rect)
 
         mode_frame = self.story_frames if self.story else self.survival_frames
         # Mode Option
         index = v_alt_index if self.player_selected else self.vertical_index
         frame = mode_frame[index]
-        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 110))
+        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 90))
         self.screen.blit(frame, frame_rect)
 
         info = 0
@@ -288,33 +291,37 @@ class Menu():
                 info = 0
             else:
                 info = 2
-        frame = self.info_msg[info]
-        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 82))
 
-        self.screen.blit(frame, frame_rect)
+        # frame = self.info_msg[info]
+        # frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 82))
+        # self.screen.blit(frame, frame_rect)
+
+
+
+
+        frame_rect = self.credits.get_rect(midleft=(SCREEN_WIDTH * 0.15, SCREEN_HEIGHT - 60))
+        self.screen.blit(self.credits, frame_rect)
 
         frame = self.coin_frames[int(self.animation_index)] if not self.coin_inserted else self.coin_frames[2]
-        frame_rect = frame.get_rect(midleft=(SCREEN_WIDTH * 0.1, SCREEN_HEIGHT - 50))
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 60))
         self.screen.blit(frame, frame_rect)
-
-
 
         if self.multiplayer:
             frame = self.p1_frames[int(self.animation_index)]
-            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 120))
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.6, SCREEN_HEIGHT - 120))
             self.screen.blit(frame, frame_rect)
 
             frame = self.p2_frames[int(self.animation_index)]
-            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.9, SCREEN_HEIGHT - 120))
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT - 120))
             self.screen.blit(frame, frame_rect)
 
             frame = self.mode_identifier[0] if self.story else self.mode_identifier[1]
-            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT - 110))
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 110))
             self.screen.blit(frame, frame_rect)
         else:
             frame = self.p1_frames[int(self.animation_index)]
             frame = pygame.transform.flip(frame, True, False)
-            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.8, SCREEN_HEIGHT - 120))
+            frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.7, SCREEN_HEIGHT - 120))
             self.screen.blit(frame, frame_rect)
 
     def create_frames(self, text_msg):
