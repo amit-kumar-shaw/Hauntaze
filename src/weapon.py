@@ -46,9 +46,10 @@ class Weapon(pygame.sprite.Sprite):
 
     def check_wall_collision(self):
         for sprite in self.collision_sprites.sprites():
-            if sprite.rect.colliderect(self.rect):
+            if self.type == 'flamethrower' and sprite.rect.colliderect(self.rect):
                 self.animation_index = 0
                 self.status = 'idle'
+
 
 
     def draw(self, screen):

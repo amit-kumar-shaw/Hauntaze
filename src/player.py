@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
-        self.life_stone_available = True
+        self.life_stone_available = False
         self.death_stone_available = False
 
         self.life_stone_activated = False
