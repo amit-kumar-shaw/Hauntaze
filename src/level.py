@@ -667,6 +667,11 @@ class Level:
                 rect = self.player2.web.get_rect(midtop=self.player2.rect.midtop)
                 self.level_window.blit(self.player2.web, rect)
 
+        if self.player1_active and self.player1.wait_revival:
+            self.level_window.blit(self.player1.timer, self.player1.timer_rect)
+        if self.player2_active and self.player2.wait_revival:
+            self.level_window.blit(self.player2.timer, self.player2.timer_rect)
+
         # Ghost update
         if self.ghost_active:
             # if self.ghost.visibility_radius < 2:

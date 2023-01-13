@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
-        self.life_stone_available = False
+        self.life_stone_available = True
         self.death_stone_available = False
 
         self.life_stone_activated = False
@@ -39,6 +39,10 @@ class Player(pygame.sprite.Sprite):
         self.wait_revival = False
         self.revival_position = None
         self.revival_time = 0
+
+        self.time_frames = import_frames('./assets/images/player/numbers', 1)
+        self.timer = self.time_frames[10]
+        self.timer_rect = self.timer.get_rect(center=self.rect.center)
 
         self.torch = Torch(pos)
         self.player2 = player2
@@ -357,8 +361,10 @@ class Player(pygame.sprite.Sprite):
                 self.ui_update = True
 
         elif self.wait_revival:
-            if pygame.time.get_ticks() - self.revival_time < 10000:
+            if pygame.time.get_ticks() - self.revival_time < 11000:
                 self.revival_input()
+                self.timer = self.time_frames[10 - int((pygame.time.get_ticks() - self.revival_time)/1000)]
+                self.timer_rect = self.timer.get_rect(center=self.torch.rect.center)
                 if self.life_stone_activated:
                     self.lives = PLAYER_LIVES
                     self.wait_revival = False
