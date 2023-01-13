@@ -38,7 +38,7 @@ Hauntaze is game to show your skills to find your way across multiple mazes in a
 | Left                                   |         a         |         j         |  Joystick Left   |  Joystick Left  |
 | Right                                  |         d         |         l         |  Joystick Right  | Joystick Right  |
 | Attack                                 |         q         |         u         |      Black       |        A        |
-| Confirm/Skip                           |       Enter       |       Enter       |      Start       |       LB        |
+| Start/Confirm/Skip                     |       Enter       |       Enter       |      Start       |       LB        |
 | Coin                                   |       Space       |       Space       |       Coin       |       RB        |
 | Pause                                  |        Esc        |        Esc        |       Red        |        B        |
 | Activate Life Stone (only Story Mode)  |         e         |         o         |       Blue       |        X        |

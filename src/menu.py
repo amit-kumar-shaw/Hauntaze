@@ -12,8 +12,9 @@ class Menu():
         self.joystick = joystick
         self.is_story_mode = True
         self.multiplayer = False
-        self.is_player1_ready = False
+        self.is_player1_ready = True
         self.is_player2_ready = False
+        self.coin_inserted = False
         self.animation_index = 0
         self.animation_direction = 1
         self.mode_transition = False
@@ -133,7 +134,7 @@ class Menu():
         # self.game_mode()
 
         self.update_menu()
-        self.screen.blit(self.start_surf, self.start_rect)
+        # self.screen.blit(self.start_surf, self.start_rect)
 
     def mode_frames(self, text_msg):
         frames = []
@@ -178,7 +179,7 @@ class Menu():
         for i in range(3):
             text_surf = pygame.Surface((200, 50), pygame.SRCALPHA)
             text_surf.fill((0, 0, 0, 0))
-            msg = 'Select Player' if i < 2 else 'Ready'
+            msg = 'Insert Coin' if i < 2 else 'Ready to play'
             font = pygame.font.Font('./assets/fonts/1.ttf', 15 + i)
             text = font.render(msg, False, 'orange')
             text_rect = text.get_rect(center=(100, 25))
@@ -193,6 +194,10 @@ class Menu():
 
     def input(self):
         keys = pygame.key.get_pressed()
+
+        if (keys[COIN_KEYBOARD] or (self.joystick is not None and self.joystick.get_button(COIN_BUTTON))) and not self.coin_inserted:
+            self.coin_inserted = True
+            self.sound.insert_coin.play()
 
         if keys[pygame.K_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             if not self.horizontal_transition and self.player_selected:
@@ -236,7 +241,6 @@ class Menu():
 
     def update_menu(self):
 
-        self.is_player1_ready = True
         self.is_story_mode = self.story
 
         self.input()
@@ -283,6 +287,11 @@ class Menu():
                 info = 2
         frame = self.info_msg[info]
         frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 70))
+
+        self.screen.blit(frame, frame_rect)
+
+        frame = self.coin_frames[int(self.animation_index)] if not self.coin_inserted else self.coin_frames[2]
+        frame_rect = frame.get_rect(center=(SCREEN_WIDTH * 0.5, SCREEN_HEIGHT - 25))
         self.screen.blit(frame, frame_rect)
 
     def create_frames(self, text_msg):

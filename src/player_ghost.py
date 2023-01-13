@@ -34,16 +34,16 @@ class Ghost(pygame.sprite.Sprite):
 
         # ghost keys
         if player2:
-            self.MOVE_LEFT = K_LEFT
-            self.MOVE_RIGHT = K_RIGHT
-            self.MOVE_UP = K_UP
-            self.MOVE_DOWN = K_DOWN
+            self.MOVE_LEFT = PLAYER2_MOVE_LEFT
+            self.MOVE_RIGHT = PLAYER2_MOVE_RIGHT
+            self.MOVE_UP = PLAYER2_MOVE_UP
+            self.MOVE_DOWN = PLAYER2_MOVE_DOWN
 
         else:
-            self.MOVE_LEFT = K_a
-            self.MOVE_RIGHT = K_d
-            self.MOVE_UP = K_w
-            self.MOVE_DOWN = K_s
+            self.MOVE_LEFT = PLAYER1_MOVE_LEFT
+            self.MOVE_RIGHT = PLAYER1_MOVE_RIGHT
+            self.MOVE_UP = PLAYER1_MOVE_UP
+            self.MOVE_DOWN = PLAYER1_MOVE_DOWN
 
     def input(self):
         keys = pygame.key.get_pressed()

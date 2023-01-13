@@ -313,7 +313,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.intro_completed = True
 
         self.intro_index += 0.2
@@ -389,7 +389,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.life_completed = True
 
         self.life_index += 0.2
@@ -454,7 +454,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.death_completed = True
 
         self.death_index += 0.2
@@ -519,7 +519,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.curse_completed = True
             pygame.quit()
             sys.exit()

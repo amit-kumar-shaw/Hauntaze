@@ -92,8 +92,8 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER2_MOVE_UP
             self.MOVE_DOWN = PLAYER2_MOVE_DOWN
             self.ATTACK = PLAYER2_ATTACK
-            self.DEATH_STONE = K_u
-            self.LIFE_STONE = K_t
+            self.DEATH_STONE = PLAYER2_DEATH
+            self.LIFE_STONE = PLAYER2_LIFE
 
         else:
             self.MOVE_LEFT = PLAYER1_MOVE_LEFT
@@ -101,8 +101,8 @@ class Player(pygame.sprite.Sprite):
             self.MOVE_UP = PLAYER1_MOVE_UP
             self.MOVE_DOWN = PLAYER1_MOVE_DOWN
             self.ATTACK = PLAYER1_ATTACK
-            self.DEATH_STONE = K_e
-            self.LIFE_STONE = K_q
+            self.DEATH_STONE = PLAYER1_DEATH
+            self.LIFE_STONE = PLAYER1_LIFE
 
     def import_assets(self, player, scale):
         path = f'./assets/images/player/p{player}/'
