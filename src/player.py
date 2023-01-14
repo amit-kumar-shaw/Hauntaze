@@ -55,7 +55,7 @@ class Player(pygame.sprite.Sprite):
         self.is_slow = False
         self.web_time = 0
         self.web = pygame.image.load('./assets/images/web/web2.png').convert_alpha()
-        self.web = pygame.transform.rotozoom(self.web, 0, 1.1)
+        # self.web = pygame.transform.rotozoom(self.web, 0, 1.1)
         self.score = 0
         self.key_active = True
         self.key_picked = False
@@ -248,6 +248,9 @@ class Player(pygame.sprite.Sprite):
                     self.is_invincible = True
                     self.sounds.enemy_collision.play()
                     self.lives -= 1
+                    if self.lives == 0 and self.weapon_active:
+                        self.weapon.status = 'idle'
+                        self.weapon.animation_index = 0
                     self.ui_update = True
                     self.hurt_time = pygame.time.get_ticks()
 
@@ -258,6 +261,9 @@ class Player(pygame.sprite.Sprite):
                     self.is_invincible = True
                     self.sounds.enemy_collision.play()
                     self.lives -= 1
+                    if self.lives == 0 and self.weapon_active:
+                        self.weapon.status = 'idle'
+                        self.weapon.animation_index = 0
                     self.ui_update = True
                     self.hurt_time = pygame.time.get_ticks()
 
@@ -326,6 +332,7 @@ class Player(pygame.sprite.Sprite):
             if self.move:
                 self.rect.y += self.direction.y * self.speed
             self.vertical_collisions()
+            self.enemy_collisions()
             self.collectible_collisions()
             if self.key_active:
                 self.key_collisions()
@@ -349,7 +356,7 @@ class Player(pygame.sprite.Sprite):
                 self.torch_update()
             self.door_collisions()
             self.weapon_collisions()
-            self.enemy_collisions()
+
             self.trap_collisions()
             self.move = not self.move
 
