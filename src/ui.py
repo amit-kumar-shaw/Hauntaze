@@ -18,8 +18,10 @@ class UI:
             self.p1_surf = pygame.Surface((100, SCREEN_HEIGHT - (ROWS * CELL_SIZE * TILE_HEIGHT)))
             self.p1_surf.fill('black')
 
-            player_name = font.render('Player 1', False, 'white')
-            player_rect = player_name.get_rect(midleft=(0, 8))
+            # player_name = font.render('Player 1', False, 'white')
+            # player_rect = player_name.get_rect(midleft=(0, 8))
+            player_name = pygame.image.load("./assets/images/player/p1/idle/PlayerIdle1.png").convert_alpha()
+            player_rect = player_name.get_rect(midleft=(-3, 8))
             self.p1_surf.blit(player_name, player_rect)
 
             coin_rect = coin.get_rect(topleft=(0, 24))
@@ -35,8 +37,11 @@ class UI:
             self.p2_surf = pygame.Surface((100, SCREEN_HEIGHT - (ROWS * CELL_SIZE * TILE_HEIGHT)))
             self.p2_surf.fill('black')
 
-            player_name = font.render('Player 2', False, 'white')
-            player_rect = player_name.get_rect(midright=(100, 8))
+            # player_name = font.render('Player 2', False, 'white')
+            # player_rect = player_name.get_rect(midright=(100, 8))
+            player_name = pygame.image.load("./assets/images/player/p2/idle/PlayerIdle1.png").convert_alpha()
+            player_name = pygame.transform.flip(player_name, True, False)
+            player_rect = player_name.get_rect(midright=(103, 8))
             self.p2_surf.blit(player_name, player_rect)
 
             coin_rect = coin.get_rect(topright=(100, 24))
@@ -68,7 +73,7 @@ class UI:
             hearts_rect = []
 
             for i in range(0, self.level.player1.lives):
-                UI_SURFACE.blit(self.heart, self.heart.get_rect(topleft=(16 + (i * 12), 14)))
+                UI_SURFACE.blit(self.heart, self.heart.get_rect(topleft=(16 + (i * 12), 16)))
 
             score_font = pygame.font.Font('./assets/fonts/1.ttf', 10)
             if self.level.player1.score > self.p1_score:
@@ -93,7 +98,7 @@ class UI:
             # key_rect = key.get_rect(bottomright=player_rect.bottomleft)
             for i in range(0, self.level.player2.lives):
                 #hearts_rect.append(heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), 14)))
-                UI_SURFACE.blit(self.heart, self.heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), 14)))
+                UI_SURFACE.blit(self.heart, self.heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), 16)))
 
             # coin = pygame.image.load("./assets/images/coin.png").convert_alpha()
             # coin_rect = coin.get_rect(topright=(SCREEN_WIDTH - 16, 24))

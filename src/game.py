@@ -87,7 +87,7 @@ class Game:
         # end game and load menu
         elif self.status == Status.OVER:
             self.status = Status.MENU
-            self.menu = Menu()
+            self.menu = Menu(self.joystick)
             self.sound.play_background(self.sound.menu)
 
     def pause(self):
