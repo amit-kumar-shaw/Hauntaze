@@ -45,3 +45,36 @@ Hauntaze is game to show your skills to find your way across multiple mazes in a
 | Activate Death Stone (only Story Mode) |         r         |         p         |      Yellow      |        Y        |
 
 ## Resources
+
+Map Generator: Copyright (c) 2014 Alexander Fast. https://github.com/alexanderfast/roguelike-dungeon-generator
+
+Player: https://gianmansuper.itch.io/platform-assets-robotic
+
+Skull, Coin, Web, Flamethrower, Spikes, Key: https://pixel-poem.itch.io/dungeon-assetpuck
+
+Bat, Slime, Door, Torch, Effects: https://o-lobster.itch.io/simple-dungeon-crawler-16x16-pixel-pack
+
+Sword, Flamethrower gun: https://axulart.itch.io/pixelart-icons
+
+Big Torch: https://szadiart.itch.io/rogue-fantasy-catacombs
+
+Boss 1 and 2: https://luizmelo.itch.io/monsters-creatures-fantasy
+
+Boss 3: https://darkpixel-kronovi.itch.io/undead-executioner
+
+Tiles: https://maxence-jacquot.itch.io/tiny-tower-16x16-asset-pack
+
+Player Ghost: https://kdya.itch.io/16x16-black-cultist
+
+Smoke: https://opengameart.org/content/smoke-aura
+
+Mask: https://rafagars.itch.io/16x16-rpg-icons
+
+Stones: https://opengameart.org/content/three-shiny-jewels-square-soft-diamond-hard-edge-diamond-shapes-package
+
+Numbers: https://opengameart.org/content/numbers-0-9-7x10px
+
+Handshake: https://opengameart.org/content/handshake
+
+Boxing gloves: https://opengameart.org/content/cc0-hand-wear-icons
+
