@@ -1,7 +1,7 @@
 import pygame
 import sys
 # import postprocessing
-from settings import *
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 from game import Game
 
 
