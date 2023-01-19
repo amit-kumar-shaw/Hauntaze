@@ -1,5 +1,6 @@
 import math
 import random
+import sys
 
 import pygame
 
@@ -91,6 +92,8 @@ class Level:
         self.sound = GameSound()
         self.background_music_on = False
         self.background_music = None
+        self.continue_text = pygame.image.load("./assets/images/transitions/continue.png").convert_alpha()
+        self.exit = pygame.image.load("./assets/images/transitions/exit.png").convert_alpha()
 
         if story_mode:
             self.story_setup()
@@ -844,25 +847,47 @@ class Level:
             self.sound.stop_background()
             self.background_music_on = False
 
-        keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
-            self.completed = True
+        # keys = pygame.key.get_pressed()
+        # if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        #     self.completed = True
         self.animation_index += 0.08
 
         if self.animation_index >= 2: self.animation_index = 0
 
+        msg = 'Level Completed'
+
+        if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
+            msg = 'Congratulations'
+
         # title
         font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
-        title = font.render('Level Completed', False, 'red')
+        title = font.render(msg, False, 'red')
         title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
-        title = font.render('Level Completed', False, 'yellow')
+        title = font.render(msg, False, 'yellow')
         title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
-        # Continue game message
-        font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press Start to continue', False, 'white')
-        msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
-        self.level_window.blit(resume_msg, msg_rect)
+        button = self.continue_text
+
+        # Winning Msg
+        if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
+            font = pygame.font.Font('./assets/fonts/4.ttf', 24)
+            resume_msg = font.render('You have completed Hauntaze Survival Mode', False, 'white')
+            msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 140))
+            self.level_window.blit(resume_msg, msg_rect)
+
+            button = self.exit
+
+        msg_rect = button.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
+        self.level_window.blit(button, msg_rect)
+
+        keys = pygame.key.get_pressed()
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (
+                self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+            self.completed = True
+            self.level_window.fill('black')
+            if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
+                pygame.quit()
+                sys.exit()
