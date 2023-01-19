@@ -5,7 +5,7 @@ from settings import *
 from level import Level
 from player import Player
 from stones import StonesUI
-from transitions import Transition
+from transitions import StoryTransition
 from ui import UI
 
 
@@ -45,7 +45,7 @@ class StoryMode:
         self.ui.current_level = self.current_level
         self.ui.update_level()
         self.stones = StonesUI()
-        self.transition = Transition(self.player1_active, self.player2_active, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
+        self.transition = StoryTransition(self.player1_active, self.player2_active, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
 
     def run(self):
         if self.status == Status.RUNNING:

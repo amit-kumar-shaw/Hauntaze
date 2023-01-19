@@ -65,6 +65,9 @@ class Menu():
 
         # pygame.image.save(self.text('Credits', 16), './assets/images/menu/credits1.png')
         # pygame.image.save(self.text('Back', 16), './assets/images/menu/credits2.png')
+        # pygame.image.save(self.text('Skip', 16), './assets/images/menu/skip.png')
+        # pygame.image.save(self.text('Skip Animation', 16), './assets/images/menu/skip2.png')
+        # pygame.image.save(self.text('Exit', 16), './assets/images/transitions/exit1.png')
         # pygame.image.save(self.credits_text('Hauntaze is developed for FabArcade as part of the', 12), './assets/images/menu/1.png')
         # pygame.image.save(
         #     self.credits_text('Media Computing Project at RWTH Aachen University.', 12),

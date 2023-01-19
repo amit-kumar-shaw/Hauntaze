@@ -717,15 +717,15 @@ class Level:
         if self.player1_active and self.player1.level_completed and self.player2_active and self.player2.level_completed:
             self.level_completed()
 
-        if self.player1_active and self.player1.level_completed and self.player2_active and self.player2.wait_revival:
-            self.player2.wait_revival = False
-            self.player2.life_stone_activated = False
-            self.player2.life_stone_available = False
-
-        if self.player1_active and self.player1.wait_revival and self.player2_active and self.player2.level_completed:
-            self.player1.wait_revival = False
-            self.player1.life_stone_activated = False
-            self.player1.life_stone_available = False
+        # if self.player1_active and self.player1.level_completed and self.player2_active and self.player2.wait_revival:
+        #     self.player2.wait_revival = False
+        #     self.player2.life_stone_activated = False
+        #     self.player2.life_stone_available = False
+        #
+        # if self.player1_active and self.player1.wait_revival and self.player2_active and self.player2.level_completed:
+        #     self.player1.wait_revival = False
+        #     self.player1.life_stone_activated = False
+        #     self.player1.life_stone_available = False
 
         self.check_player_status()
 

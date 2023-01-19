@@ -8,7 +8,7 @@ from utilities import import_frames
 from sounds import TransitionSound
 
 
-class Transition:
+class StoryTransition:
     def __init__(self, p1, p2, joystick_1=None, joystick_2=None):
 
         self.joystick_1 = joystick_1
@@ -25,6 +25,9 @@ class Transition:
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.castle = pygame.image.load("./assets/images/transitions/castle.png").convert_alpha()
+        self.skip = pygame.image.load("./assets/images/transitions/skip.png").convert_alpha()
+        self.skip_animation = pygame.image.load("./assets/images/transitions/skip_animation.png").convert_alpha()
+        self.start = pygame.image.load("./assets/images/transitions/start.png").convert_alpha()
 
         self.intro_completed = False
         self.life_completed = False
@@ -37,6 +40,12 @@ class Transition:
         self.reached_tower3 = False
         self.stall_completed = False
         self.player_position_initialized = False
+        self.skip_active = True
+        self.animating = False
+
+        self.wait_frames = []
+        self.wait_index = 0
+        self.wait_active = False
 
         self.level = 1
         self.frame_index = 1
@@ -269,7 +278,10 @@ class Transition:
             if not self.intro_completed:
                 self.intro()
             else:
-                self.tower()
+                if self.wait_active:
+                    self.wait_start()
+                else:
+                    self.tower()
         elif 5 < self.level <= 10:
             if not self.life_completed:
                 self.life()
@@ -294,14 +306,31 @@ class Transition:
             self.p2_active = True
         self.ghost_active = True
 
+    def wait_start(self):
+
+        self.wait_index += 0.2
+        if self.wait_index >= len(self.wait_frames):
+            self.wait_index = 0
+
+
+        self.display.blit(self.wait_frames[int(self.wait_index)], (0, 0))
+        self.display.blit(self.start, self.start.get_rect(midright=(632, 350)))
+
+        keys = pygame.key.get_pressed()
+        if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
+            self.skip_active = True
+        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
+            self.skip_active = False
+            self.wait_active = False
+
     def intro(self):
         if self.intro_frames is None:
-            # self.intro_frames = import_frames(f"./assets/images/transitions/intro2", scale=1)
-            # self.screen_surface.fill('black')
             self.screen_surface.blit(self.castle, (0, 0))
+            self.screen_surface.blit(self.skip_animation, self.skip_animation.get_rect(midright=(632,350)))
             self.sound_index = 4
             self.load_index = 2
             self.intro_frames = []
+            self.animating = True
 
         if self.load_index <= 299:
             if self.load_index < 10:
@@ -313,8 +342,14 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
             self.intro_completed = True
+            self.skip_active = False
+            self.wait_frames = import_frames("./assets/images/transitions/wait_intro", scale=1)
+            self.wait_index = 0
+            self.wait_active = True
+            self.display.blit(self.wait_frames[self.wait_index], (0, 0))
+            return
 
         self.intro_index += 0.2
         if self.intro_index >= len(self.intro_frames): self.intro_index = 225
@@ -372,6 +407,7 @@ class Transition:
             # self.life_frames = import_frames(f"./assets/images/transitions/life", scale=1)
             # self.screen_surface.fill('black')
             self.screen_surface.blit(self.castle, (0, 0))
+            self.screen_surface.blit(self.skip_animation, self.skip_animation.get_rect(midright=(632, 350)))
             self.sound_index = 4
             self.load_index = 2
             self.life_frames = []
@@ -437,6 +473,7 @@ class Transition:
         if self.death_frames is None:
             # self.death_frames = import_frames(f"./assets/images/transitions/death", scale=1)
             self.screen_surface.blit(self.castle, (0, 0))
+            self.screen_surface.blit(self.skip_animation, self.skip_animation.get_rect(midright=(632, 350)))
             self.sound_index = 4
             self.load_index = 2
             self.death_frames = []
@@ -502,6 +539,7 @@ class Transition:
         if self.curse_frames is None:
             # self.curse_frames = import_frames(f"./assets/images/transitions/curse", scale=1)
             self.screen_surface.blit(self.castle, (0, 0))
+            self.screen_surface.blit(self.skip_animation, self.skip_animation.get_rect(midright=(632, 350)))
             self.sound_index = 4
             self.load_index = 2
             self.curse_frames = []
@@ -1111,3 +1149,4 @@ class Transition:
             else:
                 pygame.image.save(self.screen_surface,
                                   f'./assets/images/transitions/curse2/curse_{self.frame_index}.png')
+
