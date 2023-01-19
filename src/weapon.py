@@ -3,6 +3,7 @@ from utilities import import_frames
 
 
 class Weapon(pygame.sprite.Sprite):
+    """player weapons"""
     def __init__(self, pos, groups, collision_sprites, type):
         super().__init__(groups)
 
@@ -16,7 +17,7 @@ class Weapon(pygame.sprite.Sprite):
         for status in self.frames.keys():
             full_path = path + status
             self.frames[status] = import_frames(full_path, scale=0.7)
-        # self.frames = import_frames(f"./assets/images/weapon/{type}", scale=0.75)
+
         self.animation_index = 0
 
         self.image = self.frames[self.status][self.animation_index]
@@ -26,6 +27,8 @@ class Weapon(pygame.sprite.Sprite):
         self.collision_sprites = collision_sprites
 
     def animate(self, flipped=False):
+        """update weapon frames"""
+
         status = self.frames[self.status]
 
         self.animation_index += 0.1
@@ -34,7 +37,7 @@ class Weapon(pygame.sprite.Sprite):
             self.animation_index = 0
             if self.status == 'attack':
                 self.status = 'idle'
-        # if self.animation_index >= len(self.frames): self.animation_index = 0
+
         self.image = status[int(self.animation_index)]
         if flipped:
             self.image = pygame.transform.flip(self.image, True, False)
@@ -45,12 +48,14 @@ class Weapon(pygame.sprite.Sprite):
             self.check_wall_collision()
 
     def check_wall_collision(self):
+        """stop weapon attack when flamethrower collide with walls"""
+
         for sprite in self.collision_sprites.sprites():
             if self.type == 'flamethrower' and sprite.rect.colliderect(self.rect):
                 self.animation_index = 0
                 self.status = 'idle'
 
-
-
     def draw(self, screen):
+        """draw weapon on screen"""
+
         screen.blit(self.image, self.rect)
