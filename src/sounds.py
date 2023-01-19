@@ -5,16 +5,6 @@ class GameSound(object):
 
     def __init__(self):
         pygame.mixer.init()
-        # pygame.mixer.music.load('./assets/Audio/Magic Escape Room.mp3')
-        # pygame.mixer.music.set_volume(0.5)
-        # self.menu = pygame.mixer.Sound('./assets/Audio/game/menu.ogg')
-        # self.menu.set_volume(1)
-        # self.background1 = pygame.mixer.Sound('./assets/Audio/game/tower1.ogg')
-        # self.background1.set_volume(0.8)
-        # self.background2 = pygame.mixer.Sound('./assets/Audio/game/tower2.ogg')
-        # self.background2.set_volume(0.8)
-        # self.background3 = pygame.mixer.Sound('./assets/Audio/game/tower3.ogg')
-        # self.background3.set_volume(0.8)
         self.menu = './assets/Audio/game/menu.ogg'
         self.background1 = './assets/Audio/game/tower1.ogg'
         self.background2 = './assets/Audio/game/tower2.ogg'
@@ -28,29 +18,6 @@ class GameSound(object):
     def stop_background(self):
         pygame.mixer.music.stop()
         pygame.mixer.music.unload()
-    # @staticmethod
-    # def playbackgroundmusic():
-    #     pygame.mixer.music.play(-1)
-
-    # def play_insert_coin(self):
-    #     sound = pygame.mixer.Sound('./assets/Audio/handleCoins.ogg')
-    #     sound.set_volume(0.7)
-    #     sound.play()
-    #
-    # def play_mode_select(self):
-    #     sound = pygame.mixer.Sound('./assets/Audio/select_004.ogg')
-    #     sound.set_volume(0.7)
-    #     sound.play()
-    #
-    # def play_confirmation(self):
-    #     sound = pygame.mixer.Sound('./assets/Audio/confirmation_004.ogg')
-    #     sound.set_volume(0.7)
-    #     sound.play()
-
-    # def play_menu_sound(self):
-    #     sound = pygame.mixer.Sound('./assets/Audio/horror_menu.ogg')
-    #     sound.set_volume(0.7)
-    #     sound.play(loops=-1)
 
 class PlayerSound(object):
 
@@ -112,6 +79,8 @@ class TransitionSound(object):
         self.typing.set_volume(0.1)
         self.appear = pygame.mixer.Sound('./assets/Audio/transition/appear.ogg')
         self.appear.set_volume(0.3)
+        self.confirm = pygame.mixer.Sound('./assets/Audio/menu/confirmation_004.ogg')
+        self.confirm.set_volume(0.8)
 
 class MenuSound(object):
 
