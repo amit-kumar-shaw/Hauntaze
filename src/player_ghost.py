@@ -1,9 +1,11 @@
+import pygame
 from settings import *
 from utilities import import_frames
-from pygame.locals import *
 
 
 class Ghost(pygame.sprite.Sprite):
+    """Turn player to ghost in multiplayer mode, when one player completes level first"""
+
     def __init__(self, pos, story_mode, player2=False, joystick=None):
         super().__init__()
 
@@ -13,6 +15,7 @@ class Ghost(pygame.sprite.Sprite):
 
         self.player2 = player2
         self.partner = None
+
         if self.story_mode:
             self.frames = import_frames("./assets/images/player/torch", scale=0.5)
         else:
@@ -46,6 +49,8 @@ class Ghost(pygame.sprite.Sprite):
             self.MOVE_DOWN = PLAYER1_MOVE_DOWN
 
     def input(self):
+        """move ghost with the player input"""
+
         keys = pygame.key.get_pressed()
 
         if keys[self.MOVE_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
@@ -65,18 +70,26 @@ class Ghost(pygame.sprite.Sprite):
             self.direction.y = 0
 
     def horizontal_border(self):
+        """keep the ghost in playing window"""
+
+        right_boundary = 576 if self.story_mode else 640
+
         if self.rect.x <= 16:
             self.rect.x = 16
-        if self.rect.x >= 560 - self.rect.width - 16:
-            self.rect.x = 560 - self.rect.width - 16
+        if self.rect.x >= right_boundary - self.rect.width - 16:
+            self.rect.x = right_boundary - self.rect.width - 16
 
     def vertical_border(self):
+        """keep the ghost in playing window"""
+
         if self.rect.y <= 16:
             self.rect.y = 16
         if self.rect.y >= 320 - self.rect.height - 16:
             self.rect.y = 320 - self.rect.height - 16
 
     def animate(self):
+        """update ghost frames"""
+
         self.frame_index += 0.1
         if self.frame_index >= len(self.frames): self.frame_index = 0
         self.image = self.frames[int(self.frame_index)]
@@ -84,9 +97,12 @@ class Ghost(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False)
 
     def update(self):
+        """update ghost every frame"""
+
         self.input()
         self.animate()
 
+        # reduce visibility when other play completes level
         if self.partner.visibility_radius > GHOST_VISIBILITY:
             self.visibility_radius = GHOST_VISIBILITY
         else:
@@ -99,13 +115,14 @@ class Ghost(pygame.sprite.Sprite):
         self.rect.y += self.direction.y * self.speed
         self.vertical_border()
 
+        # animate smoke in survival mode
         if not self.story_mode:
             self.smoke.animate()
-            self.smoke.rect = self.smoke.image.get_rect(center = self.rect.center)
-            #pygame.display.get_surface().blit(self.smoke.image,self.smoke.rect)
+            self.smoke.rect = self.smoke.image.get_rect(center=self.rect.center)
 
 
 class Smoke(pygame.sprite.Sprite):
+    """in survival mode, ghost uses smoke to distract opponent"""
     def __init__(self, pos):
         super().__init__()
 
@@ -113,11 +130,10 @@ class Smoke(pygame.sprite.Sprite):
         self.frame_index = 0
 
         self.image = self.frames[self.frame_index]
-
         self.rect = self.image.get_rect(center=pos)
 
-
     def animate(self):
+        """update smoke frames"""
 
         self.frame_index += 0.1
         if self.frame_index >= len(self.frames): self.frame_index = 0

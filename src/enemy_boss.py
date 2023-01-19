@@ -225,6 +225,7 @@ class Boss(pygame.sprite.Sprite):
             self.vertical_collisions()
         self.weapon_collisions()
 
+        # if player is nearby get ready to attack
         if self.status == 'run' and pygame.time.get_ticks() - self.attack_end_time > 2000:
             if self.player_nearby():
                 self.status = 'idle'

@@ -3,7 +3,7 @@ from utilities import import_frames
 
 
 class Collectible(pygame.sprite.Sprite):
-    '''Collectibles for players to pick during the game'''
+    """Collectibles for players to pick during the game"""
     def __init__(self, pos, groups, type):
         super().__init__(groups)
         self.type = type
@@ -44,7 +44,7 @@ class Collectible(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=self.pos)
 
     def animate(self):
-        '''update collectible frames'''
+        """update collectible frames"""
 
         status = self.frames[self.status]
 
@@ -62,11 +62,11 @@ class Collectible(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(center=self.pos)
 
     def update(self):
-        '''update the collectible every frame'''
+        """update the collectible every frame"""
 
         self.animate()
 
     def draw(self, screen):
-        '''Draw the collectible on screen'''
+        """Draw the collectible on screen"""
 
         screen.blit(self.image, self.rect)

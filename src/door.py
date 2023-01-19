@@ -3,7 +3,7 @@ from utilities import import_frames
 
 
 class Door(pygame.sprite.Sprite):
-    '''Each level Door'''
+    """Each level Door"""
     def __init__(self, pos, groups):
         super().__init__(groups)
         self.closed_frame = pygame.image.load("./assets/images/door/door_closed.png").convert_alpha()
@@ -23,7 +23,7 @@ class Door(pygame.sprite.Sprite):
         self.sound.set_volume(0.7)
 
     def open(self):
-        '''door open animation when key is picked by player'''
+        """door open animation when key is picked by player"""
 
         self.animation_index += 0.08
 

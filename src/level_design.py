@@ -1,3 +1,5 @@
+"""Contains level detail of Story mode and Survival Mode"""
+
 STORY_DATA = [
     {
         'level': 1,

@@ -5,7 +5,7 @@ from sounds import EnemySound
 
 
 class Enemy(pygame.sprite.Sprite):
-    '''basic enemies for each level'''
+    """basic enemies for each level"""
 
     def __init__(self, pos, groups, collision_sprites, player_weapon_sprites, type='None'):
         super().__init__(groups)
@@ -40,7 +40,7 @@ class Enemy(pygame.sprite.Sprite):
         self.movement_update()
 
     def horizontal_collisions(self):
-        '''Check left/right wall collision'''
+        """Check left/right wall collision"""
 
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -51,7 +51,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.movement_update()
 
     def vertical_collisions(self):
-        '''Check top/bottom wall collision'''
+        """Check top/bottom wall collision"""
 
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
@@ -62,7 +62,7 @@ class Enemy(pygame.sprite.Sprite):
                 self.movement_update()
 
     def movement_update(self):
-        '''Change enemy direction randomly'''
+        """Change enemy direction randomly"""
 
         possible_move = ['Left', 'Right', 'Up', 'Down']
 
@@ -82,7 +82,7 @@ class Enemy(pygame.sprite.Sprite):
             self.direction.y = 1
 
     def animate(self):
-        '''update enemy frames'''
+        """update enemy frames"""
 
         status = self.frames[self.status]
 
@@ -98,7 +98,7 @@ class Enemy(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def weapon_collisions(self):
-        '''Kill enenmy when collide with player weapon'''
+        """Kill enenmy when collide with player weapon"""
 
         for sprite in self.player_weapon_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and sprite.status == 'attack':
@@ -108,7 +108,7 @@ class Enemy(pygame.sprite.Sprite):
                     self.animation_index = 0
 
     def update(self):
-        '''update the enemy every frame'''
+        """update the enemy every frame"""
 
         self.animate()
         if self.status == 'active':
@@ -128,6 +128,6 @@ class Enemy(pygame.sprite.Sprite):
             self.tog = not self.tog
 
     def draw(self, screen):
-        '''Draw the enemy on screen'''
+        """Draw the enemy on screen"""
 
         screen.blit(self.image, self.rect)
