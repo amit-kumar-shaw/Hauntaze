@@ -25,7 +25,7 @@ class StoryTransition:
         self.tower_rect = self.tower_surface.get_rect(topleft=(576, 0))
         self.screen_surface = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.castle = pygame.image.load("./assets/images/transitions/castle.png").convert_alpha()
-        self.skip = pygame.image.load("./assets/images/transitions/skip.png").convert_alpha()
+        self.exit = pygame.image.load("./assets/images/transitions/exit.png").convert_alpha()
         self.skip_animation = pygame.image.load("./assets/images/transitions/skip_animation.png").convert_alpha()
         self.start = pygame.image.load("./assets/images/transitions/start.png").convert_alpha()
 
@@ -286,14 +286,23 @@ class StoryTransition:
             if not self.life_completed:
                 self.life()
             else:
-                self.tower()
+                if self.wait_active:
+                    self.wait_start()
+                else:
+                    self.tower()
         elif 10 < self.level <= 15:
             if not self.death_completed:
                 self.death()
             else:
-                self.tower()
+                if self.wait_active:
+                    self.wait_start()
+                else:
+                    self.tower()
         else:
-            self.curse()
+            if not self.curse_completed:
+                self.curse()
+            else:
+                self.wait_start()
         #
         # self.draw()
 
@@ -312,16 +321,23 @@ class StoryTransition:
         if self.wait_index >= len(self.wait_frames):
             self.wait_index = 0
 
+        if self.level == 1:
+            self.display.blit(self.wait_frames[int(self.wait_index)], (139, 180, 44, 40), (139, 180, 44, 40))
+            self.display.blit(self.wait_frames[int(self.wait_index)], (458, 182, 44, 39), (458, 182, 44, 39))
 
-        self.display.blit(self.wait_frames[int(self.wait_index)], (0, 0))
-        self.display.blit(self.start, self.start.get_rect(midright=(632, 350)))
+        self.display.blit(self.wait_frames[int(self.wait_index)], (299, 181, 42, 39), (299, 181, 42, 39))
+
+        # self.display.blit(self.wait_frames[int(self.wait_index)], (0, 0))
+
 
         keys = pygame.key.get_pressed()
         if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
             self.skip_active = True
         if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
-            self.skip_active = False
             self.wait_active = False
+            if self.level == 16:
+                pygame.quit()
+                sys.exit()
 
     def intro(self):
         if self.intro_frames is None:
@@ -349,6 +365,7 @@ class StoryTransition:
             self.wait_index = 0
             self.wait_active = True
             self.display.blit(self.wait_frames[self.wait_index], (0, 0))
+            self.display.blit(self.start, self.start.get_rect(midright=(632, 350)))
             return
 
         self.intro_index += 0.2
@@ -425,8 +442,15 @@ class StoryTransition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
             self.life_completed = True
+            self.skip_active = False
+            self.wait_frames = import_frames("./assets/images/transitions/wait_life", scale=1)
+            self.wait_index = 0
+            self.wait_active = True
+            self.display.blit(self.wait_frames[self.wait_index], (0, 0))
+            self.display.blit(self.start, self.start.get_rect(midright=(632, 350)))
+            return
 
         self.life_index += 0.2
         if self.life_index >= len(self.life_frames): self.life_index = 265
@@ -491,8 +515,15 @@ class StoryTransition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
             self.death_completed = True
+            self.skip_active = False
+            self.wait_frames = import_frames("./assets/images/transitions/wait_death", scale=1)
+            self.wait_index = 0
+            self.wait_active = True
+            self.display.blit(self.wait_frames[self.wait_index], (0, 0))
+            self.display.blit(self.start, self.start.get_rect(midright=(632, 350)))
+            return
 
         self.death_index += 0.2
         if self.death_index >= len(self.death_frames): self.death_index = 253
@@ -557,10 +588,16 @@ class StoryTransition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
             self.curse_completed = True
-            pygame.quit()
-            sys.exit()
+            self.skip_active = False
+            self.wait_frames = import_frames("./assets/images/transitions/wait_curse", scale=1)
+            self.wait_index = 0
+            self.wait_active = True
+            self.display.blit(self.wait_frames[self.wait_index], (0, 0))
+            self.display.blit(self.exit, self.exit.get_rect(midright=(632, 350)))
+            return
+
 
         self.curse_index += 0.2
         if self.curse_index >= len(self.curse_frames): self.curse_index = 135
