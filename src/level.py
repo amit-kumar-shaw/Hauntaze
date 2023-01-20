@@ -1,9 +1,7 @@
 import math
 import random
 import sys
-
 import pygame
-
 import map_generator
 from settings import *
 from tile import Tile
@@ -20,16 +18,19 @@ from player_ghost import Ghost
 
 
 class Level:
-    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer=False, joystick_1=None, joystick_2=None):
+    """ run complete playing logic """
+
+    def __init__(self, story_mode, player1_active, player1, player2_active, player2, level, multiplayer=False,
+                 joystick_1=None, joystick_2=None):
 
         self.joystick_1 = joystick_1
         self.joystick_2 = joystick_2
 
-        # level setup
-        self.display_surface = pygame.display.get_surface()
+        self.screen = pygame.display.get_surface()
 
         self.completed = False
         self.failed = False
+
         self.animation_index = 0
 
         self.story_mode = story_mode
@@ -58,18 +59,19 @@ class Level:
 
         self.level_width = SCREEN_WIDTH if not story_mode else 576
 
-        # create map surface
+        # create level surface
         self.level_window = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
         # create cover surface for limited visibility
-        self.cover_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)), pygame.SRCALPHA).convert_alpha()
+        self.cover_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)),
+                                         pygame.SRCALPHA).convert_alpha()
         self.cover_surf.fill(COVER_COLOR)
         self.cover_surf.set_colorkey((255, 255, 255))
 
         # create map surface
         self.map_surf = pygame.Surface((self.level_width, (ROWS * CELL_SIZE * TILE_HEIGHT)))
 
-        # create cropped surface
+        # create cropped surfaces for players and ghost
         self.cropped_surf1 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
         self.cropped_surf2 = pygame.Surface((VISIBILITY_RADIUS * 2, VISIBILITY_RADIUS * 2))
         self.cropped_surf3 = pygame.Surface((GHOST_VISIBILITY * 2, GHOST_VISIBILITY * 2))
@@ -83,7 +85,7 @@ class Level:
         self.player2 = player2
 
         self.coins = []
-        self.enemys = []
+        self.enemies = []
 
         # Ghost
         self.ghost_active = False
@@ -94,14 +96,18 @@ class Level:
         self.background_music = None
         self.continue_text = pygame.image.load("./assets/images/transitions/continue.png").convert_alpha()
         self.exit = pygame.image.load("./assets/images/transitions/exit.png").convert_alpha()
+        self.main_menu = pygame.image.load("./assets/images/menu/main_menu.png").convert_alpha()
 
+        # setup level based on game mode
         if story_mode:
             self.story_setup()
         else:
-            self.survival_setup1()
+            self.survival_setup()
 
-    def survival_setup1(self):
+    def survival_setup(self):
+        """ setup survival mode level """
 
+        # fetch survival mode data
         from level_design import SURVIVAL_DATA
         data = SURVIVAL_DATA[self.current_level - 1]
 
@@ -126,8 +132,10 @@ class Level:
         spikes = data['spikes']
         need_spikes = False
 
+        # auto generate random map
         level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
 
+        # lay out walls and floors
         for col_index in range(ROWS * CELL_SIZE):
             for row_index in range(COLUMNS * CELL_SIZE):
                 y = col_index * TILE_HEIGHT
@@ -137,13 +145,13 @@ class Level:
                 if level_map[(row_index, col_index)] == '#':
                     Tile((x, y), [self.visible_sprites, self.collision_sprites], self.current_level, wall=True)
                 if level_map[(row_index, col_index)] == 'A':
-                    p1 = (x, y)
                     Tile((x, y), [self.visible_sprites], self.current_level, wall=False)
                 if level_map[(row_index, col_index)] == 'B':
-                    p2 = (x, y)
                     Tile((x, y), [self.visible_sprites], self.current_level, wall=False)
 
+        # draw tiles on map surface
         self.visible_sprites.draw(self.map_surf)
+
         other_cells = random.sample(other_cells, 30)
 
         personal_index = None
@@ -154,17 +162,18 @@ class Level:
         web_index = None
         spike_index = None
 
+        # randomly select cells for each item
         for index, cell in enumerate(other_cells):
             items = 0
             if personal_items != 0 and index % int(30 / personal_items) == 0:
                 need_personal_item = True
                 personal_index = items
                 items += 1
-            if coins!=0 and index % int(30 / coins) == 0:
+            if coins != 0 and index % int(30 / coins) == 0:
                 need_coins = True
                 coin_index = items
                 items += 1
-            if enemies !=0 and index % int(30 / enemies) == 0:
+            if enemies != 0 and index % int(30 / enemies) == 0:
                 need_enemy = True
                 enemy_index = items
                 items += 1
@@ -190,7 +199,7 @@ class Level:
                 web_index = items
                 items += 1
                 web1 = not web1
-            if spikes !=0 and index % int(30 / spikes) == 0:
+            if spikes != 0 and index % int(30 / spikes) == 0:
                 need_spikes = True
                 spike_index = items
                 items += 1
@@ -203,35 +212,36 @@ class Level:
             if need_coins:
                 need_coins = False
                 self.coins.append(
-                    Collectible(tuple(TILE_SIZE * x for x in cells[coin_index]), [self.visible_sprites, self.collectible_sprites],
+                    Collectible(tuple(TILE_SIZE * x for x in cells[coin_index]),
+                                [self.visible_sprites, self.collectible_sprites],
                                 type='coin'))
             if need_enemy:
                 need_enemy = False
-                self.enemys.append(
+                self.enemies.append(
                     Enemy(tuple(TILE_SIZE * x for x in cells[enemy_index]),
                           [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                           self.collision_sprites, self.weapon_sprite, type=enemy_type))
             if need_torch:
                 need_torch = False
-                Collectible(tuple(TILE_SIZE * x for x in cells[torch_index]), [self.visible_sprites, self.collectible_sprites],
+                Collectible(tuple(TILE_SIZE * x for x in cells[torch_index]),
+                            [self.visible_sprites, self.collectible_sprites],
                             type='torch')
             if need_mask:
                 need_mask = False
-                Collectible(tuple(TILE_SIZE * x for x in cells[mask_index]), [self.visible_sprites, self.collectible_sprites],
+                Collectible(tuple(TILE_SIZE * x for x in cells[mask_index]),
+                            [self.visible_sprites, self.collectible_sprites],
                             type='mask2')
             if need_web:
                 need_web = False
-                Collectible(tuple(TILE_SIZE * x for x in cells[web_index]), [self.visible_sprites, self.collectible_sprites],
+                Collectible(tuple(TILE_SIZE * x for x in cells[web_index]),
+                            [self.visible_sprites, self.collectible_sprites],
                             type='web1' if web1 else 'web2')
             if need_spikes:
                 need_spikes = False
                 Spike(tuple(TILE_SIZE * x for x in cells[spike_index]),
                       [self.visible_sprites, self.trap_sprites])
 
-
-        # key_door_cells = random.sample(other_cells, 4)
-
-        # draw player and keys
+        # update some properties, key, door, and weapon for player 1
         if self.player1_active:
             self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
             self.player1.attach_torch()
@@ -240,15 +250,14 @@ class Level:
             self.player1.enemy_sprites = self.enemy_sprites
             self.player1.trap_sprites = self.trap_sprites
 
-            # c = random.choice(list(key_door_cells[0].room))
             self.player1.key = Key(tuple(TILE_SIZE * x for x in personal_cells[0]), self.key1_sprite)
-            # c = random.choice(list(key_door_cells[1].room))
             self.player1.door = Door(tuple(TILE_SIZE * x for x in personal_cells[1]), self.door1_sprite)
             if data['weapon_type'] is not None:
                 self.player1.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[2]),
-                                         [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
-                                         type=data['weapon_type'])
+                                             [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
+                                             type=data['weapon_type'])
 
+        # update some properties, key, door, and weapon for player 2
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[1])
             self.player2.attach_torch()
@@ -257,121 +266,30 @@ class Level:
             self.player2.enemy_sprites = self.enemy_sprites
             self.player2.trap_sprites = self.trap_sprites
 
-            # c = random.choice(list(key_door_cells[2].room))
             self.player2.key = Key(tuple(TILE_SIZE * x for x in personal_cells[3]), self.key2_sprite)
-            # c = random.choice(list(key_door_cells[3].room))
             self.player2.door = Door(tuple(TILE_SIZE * x for x in personal_cells[4]), self.door2_sprite)
             if data['weapon_type'] is not None:
                 self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[5]),
-                                         [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
-                                         type=data['weapon_type'])
+                                             [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
+                                             type=data['weapon_type'])
 
+        # set background music
         if self.current_level <= 15:
             self.background_music = self.sound.background1
         elif 15 < self.current_level <= 35:
             self.background_music = self.sound.background2
         elif 35 < self.current_level <= 50:
             self.background_music = self.sound.background3
-            # self.player2.door = door
-
-        # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
-        # for cell in coin_cells:
-        #     c = random.choice(list(cell.room))
-        #     self.coins.append(
-        #         Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites],
-        #                     type='coin'))
-        #
-        # cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
-        # c = random.choice(list(cell[0].room))
-        # Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
-        #
-        # # draw enemies
-        # enemy_cells = random.sample(other_cells, 5)
-        # for enemy in enemy_cells:
-        #     e = random.choice(list(enemy.room))
-        #     self.enemys.append(
-        #         Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-        #               self.collision_sprites, self.weapon_sprite))
-
-    def survival_setup(self):
-
-        level_map, player_cells, other_cells = map_generator.generate(COLUMNS, ROWS, CELL_SIZE)
-
-        for col_index in range(ROWS * CELL_SIZE):
-            for row_index in range(COLUMNS * CELL_SIZE):
-                y = col_index * TILE_HEIGHT
-                x = row_index * TILE_WIDTH
-                if level_map[(row_index, col_index)] == '.':
-                    Tile((x, y), [self.visible_sprites], wall=False)
-                if level_map[(row_index, col_index)] == '#':
-                    Tile((x, y), [self.visible_sprites, self.collision_sprites], wall=True)
-                if level_map[(row_index, col_index)] == 'A':
-                    p1 = (x, y)
-                    Tile((x, y), [self.visible_sprites], wall=False)
-                if level_map[(row_index, col_index)] == 'B':
-                    p2 = (x, y)
-                    Tile((x, y), [self.visible_sprites], wall=False)
-
-        self.visible_sprites.draw(self.map_surf)
-        key_door_cells = random.sample(other_cells, 4)
-
-        # # draw door
-        # d = random.choice(list(key_door_cells[2].room))
-        # self.door = Door(tuple(TILE_SIZE * x for x in d), [self.visible_sprites, self.active_sprites],
-        #                  )
-
-        # draw player and keys
-        if self.player1_active:
-            self.player1.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[0])
-            self.player1.attach_torch()
-            self.player1.collision_sprites = self.collision_sprites
-            self.player1.collectible_sprites = self.collectible_sprites
-            self.player1.enemy_sprites = self.enemy_sprites
-            self.player1.trap_sprites = self.trap_sprites
-
-            c = random.choice(list(key_door_cells[0].room))
-            self.player1.key = Key(tuple(TILE_SIZE * x for x in c), self.key1_sprite)
-            c = random.choice(list(key_door_cells[1].room))
-            self.player1.door = Door(tuple(TILE_SIZE * x for x in c), self.door1_sprite)
-
-        if self.player2_active:
-            self.player2.rect.topleft = tuple(TILE_SIZE * x for x in player_cells[1])
-            self.player2.attach_torch()
-            self.player2.collision_sprites = self.collision_sprites
-            self.player2.collectible_sprites = self.collectible_sprites
-            self.player2.enemy_sprites = self.enemy_sprites
-            self.player2.trap_sprites = self.trap_sprites
-
-            c = random.choice(list(key_door_cells[2].room))
-            self.player2.key = Key(tuple(TILE_SIZE * x for x in c), self.key2_sprite)
-            c = random.choice(list(key_door_cells[3].room))
-            self.player2.door = Door(tuple(TILE_SIZE * x for x in c), self.door2_sprite)
-            # self.player2.door = door
-
-        coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
-        for cell in coin_cells:
-            c = random.choice(list(cell.room))
-            self.coins.append(
-                Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites],
-                            type='coin'))
-
-        cell = random.sample(list(set(other_cells) - set(key_door_cells)), 1)
-        c = random.choice(list(cell[0].room))
-        Collectible(tuple(TILE_SIZE * x for x in c), [self.visible_sprites, self.collectible_sprites], type='torch')
-
-        # draw enemies
-        enemy_cells = random.sample(other_cells, 5)
-        for enemy in enemy_cells:
-            e = random.choice(list(enemy.room))
-            self.enemys.append(
-                Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                      self.collision_sprites, self.weapon_sprite))
-
 
     def story_setup(self):
+        """ setup story mode for the level"""
+
         from level_design import STORY_DATA
+
+        # load level data
         data = STORY_DATA[self.current_level - 1]
 
+        # set background music
         if self.current_level <= 5:
             self.background_music = self.sound.background1
         elif 5 < self.current_level <= 10:
@@ -379,24 +297,31 @@ class Level:
         elif 10 < self.current_level <= 15:
             self.background_music = self.sound.background3
 
+        # check if it's a boss level
         if self.current_level % 5 == 0:
             self.is_boss_level = True
 
+        # get the hint to display on UI
         self.caption = data['caption']
+
+        # get the map
         level_map = data['map']
 
+        # lay out walls and floors
         for row_index, row in enumerate(level_map):
             for col_index, col in enumerate(row):
                 x = col_index * 16
                 y = row_index * 16
                 if col == '#':
-                    Tile((x, y), [self.visible_sprites, self.collision_sprites], self.current_level, wall=True, storymode=True)
+                    Tile((x, y), [self.visible_sprites, self.collision_sprites], self.current_level, wall=True,
+                         storymode=True)
                 else:
                     Tile((x, y), [self.visible_sprites], self.current_level, wall=False, storymode=True)
 
+        # draw the walls and floors on map surface
         self.visible_sprites.draw(self.map_surf)
 
-        # draw player and keys
+        # update some properties, key, door, and weapon for player 1
         if self.player1_active:
             self.player1.rect.topleft = tuple(TILE_SIZE * x for x in data['player1'])
             self.player1.revival_position = self.player1.rect.topleft
@@ -420,6 +345,7 @@ class Level:
                 Collectible(tuple(TILE_SIZE * x for x in cell), [self.visible_sprites, self.collectible_sprites],
                             type='torch')
 
+        # update some properties, key, door, and weapon for player 2
         if self.player2_active:
             self.player2.rect.topleft = tuple(TILE_SIZE * x for x in data['player2'])
             self.player2.revival_position = self.player2.rect.topleft
@@ -482,30 +408,31 @@ class Level:
         # draw enemies
         bat_cells = data['bats']
         for _, cell in enumerate(bat_cells):
-            self.enemys.append(
+            self.enemies.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell),
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='bat'))
 
         slime_cells = data['slime']
         for _, cell in enumerate(slime_cells):
-            self.enemys.append(
+            self.enemies.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell),
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='slime'))
 
         skull_cells = data['skull']
         for _, cell in enumerate(skull_cells):
-            self.enemys.append(
+            self.enemies.append(
                 Enemy(tuple(TILE_SIZE * x for x in cell),
                       [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite, type='skull'))
 
+        # instantiate boss if boss level
         if self.is_boss_level:
             if self.current_level == 5:
                 self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
-                                [self.visible_sprites, self.active_sprites, self.enemy_sprites],
-                                self.collision_sprites, self.weapon_sprite, type='boss1')
+                                 [self.visible_sprites, self.active_sprites, self.enemy_sprites],
+                                 self.collision_sprites, self.weapon_sprite, type='boss1')
             elif self.current_level == 10:
                 self.boss = Boss(tuple(TILE_SIZE * x for x in data['boss']),
                                  [self.visible_sprites, self.active_sprites, self.enemy_sprites],
@@ -515,17 +442,20 @@ class Level:
                                  [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                                  self.collision_sprites, self.weapon_sprite, type='boss3')
 
+            # double boss life in multiplayer
             if self.multiplayer:
                 self.boss.lives *= 2
                 self.boss.MAX_LIVES = self.boss.lives
 
     def run(self):
+        """ run the level logic"""
 
+        # start background music
         if not self.background_music_on:
             self.sound.play_background(self.background_music)
             self.background_music_on = True
 
-        # run the entire game (level)
+        # update the active sprites
         self.active_sprites.update()
 
         if self.player1_active:
@@ -534,35 +464,32 @@ class Level:
         if self.player2_active:
             PLAYER2_SPRITE.update()
 
+        # draw visible region and enemy indicator
         self.draw_visible_region()
 
-        # self.visible_sprites.draw(self.display_surface)
-        # self.collision_sprites.draw(self.display_surface)
-
-        # draw the map surface
-        # self.display_surface.blit(self.map_surf, (0, 0))
+        # draw visible map surface for player 1
         if self.player1_active:
             if self.player1.visibility_radius != VISIBILITY_RADIUS or self.cropped_rect1.width != self.player1.visibility_radius * 2:
                 self.cropped_surf1 = pygame.Surface(
                     (self.player1.visibility_radius * 2, self.player1.visibility_radius * 2))
             self.cropped_rect1 = self.cropped_surf1.get_rect(center=self.player1.torch.rect.center)
             self.level_window.blit(self.map_surf, self.cropped_rect1, self.cropped_rect1)
+
+        # draw visible map surface for player 2
         if self.player2_active:
             if self.player2.visibility_radius != VISIBILITY_RADIUS or self.cropped_rect2.width != self.player2.visibility_radius * 2:
                 self.cropped_surf2 = pygame.Surface(
                     (self.player2.visibility_radius * 2, self.player2.visibility_radius * 2))
             self.cropped_rect2 = self.cropped_surf2.get_rect(center=self.player2.torch.rect.center)
             self.level_window.blit(self.map_surf, self.cropped_rect2, self.cropped_rect2)
+
+        # draw visible map surface for ghost
         if self.ghost_active:
             if self.story_mode:
                 self.cropped_rect3 = self.cropped_surf3.get_rect(center=self.ghost.rect.center)
                 self.level_window.blit(self.map_surf, self.cropped_rect3, self.cropped_rect3)
-            # else:
-            #     pygame.draw.circle(self.display_surface, (0, 0, 0),
-            #                        (self.ghost.rect.centerx, self.ghost.rect.centery),
-            #                        self.ghost.visibility_radius)
 
-        # cover surface
+        # draw transparent cover surface
         if self.player1_active:
             self.level_window.blit(self.cover_surf, self.cropped_rect1, self.cropped_rect1)
         if self.player2_active:
@@ -570,85 +497,76 @@ class Level:
         if self.ghost_active and self.story_mode:
             self.level_window.blit(self.cover_surf, self.cropped_rect3, self.cropped_rect3)
 
-        # for coin in self.coins:
-        #     coin.animate()
-
-        # self.collectible_sprites.draw(self.display_surface)
+        # update collectible sprites
         self.collectible_sprites.update()
+
+        # draw collectible sprites when in visible region
         for sprite in self.collectible_sprites.sprites():
-            # if (self.player1_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf1) or (
-            #         self.player2_active and pygame.sprite.collide_rect_ratio(1)(sprite, self.cropped_surf2))):
             if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
                     self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.level_window)
 
         self.trap_sprites.update()
+
+        # draw spikes when in visible region
         for sprite in self.trap_sprites.sprites():
             if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
                     self.player2_active and self.cropped_rect2.contains(sprite)):
                 sprite.draw(self.level_window)
 
+        # keys are with boss in boss level
         if self.is_boss_level:
             if self.player1_active:
                 self.player1.key.rect = self.player1.key.image.get_rect(midright=self.boss.rect.midtop)
             if self.player2_active:
                 self.player2.key.rect = self.player2.key.image.get_rect(midleft=self.boss.rect.midtop)
+
         # draw key if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.key.rect.center) < self.player1.visibility_radius:
-            # self.player1.key.update()
             self.key1_sprite.draw(self.level_window)
             self.player1.key.animate()
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
                                              self.player2.key.rect.center) < self.player2.visibility_radius:
-            # self.player2.key.update()
             self.key2_sprite.draw(self.level_window)
             self.player2.key.animate()
 
         # draw door if the player is nearby
         if self.player1_active and math.dist(self.player1.torch.rect.center,
                                              self.player1.door.rect.center) < self.player1.visibility_radius:
-            # self.player1.door.update()
             self.door1_sprite.draw(self.level_window)
 
         if self.player2_active and math.dist(self.player2.torch.rect.center,
                                              self.player2.door.rect.center) < self.player2.visibility_radius:
-            # self.player2.door.update()
             self.door2_sprite.draw(self.level_window)
 
+        # draw weapon if the player is nearby
         if self.player1_active and self.player1.weapon is not None and math.dist(self.player1.torch.rect.center,
-                                             self.player1.weapon.rect.center) < self.player1.visibility_radius:
-            # self.player1.door.update()
+                                                                                 self.player1.weapon.rect.center) < self.player1.visibility_radius:
             self.weapon1_sprite.draw(self.level_window)
 
         if self.player2_active and self.player2.weapon is not None and math.dist(self.player2.torch.rect.center,
-                                             self.player2.weapon.rect.center) < self.player2.visibility_radius:
-            # self.player2.door.update()
+                                                                                 self.player2.weapon.rect.center) < self.player2.visibility_radius:
             self.weapon2_sprite.draw(self.level_window)
 
         # open door if key collected
         if (self.player1_active and self.player1.key_picked) and not self.player1.door.isOpen:
-            # pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player1.door.rect)
             self.player1.door.open()
             self.door1_sprite.draw(self.level_window)
 
         if (self.player2_active and self.player2.key_picked) and not self.player2.door.isOpen:
-            # pygame.draw.rect(self.cover_surf, (0, 0, 0, 0), self.player2.door.rect)
             self.player2.door.open()
             self.door2_sprite.draw(self.level_window)
 
         # draw Enemy sprites
         for sprite in self.enemy_sprites.sprites():
-            # if (self.player1_active and self.cropped_rect1.contains(sprite)) or (
-            #             self.player2_active and self.cropped_rect2.contains(sprite)) or (
-            #             self.ghost_active and self.cropped_rect3.contains(sprite)):
-            #     sprite.draw(self.level_window)
             if (self.player1_active and self.cropped_rect1.colliderect(sprite)) or (
                     self.player2_active and self.cropped_rect2.colliderect(sprite)) or (
                     self.ghost_active and self.cropped_rect3.colliderect(sprite)):
                 sprite.draw(self.level_window)
 
+        # draw player 1
         if self.player1_active and self.player1.visibility_radius > 1:
 
             self.level_window.blit(self.player1.torch.image, self.player1.torch.rect)
@@ -656,10 +574,12 @@ class Level:
                 self.level_window.blit(self.player1.weapon.image, self.player1.weapon.rect)
             PLAYER1_SPRITE.draw(self.level_window)
 
+            # draw web on play if collide with web
             if self.player1.is_slow:
                 rect = self.player1.web.get_rect(midtop=self.player1.rect.midtop)
                 self.level_window.blit(self.player1.web, rect)
 
+        # draw player 2
         if self.player2_active and self.player2.visibility_radius > 1:
 
             self.level_window.blit(self.player2.torch.image, self.player2.torch.rect)
@@ -667,10 +587,12 @@ class Level:
                 self.level_window.blit(self.player2.weapon.image, self.player2.weapon.rect)
             PLAYER2_SPRITE.draw(self.level_window)
 
+            # draw web on play if collide with web
             if self.player2.is_slow:
                 rect = self.player2.web.get_rect(midtop=self.player2.rect.midtop)
                 self.level_window.blit(self.player2.web, rect)
 
+        # draw revival timer
         if self.player1_active and self.player1.wait_revival:
             self.level_window.blit(self.player1.timer, self.player1.timer_rect)
         if self.player2_active and self.player2.wait_revival:
@@ -678,9 +600,8 @@ class Level:
 
         # Ghost update
         if self.ghost_active:
-            # if self.ghost.visibility_radius < 2:
-            #     self.ghost_active = False
             self.ghost.update()
+            # draw smoke in survival mode
             if not self.story_mode and self.ghost.visibility_radius > 2:
                 self.level_window.blit(self.ghost.smoke.image, self.ghost.smoke.rect)
 
@@ -721,27 +642,13 @@ class Level:
         if self.player1_active and self.player1.level_completed and self.player2_active and self.player2.level_completed:
             self.level_completed()
 
-        # if self.player1_active and self.player1.level_completed and self.player2_active and self.player2.wait_revival:
-        #     self.player2.wait_revival = False
-        #     self.player2.life_stone_activated = False
-        #     self.player2.life_stone_available = False
-        #
-        # if self.player1_active and self.player1.wait_revival and self.player2_active and self.player2.level_completed:
-        #     self.player1.wait_revival = False
-        #     self.player1.life_stone_activated = False
-        #     self.player1.life_stone_available = False
-
         self.check_player_status()
 
-        self.display_surface.blit(self.level_window, (0, 0))
+        self.screen.blit(self.level_window, (0, 0))
         self.level_window.fill('black')
 
-        # TODO: Tower - remove after test
-        # tower = pygame.image.load("./assets/images/tower.png").convert_alpha()
-        # self.display_surface.blit(tower, (576, 0))
-        # print(self.player1_active, self.player1.is_alive, self.player1.lives)
-
     def kill_all_enemies(self):
+        """ kill all enemies when death stone activated in story mode """
         self.death_stone_activated = True
         for sprite in self.enemy_sprites.sprites():
             if sprite.type == 'bat' or sprite.type == 'slime' or sprite.type == 'skull':
@@ -749,6 +656,8 @@ class Level:
                 sprite.animation_index = 0
 
     def check_player_status(self):
+        """ check if player is alive and instantiate ghost in multiplayer """
+
         if self.player1_active and not self.player1.is_alive:
             self.player1_active = False
             if not self.ghost_active and self.multiplayer:
@@ -776,6 +685,7 @@ class Level:
             self.boss.player2_active = self.player2_active
 
     def draw_visible_region(self):
+        """ draw player visible region and enemy indicator"""
 
         for i in range(0, 5):
             if self.player1_active:
@@ -793,6 +703,8 @@ class Level:
 
         # draw enemy indicator
         for enemy in self.enemy_sprites:
+
+            # display enemy dying animation when death stone activated
             if self.death_stone_activated and enemy.status == 'dead':
                 enemy.draw(self.level_window)
 
@@ -810,12 +722,16 @@ class Level:
                     pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
 
     def game_over(self):
+        """ show game over screen """
+
+        # stop background music
         if self.background_music_on:
             self.sound.stop_background()
             self.background_music_on = False
 
         keys = pygame.key.get_pressed()
-        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (
+                self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.failed = True
         self.animation_index += 0.08
 
@@ -823,6 +739,8 @@ class Level:
             self.animation_index = 0
 
         msg = 'Game Over'
+
+        # decide winner in survival mode multiplayer
         if not self.story_mode and self.multiplayer:
             msg = 'Player 1 Wins' if self.ghost.player2 else 'Player 2 Wins'
 
@@ -836,21 +754,18 @@ class Level:
         title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
-        # Restart game message
-        font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press Start to restart', False, 'white')
-        msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
-        self.level_window.blit(resume_msg, msg_rect)
+        # Main menu button
+        msg_rect = self.main_menu.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
+        self.level_window.blit(self.main_menu, msg_rect)
 
     def level_completed(self):
+        """ level completed screen"""
 
+        # stop background music
         if self.background_music_on:
             self.sound.stop_background()
             self.background_music_on = False
 
-        # keys = pygame.key.get_pressed()
-        # if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
-        #     self.completed = True
         self.animation_index += 0.08
 
         if self.animation_index >= 2: self.animation_index = 0
@@ -889,6 +804,8 @@ class Level:
                 self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.completed = True
             self.level_window.fill('black')
+
+            # exit the game if completed survival mode
             if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
                 pygame.quit()
                 sys.exit()
