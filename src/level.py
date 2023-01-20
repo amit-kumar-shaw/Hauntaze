@@ -517,6 +517,7 @@ class Level:
 
             if self.multiplayer:
                 self.boss.lives *= 2
+                self.boss.MAX_LIVES = self.boss.lives
 
     def run(self):
 

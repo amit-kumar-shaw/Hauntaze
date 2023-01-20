@@ -31,7 +31,7 @@ class Weapon(pygame.sprite.Sprite):
 
         status = self.frames[self.status]
 
-        self.animation_index += 0.1
+        self.animation_index += 0.15
 
         if self.animation_index >= len(status):
             self.animation_index = 0

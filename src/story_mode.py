@@ -35,17 +35,22 @@ class StoryMode:
             self.multiplayer = True
         if player1:
             self.player1 = Player((0, 0), PLAYER1_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, joystick=self.joystick_1)
+                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None,
+                                  joystick=self.joystick_1)
         if player2:
             self.player2 = Player((0, 0), PLAYER2_SPRITE,
-                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None, joystick=self.joystick_2, player2=True)
+                                  collision_sprites=None, collectible_sprites=None, enemy_sprites=None,
+                                  joystick=self.joystick_2, player2=True)
         self.current_level = 1
-        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
+        self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2,
+                           self.current_level, multiplayer=self.multiplayer,
+                           joystick_1=self.joystick_1, joystick_2=self.joystick_2)
         self.ui = UI(player1, player2, self.level)
         self.ui.current_level = self.current_level
         self.ui.update_level()
         self.stones = StonesUI()
-        self.transition = StoryTransition(self.player1_active, self.player2_active, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
+        self.transition = StoryTransition(self.player1_active, self.player2_active,
+                                          joystick_1=self.joystick_1, joystick_2=self.joystick_2)
 
     def run(self):
         if self.status == Status.RUNNING:
@@ -81,7 +86,9 @@ class StoryMode:
                 if self.player2_active:
                     self.player2.death_stone_available = True
 
-            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2, self.current_level, multiplayer=self.multiplayer, joystick_1=self.joystick_1, joystick_2=self.joystick_2)
+            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2,
+                               self.current_level, multiplayer=self.multiplayer,
+                               joystick_1=self.joystick_1, joystick_2=self.joystick_2)
             self.ui.level = self.level
             self.ui.current_level = self.current_level
             self.ui.update_level()

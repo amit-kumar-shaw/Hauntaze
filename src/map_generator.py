@@ -1,11 +1,11 @@
-''' The algorithm is created by Alexander Fast
+"""
+The algorithm is created by Alexander Fast
 
 Repository Link: https://github.com/alexanderfast/roguelike-dungeon-generator
 License: https://github.com/alexanderfast/roguelike-dungeon-generator/blob/master/LICENSE
 
 Copyright (c) 2014 Alexander Fast
-
-'''
+"""
 
 #!/bin/python3
 import random

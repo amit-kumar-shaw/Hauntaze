@@ -207,15 +207,15 @@ class Menu():
         frames = []
 
         for i in range(3):
-            text_surf = pygame.Surface((200, 50), pygame.SRCALPHA)
+            text_surf = pygame.Surface((250, 50), pygame.SRCALPHA)
             text_surf.fill((0, 0, 0, 0))
-            msg = 'Insert Coin' if i < 2 else 'Ready to play'
+            msg = 'Insert Coin' if i < 2 else 'Press Start to Play'
             font = pygame.font.Font('./assets/fonts/1.ttf', 15 + i)
             text = font.render(msg, False, 'orange')
-            text_rect = text.get_rect(center=(100, 25))
+            text_rect = text.get_rect(center=(125, 25))
             text_surf.blit(text, text_rect)
             text = font.render(msg, False, 'yellow')
-            text_rect = text.get_rect(center=(100 - 1, 25 - 1))
+            text_rect = text.get_rect(center=(125 - 1, 25 - 1))
             text_surf.blit(text, text_rect)
 
             frames.append(text_surf)

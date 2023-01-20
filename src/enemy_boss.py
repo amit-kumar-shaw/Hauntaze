@@ -66,6 +66,9 @@ class Boss(pygame.sprite.Sprite):
         elif type == 'boss3':
             self.lives = BOSS3_LIVES
 
+        self.MAX_LIVES = self.lives
+        self.health_bar = import_frames("./assets/images/enemy/health_bar", scale=1)
+
         self.timer = 5
         self.movement_update()
 
@@ -151,6 +154,7 @@ class Boss(pygame.sprite.Sprite):
             self.rect = self.image.get_rect(topleft=self.rect.topleft)
 
         self.mask = pygame.mask.from_surface(self.image)
+
 
     def weapon_collisions(self):
         """reduce enemy life when collide with player weapon"""
@@ -238,3 +242,6 @@ class Boss(pygame.sprite.Sprite):
         """draw boss on the screen"""
 
         screen.blit(self.image, self.rect)
+
+        health_fraction = 10 - int(self.lives * 10/self.MAX_LIVES)
+        screen.blit(self.health_bar[health_fraction], self.health_bar[health_fraction].get_rect(center=self.rect.midtop))
