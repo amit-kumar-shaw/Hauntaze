@@ -1,3 +1,6 @@
+"""
+Constants for the game
+"""
 import pygame
 from pygame.locals import *
 
@@ -10,8 +13,8 @@ SCREEN_HEIGHT = 360
 TILE_SIZE = 16
 TILE_WIDTH = 16
 TILE_HEIGHT = 16
-# TILE_WIDTH = SCREEN_WIDTH/(CELL_X*CELL_SIZE)
-# TILE_HEIGHT = SCREEN_HEIGHT/(CELL_Y*CELL_SIZE)
+
+LAST_SURVIVAL_LEVEL = 50
 
 # map
 COLUMNS = 8

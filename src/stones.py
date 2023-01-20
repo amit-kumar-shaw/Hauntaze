@@ -1,9 +1,10 @@
 import pygame
 from utilities import import_frames
-from settings import *
+from settings import SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class Stone(pygame.sprite.Sprite):
+    """magical stones for story mode"""
     def __init__(self, pos, type, scale):
         super().__init__()
 
@@ -19,12 +20,14 @@ class Stone(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def animate(self):
+        """update stone frames when active"""
         self.animation_index += 0.1
         if self.animation_index >= len(self.frames): self.animation_index = 0
         self.image = self.frames[int(self.animation_index)]
 
 
 class StonesUI:
+    """display available stone to the player"""
     def __init__(self):
 
         height = 24
@@ -40,6 +43,7 @@ class StonesUI:
         self.stones.append(Stone((46, y), 'curse', 0.75))
 
     def update(self):
+        """update and draw stones on the screen"""
         for stone in self.stones:
             if stone.active:
                 stone.animate()

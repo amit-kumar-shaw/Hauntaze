@@ -1,10 +1,10 @@
 import random
-
 import pygame
 from utilities import import_frames
 
 
 class Spike(pygame.sprite.Sprite):
+    """spikes on floor"""
     def __init__(self, pos, groups):
         super().__init__(groups)
 
@@ -21,13 +21,16 @@ class Spike(pygame.sprite.Sprite):
         self.image = self.frames[self.state][self.animation_index]
         self.rect = self.image.get_rect(topleft=pos)
 
+        # spike stay on duration
         self.on_duration = random.choice([4000, 2000, 3000])
         self.on_start_time = 0
 
+        # spike stay off duration
         self.off_duration = random.choice([4000, 2000, 3000])
         self.off_start_time = 0
 
     def animate(self):
+        """update spike frames"""
 
         state = self.frames[self.state]
 
@@ -43,6 +46,8 @@ class Spike(pygame.sprite.Sprite):
         self.image = state[int(self.animation_index)]
 
     def update(self):
+        """update spike on each frame"""
+
         self.animate()
         if self.state == 'off' and pygame.time.get_ticks() - self.off_start_time > self.off_duration:
             self.state = 'out'
@@ -52,4 +57,6 @@ class Spike(pygame.sprite.Sprite):
             self.animation_index = 0
 
     def draw(self, screen):
+        """draw spike on screen"""
+
         screen.blit(self.image, self.rect)
