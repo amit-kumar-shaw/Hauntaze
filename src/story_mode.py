@@ -96,7 +96,7 @@ class StoryMode:
         # make the next level ready
         elif self.status == Status.COMPLETED:
 
-            # reset some player properties
+            # reset some player properties for new level
             if self.player1_active:
                 self.player1.reset()
             if self.player2_active:
