@@ -1,3 +1,6 @@
+"""
+Constants for the game
+"""
 import pygame
 from pygame.locals import *
 
