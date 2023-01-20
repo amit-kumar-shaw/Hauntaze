@@ -1,8 +1,5 @@
-import math
 from math import sin
-
 import pygame
-from pygame.locals import *
 from settings import *
 from torch import Torch
 from sounds import PlayerSound
@@ -10,11 +7,15 @@ from utilities import import_frames
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, joystick=None, player2=False):
+    """ player sprite for the game """
+
+    def __init__(self, pos, groups, collision_sprites, collectible_sprites, enemy_sprites, joystick=None,
+                 player2=False):
         super().__init__(groups)
 
         self.joystick = joystick
 
+        # import player assets
         if player2:
             self.import_assets(2, 0.7)
         else:
@@ -22,7 +23,6 @@ class Player(pygame.sprite.Sprite):
 
         self.frame_index = 0
 
-        # self.image = self.player_still
         self.status = 'idle'
         self.image = self.frames[self.status][self.frame_index]
         self.rect = self.image.get_rect(topleft=pos)
@@ -30,21 +30,25 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
         self.is_flipped = False
 
+        # special stones for story mode
         self.life_stone_available = False
         self.death_stone_available = False
-
         self.life_stone_activated = False
         self.death_stone_activated = False
 
+        # for revival option in story mode
         self.wait_revival = False
         self.revival_position = None
         self.revival_time = 0
-
         self.time_frames = import_frames('./assets/images/player/numbers', 1)
         self.timer = self.time_frames[10]
         self.timer_rect = self.timer.get_rect(center=self.rect.center)
 
+        # instantiate torch sprite
         self.torch = Torch(pos)
+
+        self.sounds = PlayerSound()
+
         self.player2 = player2
         self.lives = PLAYER_LIVES
         self.is_alive = True
@@ -55,12 +59,10 @@ class Player(pygame.sprite.Sprite):
         self.is_slow = False
         self.web_time = 0
         self.web = pygame.image.load('./assets/images/web/web2.png').convert_alpha()
-        # self.web = pygame.transform.rotozoom(self.web, 0, 1.1)
         self.score = 0
         self.key_active = True
         self.key_picked = False
         self.visibility_radius = VISIBILITY_RADIUS
-        self.sounds = PlayerSound()
         self.door = None
         self.key = None
         self.level_completed = False
@@ -71,6 +73,7 @@ class Player(pygame.sprite.Sprite):
 
         self.is_ghost = False
 
+        # for weapon
         self.is_attacking = False
         self.weapon_active = False
         self.weapon = None
@@ -105,6 +108,7 @@ class Player(pygame.sprite.Sprite):
             self.LIFE_STONE = PLAYER1_LIFE
 
     def import_assets(self, player, scale):
+        """import player assets"""
         path = f'./assets/images/player/p{player}/'
         self.frames = {'idle': [], 'walk': [], 'dead': [], 'attack': []}
 
@@ -113,12 +117,15 @@ class Player(pygame.sprite.Sprite):
             self.frames[status] = import_frames(full_path, scale=scale)
 
     def input(self):
+        """ check user input """
         keys = pygame.key.get_pressed()
 
-        if keys[self.MOVE_RIGHT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
+        if keys[self.MOVE_RIGHT] or (
+                self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) > AXIS_THRESHOLD):
             self.direction.x = 1
             self.is_flipped = False
-        elif keys[self.MOVE_LEFT] or (self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
+        elif keys[self.MOVE_LEFT] or (
+                self.joystick is not None and self.joystick.get_axis(LEFT_RIGHT_AXIS) < -AXIS_THRESHOLD):
             self.direction.x = -1
             self.is_flipped = True
         else:
@@ -126,13 +133,14 @@ class Player(pygame.sprite.Sprite):
 
         if keys[self.MOVE_UP] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) < -AXIS_THRESHOLD):
             self.direction.y = -1
-        elif keys[self.MOVE_DOWN] or (self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
+        elif keys[self.MOVE_DOWN] or (
+                self.joystick is not None and self.joystick.get_axis(UP_DOWN_AXIS) > AXIS_THRESHOLD):
             self.direction.y = 1
         else:
             self.direction.y = 0
 
-        if (keys[
-            self.ATTACK] or (self.joystick is not None and self.joystick.get_button(BLACK_BUTTON))) and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
+        if (keys[self.ATTACK] or (self.joystick is not None and self.joystick.get_button(
+            BLACK_BUTTON))) and self.weapon_active and pygame.time.get_ticks() - self.attack_end_time >= ATTACK_DELAY and not self.is_attacking:
             self.is_attacking = True
             self.frame_index = 0
             self.status = 'attack'
@@ -142,16 +150,20 @@ class Player(pygame.sprite.Sprite):
             elif self.weapon.type == 'flamethrower':
                 self.sounds.flamethrower.play()
 
-        if (keys[self.DEATH_STONE] or (self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and self.death_stone_available:
+        if (keys[self.DEATH_STONE] or (
+                self.joystick is not None and self.joystick.get_button(YELLOW_BUTTON))) and self.death_stone_available:
             self.death_stone_activated = True
 
     def revival_input(self):
+        """ check revival input only after player dies """
         keys = pygame.key.get_pressed()
-        if (keys[self.LIFE_STONE] or (self.joystick is not None and self.joystick.get_button(BLUE_BUTTON))) and self.life_stone_available:
+        if (keys[self.LIFE_STONE] or (
+                self.joystick is not None and self.joystick.get_button(BLUE_BUTTON))) and self.life_stone_available:
             self.life_stone_activated = True
             self.sounds.revive.play()
 
     def horizontal_collisions(self):
+        """ check left/right wall collisions """
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
                 if self.direction.x < 0:
@@ -160,15 +172,16 @@ class Player(pygame.sprite.Sprite):
                     self.rect.right = sprite.rect.left
 
     def vertical_collisions(self):
+        """ check top/bottom wall collisions """
         for sprite in self.collision_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
-                # if pygame.sprite.spritecollide(player.sprite, obstacle, False, pygame.sprite.collide_mask):
                 if self.direction.y > 0:
                     self.rect.bottom = sprite.rect.top
                 if self.direction.y < 0:
                     self.rect.top = sprite.rect.bottom
 
     def update_status(self):
+        """ update player status """
         if self.is_attacking:
             self.status = 'attack'
         elif self.direction.x == 0 and self.direction.y == 0:
@@ -177,6 +190,8 @@ class Player(pygame.sprite.Sprite):
             self.status = 'walk'
 
     def animate(self):
+        """ update player frame """
+
         status = self.frames[self.status]
 
         # loop over frame index
@@ -190,9 +205,11 @@ class Player(pygame.sprite.Sprite):
                 self.frame_index = len(status) - 1
 
         self.image = status[int(self.frame_index)]
+
         if self.is_flipped:
             self.image = pygame.transform.flip(self.image, True, False)
 
+        # update player alpha value when invincible
         if self.is_invincible:
             alpha = self.wave_value()
             self.image.set_alpha(alpha)
@@ -202,6 +219,7 @@ class Player(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
     def wave_value(self):
+        """ player alpha value during invincibility """
         value = sin(pygame.time.get_ticks())
         if value >= 0:
             return 255
@@ -209,9 +227,10 @@ class Player(pygame.sprite.Sprite):
             return 0
 
     def collectible_collisions(self):
+        """ pick collectibles on collision """
+
         for sprite in self.collectible_sprites.sprites():
             if sprite.rect.colliderect(self.rect):
-                #self.collectible_sprites.remove(sprite)
                 if sprite.type == 'coin' and sprite.status == 'active':
                     self.score += 1
                     self.ui_update = True
@@ -226,8 +245,6 @@ class Player(pygame.sprite.Sprite):
                     self.sounds.special_item.play()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
-                # elif (sprite.type == 'sword' or sprite.type == 'flamethrower') and sprite.rect.x == self.weapon.rect.x:
-                #     self.weapon_active = True
                 elif (sprite.type == 'web1' or sprite.type == 'web2') and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
@@ -242,6 +259,8 @@ class Player(pygame.sprite.Sprite):
                     self.mask_time = pygame.time.get_ticks()
 
     def enemy_collisions(self):
+        """ check enemy collision """
+
         for sprite in self.enemy_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible and sprite.status != 'dead':
                 if pygame.sprite.collide_mask(self, sprite):
@@ -255,6 +274,7 @@ class Player(pygame.sprite.Sprite):
                     self.hurt_time = pygame.time.get_ticks()
 
     def trap_collisions(self):
+        """ check collision with spikes """
         for sprite in self.trap_sprites.sprites():
             if sprite.rect.colliderect(self.rect) and not self.is_invincible and not sprite.state == 'off':
                 if pygame.sprite.collide_mask(self, sprite):
@@ -268,6 +288,7 @@ class Player(pygame.sprite.Sprite):
                     self.hurt_time = pygame.time.get_ticks()
 
     def death_animate(self):
+        """ animate when played dies"""
         if self.visibility_radius >= 1:
             self.visibility_radius -= 0.5
         else:
@@ -287,17 +308,22 @@ class Player(pygame.sprite.Sprite):
                 self.is_ghost = True
 
     def invincibility_timer(self):
+        """ disable invincibility after 5 secs """
         if self.is_invincible:
             current_time = pygame.time.get_ticks()
             if (current_time - self.hurt_time >= INVINSIBILITY_DURATION) and (current_time - self.mask_time >= 5000):
                 self.is_invincible = False
 
     def weapon_collisions(self):
+        """ pick weapon """
+
         if self.weapon is not None and self.rect.colliderect(self.weapon.rect) and not self.weapon_active:
             self.sounds.special_item.play()
             self.weapon_active = True
 
     def key_collisions(self):
+        """ pick key """
+
         if self.rect.colliderect(self.key.rect) and not self.key_picked:
             self.sounds.key_collection.play()
             self.key_picked = True
@@ -305,15 +331,21 @@ class Player(pygame.sprite.Sprite):
             self.key.kill()
 
     def door_collisions(self):
-        # if self.rect.colliderect(self.door.rect) and self.key_picked:
+        """ check door collision and level complete on collision """
+
         if pygame.sprite.collide_rect_ratio(0.8)(self, self.door) and self.key_picked:
             self.sounds.level_up.play()
             self.level_completed = True
 
     def attach_torch(self):
+        """ update torch location when level starts """
+
         self.torch.rect = self.torch.image.get_rect(center=(self.rect.x + 2, self.rect.y + 2))
 
     def update(self):
+        """ update player every frame """
+
+        # when player active
         if self.lives > 0 and not self.level_completed:
             self.input()
             self.update_status()
@@ -367,15 +399,21 @@ class Player(pygame.sprite.Sprite):
                 self.score = 0
                 self.ui_update = True
 
+        # when player dies but life stone is available
         elif self.wait_revival:
             if pygame.time.get_ticks() - self.revival_time < 11000:
                 self.revival_input()
-                self.timer = self.time_frames[10 - int((pygame.time.get_ticks() - self.revival_time)/1000)]
+
+                # show time left to revive
+                self.timer = self.time_frames[10 - int((pygame.time.get_ticks() - self.revival_time) / 1000)]
                 self.timer_rect = self.timer.get_rect(center=self.torch.rect.center)
+
                 if self.life_stone_activated:
                     self.lives = PLAYER_LIVES
                     self.wait_revival = False
                     self.status = 'idle'
+
+                    # revive player at level start position
                     self.rect.topleft = self.revival_position
                     self.visibility_radius = VISIBILITY_RADIUS
                     self.life_stone_activated = False
@@ -386,6 +424,7 @@ class Player(pygame.sprite.Sprite):
                 self.life_stone_activated = False
                 self.life_stone_available = False
 
+        # when player dies or completes level
         else:
             if not self.status == 'dead' and self.lives == 0:
                 self.status = 'dead'
@@ -398,6 +437,8 @@ class Player(pygame.sprite.Sprite):
                 self.death_animate()
 
     def torch_update(self):
+        """ update visibility when picked big torch """
+
         if pygame.time.get_ticks() - self.big_torch_time < 7000:
             if self.visibility_radius < 2 * VISIBILITY_RADIUS:
                 self.visibility_radius += 0.5
@@ -410,6 +451,8 @@ class Player(pygame.sprite.Sprite):
                 self.torch.scale(0.5)
 
     def reset(self):
+        """ reset player properties for a new level """
+
         self.visibility_radius = VISIBILITY_RADIUS
         self.level_completed = False
         self.key_picked = False

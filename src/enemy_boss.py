@@ -243,5 +243,6 @@ class Boss(pygame.sprite.Sprite):
 
         screen.blit(self.image, self.rect)
 
+        # draw heath bar
         health_fraction = 10 - int(self.lives * 10/self.MAX_LIVES)
-        screen.blit(self.health_bar[health_fraction], self.health_bar[health_fraction].get_rect(center=self.rect.midtop))
+        screen.blit(self.health_bar[health_fraction], self.health_bar[health_fraction].get_rect(midbottom=self.rect.midtop))
