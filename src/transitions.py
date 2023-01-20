@@ -5,7 +5,7 @@ import pygame
 from settings import *
 from stones import Stone
 from utilities import import_frames
-from music import TransitionSound
+from sounds import TransitionSound
 
 
 class Transition:
@@ -313,7 +313,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.intro_completed = True
 
         self.intro_index += 0.2
@@ -389,7 +389,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.life_completed = True
 
         self.life_index += 0.2
@@ -454,7 +454,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.death_completed = True
 
         self.death_index += 0.2
@@ -519,7 +519,7 @@ class Transition:
             self.load_index += 1
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.curse_completed = True
             pygame.quit()
             sys.exit()
@@ -673,7 +673,7 @@ class Transition:
     def go_to_tower(self, tower):
         if tower == 3:
             tower = 2
-        self.screen_surface.blit(self.all_towers, (0, 0))
+        self.screen_surface.blit(self.all_towers, (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50), (self.p1_rect.x - 16, self.p1_rect.y - 16, 36, 50))
         if self.p1_active:
             # if self.path_index > 18 and not self.p1_direction_changed:
             #     self.p1_flipped = not self.p1_flipped

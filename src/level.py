@@ -9,12 +9,12 @@ from tile import Tile
 from player import Player
 from enemy import Enemy
 from traps import Spike
-from enemy_boss import Eye, Boss
+from enemy_boss import Boss
 from collectible import Collectible
 from key import Key
 from door import Door
 from weapon import Weapon
-from music import GameSound
+from sounds import GameSound
 from player_ghost import Ghost
 
 
@@ -89,7 +89,8 @@ class Level:
         self.ghost = None
 
         self.sound = GameSound()
-        self.sound.playbackgroundmusic()
+        self.background_music_on = False
+        self.background_music = None
 
         if story_mode:
             self.story_setup()
@@ -261,6 +262,13 @@ class Level:
                 self.player2.weapon = Weapon(tuple(TILE_SIZE * x for x in personal_cells[5]),
                                          [self.weapon_sprite, self.weapon1_sprite], self.collision_sprites,
                                          type=data['weapon_type'])
+
+        if self.current_level <= 15:
+            self.background_music = self.sound.background1
+        elif 15 < self.current_level <= 35:
+            self.background_music = self.sound.background2
+        elif 35 < self.current_level <= 50:
+            self.background_music = self.sound.background3
             # self.player2.door = door
 
         # coin_cells = random.sample(list(set(other_cells) - set(key_door_cells)), 15)
@@ -356,9 +364,17 @@ class Level:
                 Enemy(tuple(TILE_SIZE * x for x in e), [self.visible_sprites, self.active_sprites, self.enemy_sprites],
                       self.collision_sprites, self.weapon_sprite))
 
+
     def story_setup(self):
         from level_design import STORY_DATA
         data = STORY_DATA[self.current_level - 1]
+
+        if self.current_level <= 5:
+            self.background_music = self.sound.background1
+        elif 5 < self.current_level <= 10:
+            self.background_music = self.sound.background2
+        elif 10 < self.current_level <= 15:
+            self.background_music = self.sound.background3
 
         if self.current_level % 5 == 0:
             self.is_boss_level = True
@@ -501,6 +517,9 @@ class Level:
 
     def run(self):
 
+        if not self.background_music_on:
+            self.sound.play_background(self.background_music)
+            self.background_music_on = True
 
         # run the entire game (level)
         self.active_sprites.update()
@@ -648,6 +667,11 @@ class Level:
                 rect = self.player2.web.get_rect(midtop=self.player2.rect.midtop)
                 self.level_window.blit(self.player2.web, rect)
 
+        if self.player1_active and self.player1.wait_revival:
+            self.level_window.blit(self.player1.timer, self.player1.timer_rect)
+        if self.player2_active and self.player2.wait_revival:
+            self.level_window.blit(self.player2.timer, self.player2.timer_rect)
+
         # Ghost update
         if self.ghost_active:
             # if self.ghost.visibility_radius < 2:
@@ -781,43 +805,47 @@ class Level:
                                                           enemy.rect.center) > self.player2.visibility_radius):
                     pygame.draw.circle(self.level_window, 'red', enemy.rect.center, 1)
 
-        # TODO: remove in final game. Only for testing and debugging
-        # if self.player1_active:
-        #     pygame.draw.circle(self.level_window, 'green', self.player1.door.rect.center, 3)
-        #     pygame.draw.circle(self.level_window, 'yellow', self.player1.key.rect.center, 3)
-        #
-        # if self.player2_active:
-        #     pygame.draw.circle(self.level_window, 'pink', self.player2.door.rect.center, 3)
-        #     pygame.draw.circle(self.level_window, 'orange', self.player2.key.rect.center, 3)
-
     def game_over(self):
+        if self.background_music_on:
+            self.sound.stop_background()
+            self.background_music_on = False
+
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.failed = True
         self.animation_index += 0.08
 
-        if self.animation_index >= 2: self.animation_index = 0
+        if self.animation_index >= 2:
+            self.animation_index = 0
+
+        msg = 'Game Over'
+        if not self.story_mode and self.multiplayer:
+            msg = 'Player 1 Wins' if self.ghost.player2 else 'Player 2 Wins'
 
         # title
         font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
-        title = font.render('Game Over', False, 'yellow')
+        title = font.render(msg, False, 'yellow')
         title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
 
-        title = font.render('Game Over', False, 'red')
+        title = font.render(msg, False, 'red')
         title_rect = title.get_rect(midbottom=(self.level_width // 2, SCREEN_HEIGHT // 2))
         self.level_window.blit(title, title_rect)
 
         # Restart game message
         font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press ENTER to restart', False, 'white')
+        resume_msg = font.render('Press Start to restart', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
 
-    # TODO: Level completed
     def level_completed(self):
+
+        if self.background_music_on:
+            self.sound.stop_background()
+            self.background_music_on = False
+
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RETURN] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
+        if keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON)):
             self.completed = True
         self.animation_index += 0.08
 
@@ -835,6 +863,6 @@ class Level:
 
         # Continue game message
         font = pygame.font.Font('./assets/fonts/4.ttf', 24)
-        resume_msg = font.render('Press ENTER to continue', False, 'white')
+        resume_msg = font.render('Press Start to continue', False, 'white')
         msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 100))
         self.level_window.blit(resume_msg, msg_rect)
