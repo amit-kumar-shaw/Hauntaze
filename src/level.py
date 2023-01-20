@@ -205,7 +205,6 @@ class Level:
                 items += 1
 
             cells = random.sample(list(cell.room), items)
-            # for cell in cells:
             if need_personal_item:
                 need_personal_item = False
                 personal_cells.append(cells[personal_index])
