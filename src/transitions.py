@@ -38,7 +38,7 @@ class StoryTransition:
         self.reached_tower3 = False
         self.stall_completed = False
         self.player_position_initialized = False
-        self.skip_active = True
+        self.skip_active = False
         self.animating = False
 
         self.wait_frames = []
@@ -330,10 +330,15 @@ class StoryTransition:
         self.display.blit(self.wait_frames[int(self.wait_index)], (299, 181, 42, 39), (299, 181, 42, 39))
 
         keys = pygame.key.get_pressed()
+
+        # key debouncing
         if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
             self.skip_active = True
+
+        # start game
         if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
             self.wait_active = False
+            self.skip_active = False
             self.sound.confirm.play()
 
             # exit game when story mode completed
@@ -362,8 +367,13 @@ class StoryTransition:
                 self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro/intro_{self.load_index}.png").convert())
             self.load_index += 1
 
-        # skip animation
         keys = pygame.key.get_pressed()
+
+        # key debouncing
+        if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
+            self.skip_active = True
+
+        # skip animation
         if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.intro_index > 222:
             self.intro_completed = True
             if not self.intro_index > 222:
@@ -468,8 +478,13 @@ class StoryTransition:
                     pygame.image.load(f"./assets/images/transitions/life/life_{self.load_index}.png").convert())
             self.load_index += 1
 
-        # skip animation
         keys = pygame.key.get_pressed()
+
+        # key debouncing
+        if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
+            self.skip_active = True
+
+        # skip animation
         if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.life_index > 261:
             self.life_completed = True
             if not self.life_index > 261:
@@ -555,8 +570,13 @@ class StoryTransition:
                     pygame.image.load(f"./assets/images/transitions/death/death_{self.load_index}.png").convert())
             self.load_index += 1
 
-        # skip animation
         keys = pygame.key.get_pressed()
+
+        # key debouncing
+        if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
+            self.skip_active = True
+
+        # skip animation
         if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.death_index > 250:
             self.death_completed = True
             if not self.death_index > 250:
@@ -642,8 +662,12 @@ class StoryTransition:
                     pygame.image.load(f"./assets/images/transitions/curse/curse_{self.load_index}.png").convert())
             self.load_index += 1
 
-        # skip animation
         keys = pygame.key.get_pressed()
+        # key debouncing
+        if not (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and not self.skip_active:
+            self.skip_active = True
+
+        # skip animation
         if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.curse_index > 133:
             self.curse_completed = True
             if not self.curse_index > 133:
