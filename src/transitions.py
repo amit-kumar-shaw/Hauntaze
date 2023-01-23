@@ -364,9 +364,10 @@ class StoryTransition:
 
         # skip animation
         keys = pygame.key.get_pressed()
-        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
+        if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.intro_index > 222:
             self.intro_completed = True
-            self.sound.confirm.play()
+            if not self.intro_index > 222:
+                self.sound.confirm.play()
             self.skip_active = False
             self.wait_frames = import_frames("./assets/images/transitions/wait_intro", scale=1)
             self.wait_index = 0
@@ -469,9 +470,10 @@ class StoryTransition:
 
         # skip animation
         keys = pygame.key.get_pressed()
-        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
+        if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.life_index > 261:
             self.life_completed = True
-            self.sound.confirm.play()
+            if not self.life_index > 261:
+                self.sound.confirm.play()
             self.skip_active = False
             self.wait_frames = import_frames("./assets/images/transitions/wait_life", scale=1)
             self.wait_index = 0
@@ -555,9 +557,10 @@ class StoryTransition:
 
         # skip animation
         keys = pygame.key.get_pressed()
-        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
+        if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.death_index > 250:
             self.death_completed = True
-            self.sound.confirm.play()
+            if not self.death_index > 250:
+                self.sound.confirm.play()
             self.skip_active = False
             self.wait_frames = import_frames("./assets/images/transitions/wait_death", scale=1)
             self.wait_index = 0
@@ -641,9 +644,10 @@ class StoryTransition:
 
         # skip animation
         keys = pygame.key.get_pressed()
-        if (keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active:
+        if ((keys[CONFIRM] or (self.joystick_1 is not None and self.joystick_1.get_button(START_BUTTON)) or (self.joystick_2 is not None and self.joystick_2.get_button(START_BUTTON))) and self.skip_active) or self.curse_index > 133:
             self.curse_completed = True
-            self.sound.confirm.play()
+            if not self.curse_index > 133:
+                self.sound.confirm.play()
             self.skip_active = False
             self.wait_frames = import_frames("./assets/images/transitions/wait_curse", scale=1)
             self.wait_index = 0
