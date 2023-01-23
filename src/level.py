@@ -744,7 +744,7 @@ class Level:
             msg = 'Player 1 Wins' if self.ghost.player2 else 'Player 2 Wins'
 
         # title
-        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
+        font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 40 + int(self.animation_index))
         title = font.render(msg, False, 'yellow')
         title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
@@ -775,7 +775,7 @@ class Level:
             msg = 'Congratulations'
 
         # title
-        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.animation_index))
+        font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 40 + int(self.animation_index))
         title = font.render(msg, False, 'red')
         title_rect = title.get_rect(midbottom=(self.level_width // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.level_window.blit(title, title_rect)
@@ -788,7 +788,7 @@ class Level:
 
         # Winning Msg
         if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
-            font = pygame.font.Font('./assets/fonts/1.ttf', 16)
+            font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 16)
             resume_msg = font.render('You have completed Hauntaze Survival Mode', False, 'white')
             msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 140))
             self.level_window.blit(resume_msg, msg_rect)
