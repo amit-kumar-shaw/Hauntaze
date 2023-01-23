@@ -245,7 +245,7 @@ class Player(pygame.sprite.Sprite):
                     self.sounds.special_item.play()
                     sprite.status = 'picked'
                     sprite.animation_index = 0
-                elif (sprite.type == 'web1' or sprite.type == 'web2') and sprite.status == 'active':
+                elif (sprite.type == 'web1' or sprite.type == 'web2') and not self.is_invincible and sprite.status == 'active':
                     sprite.status = 'picked'
                     sprite.animation_index = 0
                     self.sounds.trap.play()
