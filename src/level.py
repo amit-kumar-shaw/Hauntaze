@@ -788,7 +788,7 @@ class Level:
 
         # Winning Msg
         if not self.story_mode and self.current_level == LAST_SURVIVAL_LEVEL:
-            font = pygame.font.Font('./assets/fonts/4.ttf', 24)
+            font = pygame.font.Font('./assets/fonts/1.ttf', 16)
             resume_msg = font.render('You have completed Hauntaze Survival Mode', False, 'white')
             msg_rect = resume_msg.get_rect(center=(self.level_width // 2, SCREEN_HEIGHT - 140))
             self.level_window.blit(resume_msg, msg_rect)
