@@ -355,11 +355,11 @@ class StoryTransition:
         # load frames one frame at a time for efficiency
         if self.load_index <= 299:
             if self.load_index < 10:
-                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_00{self.load_index}.png").convert())
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro/intro_00{self.load_index}.png").convert())
             elif self.load_index < 100:
-                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_0{self.load_index}.png").convert())
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro/intro_0{self.load_index}.png").convert())
             else:
-                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro2/intro_{self.load_index}.png").convert())
+                self.intro_frames.append(pygame.image.load(f"./assets/images/transitions/intro/intro_{self.load_index}.png").convert())
             self.load_index += 1
 
         # skip animation
@@ -546,13 +546,13 @@ class StoryTransition:
         if self.load_index <= 299:
             if self.load_index < 10:
                 self.death_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/death2/death_00{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/death/death_00{self.load_index}.png").convert())
             elif self.load_index < 100:
                 self.death_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/death2/death_0{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/death/death_0{self.load_index}.png").convert())
             else:
                 self.death_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/death2/death_{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/death/death_{self.load_index}.png").convert())
             self.load_index += 1
 
         # skip animation
@@ -633,13 +633,13 @@ class StoryTransition:
         if self.load_index <= 149:
             if self.load_index < 10:
                 self.curse_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/curse2/curse_00{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/curse/curse_00{self.load_index}.png").convert())
             elif self.load_index < 100:
                 self.curse_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/curse2/curse_0{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/curse/curse_0{self.load_index}.png").convert())
             else:
                 self.curse_frames.append(
-                    pygame.image.load(f"./assets/images/transitions/curse2/curse_{self.load_index}.png").convert())
+                    pygame.image.load(f"./assets/images/transitions/curse/curse_{self.load_index}.png").convert())
             self.load_index += 1
 
         # skip animation
