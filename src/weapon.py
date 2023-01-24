@@ -31,12 +31,13 @@ class Weapon(pygame.sprite.Sprite):
 
         status = self.frames[self.status]
 
-        self.animation_index += 0.15
+        self.animation_index += 0.1 if self.type == 'flamethrower' else 0.15
 
         if self.animation_index >= len(status):
             self.animation_index = 0
             if self.status == 'attack':
                 self.status = 'idle'
+                return
 
         self.image = status[int(self.animation_index)]
         if flipped:

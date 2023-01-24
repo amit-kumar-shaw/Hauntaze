@@ -33,5 +33,4 @@ class Tile(pygame.sprite.Sprite):
             number = choice([1, 1, 1, 1, 1, 1, 1, 2, 3, 4])
             self.image = pygame.image.load(f"./assets/images/tiles/{floor}_{number}.png").convert_alpha()
 
-
         self.rect = self.image.get_rect(topleft=pos)
