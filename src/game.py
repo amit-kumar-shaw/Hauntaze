@@ -110,7 +110,7 @@ class Game:
             self.pause_animation = 0
 
         # Pause message
-        font = pygame.font.Font('./assets/fonts/1.ttf', 40 + int(self.pause_animation))
+        font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 40 + int(self.pause_animation))
         title = font.render('Game Paused', False, 'red')
         title_rect = title.get_rect(midbottom=(SCREEN_WIDTH // 2 + 1, SCREEN_HEIGHT // 2 + 1))
         self.pause_surface.blit(title, title_rect)

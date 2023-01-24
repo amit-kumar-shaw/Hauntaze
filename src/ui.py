@@ -63,7 +63,7 @@ class UI:
                 UI_SURFACE.blit(self.heart, self.heart.get_rect(topleft=(16 + (i * 12), 16)))
 
             # display coins
-            score_font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+            score_font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 10)
             if self.level.player1.score > self.p1_score:
                 self.p1_score_msg = score_font.render(f'{self.level.player1.score}', False, 'white')
             score_rect = self.p1_score_msg.get_rect(topleft=(30, 26))
@@ -82,7 +82,7 @@ class UI:
                 UI_SURFACE.blit(self.heart, self.heart.get_rect(topright=(SCREEN_WIDTH - 16 - (i * 12), 16)))
 
             # display coins
-            score_font = pygame.font.Font('./assets/fonts/1.ttf', 10)
+            score_font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 10)
             if self.level.player2.score > self.p2_score:
                 self.p2_score_msg = score_font.render(f'{self.level.player2.score}', False, 'white')
             score_rect = self.p2_score_msg.get_rect(topright=(SCREEN_WIDTH - 30, 26))
@@ -104,11 +104,11 @@ class UI:
         self.info_surf.fill('black')
 
         if self.level.story_mode:
-            font = pygame.font.Font('./assets/fonts/1.ttf', 12)
+            font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 12)
             level = font.render(f'{self.level.caption}', False, 'white')
             level_rect = level.get_rect(center=(100, 8))
         else:
-            font = pygame.font.Font('./assets/fonts/1.ttf', 16)
+            font = pygame.font.Font('./assets/fonts/retro_gaming.ttf', 16)
             level = font.render(f'LEVEL {self.current_level}', False, 'white')
             level_rect = level.get_rect(center=(100, 15))
         self.info_surf.blit(level, level_rect)

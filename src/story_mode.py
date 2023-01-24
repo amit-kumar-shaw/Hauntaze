@@ -121,14 +121,15 @@ class StoryMode:
                     self.player2.death_stone_available = True
 
             # instantiate new level
-            self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2,
-                               self.current_level, multiplayer=self.multiplayer,
-                               joystick_1=self.joystick_1, joystick_2=self.joystick_2)
+            if self.current_level <= 15:
+                self.level = Level(True, self.player1_active, self.player1, self.player2_active, self.player2,
+                                   self.current_level, multiplayer=self.multiplayer,
+                                   joystick_1=self.joystick_1, joystick_2=self.joystick_2)
 
-            # update ui
-            self.ui.level = self.level
-            self.ui.current_level = self.current_level
-            self.ui.update_level()
+                # update ui
+                self.ui.level = self.level
+                self.ui.current_level = self.current_level
+                self.ui.update_level()
 
             self.status = Status.TRANSITION
 
