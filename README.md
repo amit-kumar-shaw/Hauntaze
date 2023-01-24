@@ -78,3 +78,10 @@ Handshake: https://opengameart.org/content/handshake
 
 Boxing gloves: https://opengameart.org/content/cc0-hand-wear-icons
 
+RetroGaming font: https://www.dafont.com/retro-gaming.font
+
+BleedingPixels font: https://druid-cz.itch.io/pixel-horror-font-pack
+
+Menu background sound: https://svl.itch.io/free-horror-music-pack
+
+All other sounds: https://pixabay.com/sound-effects/
