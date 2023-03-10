@@ -2,6 +2,12 @@
 
 Hauntaze is game to show your skills to find your way across multiple mazes in an old castle while collecting magical stones to lift the curse of the forbidden treasure.
 
+
+
+https://user-images.githubusercontent.com/19664724/224436803-cbd2ecf7-fd05-44a6-a5a1-62c5f4a9e802.mp4
+
+
+
 ## Setting Up
 1. Install python 3.9 or above
 2. Create virtual environment 'venv'
